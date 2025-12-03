@@ -7,12 +7,12 @@ function render() {
   console.log("Rendering screen");
 }
 
-function updateState(deltaTime) {
+function updateState(deltaTime: number) {
   // TODO: Implement
   console.log(deltaTime + " elapsed");
 }
 
-function gameLoop(currentTime) {
+function gameLoop(currentTime: number) {
   const deltaTime = currentTime - lastTime;
   lastTime = currentTime;
   updateState(deltaTime);
