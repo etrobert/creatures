@@ -7,7 +7,8 @@ const ctx = canvas.getContext("2d");
 if (ctx === null) throw new Error("Could not get ctx");
 
 export const render = (state: State) => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "grey";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const { position } = state;
   ctx.fillStyle = "green";
