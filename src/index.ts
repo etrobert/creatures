@@ -1,21 +1,12 @@
-const canvas = document.querySelector("canvas");
+import { render } from "./render.js";
+import { update } from "./update.js";
 
 let lastTime = 0;
-
-function render() {
-  // TODO: Implement
-  console.log("Rendering screen");
-}
-
-function updateState(deltaTime: number) {
-  // TODO: Implement
-  console.log(deltaTime + " elapsed");
-}
 
 function gameLoop(currentTime: number) {
   const deltaTime = currentTime - lastTime;
   lastTime = currentTime;
-  updateState(deltaTime);
+  update(deltaTime);
   render();
   requestAnimationFrame(gameLoop);
 }
