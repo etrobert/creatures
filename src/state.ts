@@ -1,11 +1,11 @@
 export const createState = () => ({
-  creatures: [createCreature()],
+  creatures: [createCreature(), createCreature(1, { x: 10, y: 100 })],
 });
 
 export type State = ReturnType<typeof createState>;
 
-const createCreature = () => ({
-  position: { x: 0, y: 0 },
+const createCreature = (player = 0, position = { x: 0, y: 0 }) => ({
+  position,
   health: 10,
-  player: 1,
+  player,
 });

@@ -10,8 +10,9 @@ export const render = (state: State) => {
   ctx.fillStyle = "grey";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (const { position } of state.creatures) {
-    ctx.fillStyle = "blue";
+  for (const { position, player } of state.creatures) {
+    const color = player === 0 ? "blue" : "red";
+    ctx.fillStyle = color;
     ctx.fillRect(position.x, position.y, 100, 100);
   }
 };
