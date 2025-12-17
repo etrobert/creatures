@@ -10,8 +10,8 @@ export const render = (state: State) => {
   ctx.fillStyle = "grey";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const { position } = state.creature1;
-  ctx.fillStyle = "blue";
-  // Add a rectangle at (10, 10) with size 100x100 pixels
-  ctx.fillRect(position.x, position.y, 100, 100);
+  for (const { position } of state.creatures) {
+    ctx.fillStyle = "blue";
+    ctx.fillRect(position.x, position.y, 100, 100);
+  }
 };

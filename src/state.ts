@@ -1,4 +1,6 @@
-export const createState = () => ({ creature1: createCreature() });
+export const createState = () => ({
+  creatures: [createCreature()],
+});
 
 export type State = ReturnType<typeof createState>;
 
