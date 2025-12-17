@@ -1,7 +1,7 @@
 export type Creature = {
   player: number;
   health: number;
-  position: { x: number; y: number };
+  position: Position;
   nextAction: Action | null;
 };
 
@@ -32,3 +32,5 @@ type Action = {
   type: "move";
   direction: "up" | "right" | "left" | "down";
 };
+
+export type Position = { x: number; y: number };
