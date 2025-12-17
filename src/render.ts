@@ -11,7 +11,7 @@ export const render = (state: State) => {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const { position } = state;
-  ctx.fillStyle = "green";
+  ctx.fillStyle = "blue";
   // Add a rectangle at (10, 10) with size 100x100 pixels
   ctx.fillRect(position.x, position.y, 100, 100);
 };
