@@ -1,7 +1,7 @@
 export const createState = () => ({
   creatures: [
     createCreature(),
-    createCreature({ player: 1, position: { x: 10, y: 100 } }),
+    createCreature({ player: 1, position: { x: 1, y: 1 } }),
   ],
 });
 
