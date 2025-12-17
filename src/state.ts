@@ -12,3 +12,5 @@ const createCreature = ({ player = 0, position = { x: 0, y: 0 } } = {}) => ({
   health: 10,
   position,
 });
+
+export type Position = { x: number; y: number };
