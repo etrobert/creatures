@@ -1,4 +1,4 @@
-import type { State } from "./state.js";
+import type { Creature, State } from "./state.js";
 import type { Position } from "./state.js";
 
 const canvas = document.querySelector("canvas");
@@ -21,36 +21,38 @@ const positionOnCanvas = ({ x, y }: Position) => ({
   canvasY: y * cellHeight,
 });
 
+const renderCreature = (creature: Creature) => {
+  const color = creature.player === 0 ? "blue" : "red";
+  const canvasPosition = positionOnCanvas(creature.position);
+  ctx.fillStyle = color;
+  ctx.fillRect(
+    canvasPosition.canvasX,
+    canvasPosition.canvasY,
+    cellWidth,
+    cellHeight
+  );
+
+  const img = new Image();
+  const imgWidth = 40;
+  const imgHeigth = 40;
+  img.src = "./animations/bulbasaur/Walk-Anim.png";
+
+  ctx.drawImage(
+    img,
+    0,
+    0,
+    imgWidth,
+    imgHeigth,
+    canvasPosition.canvasX,
+    canvasPosition.canvasY,
+    imgWidth,
+    imgHeigth
+  );
+};
+
 export const render = (state: State) => {
   ctx.fillStyle = "grey";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (const { position, player } of state.creatures) {
-    const color = player === 0 ? "blue" : "red";
-    const canvasPosition = positionOnCanvas(position);
-    ctx.fillStyle = color;
-    ctx.fillRect(
-      canvasPosition.canvasX,
-      canvasPosition.canvasY,
-      cellWidth,
-      cellHeight
-    );
-
-    const img = new Image();
-    const imgWidth = 40;
-    const imgHeigth = 40;
-    img.src = "./animations/bulbasaur/Walk-Anim.png";
-
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      imgWidth,
-      imgHeigth,
-      canvasPosition.canvasX,
-      canvasPosition.canvasY,
-      imgWidth,
-      imgHeigth
-    );
-  }
+  state.creatures.forEach((creature) => renderCreature(creature));
 };
