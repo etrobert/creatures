@@ -2,7 +2,8 @@ export type Creature = {
   player: number;
   health: number;
   position: Position;
-  nextAction: Action | null;
+  onGoingAction: Action | null;
+  nextActions: Action[];
 };
 
 const createCreature = ({
@@ -12,7 +13,8 @@ const createCreature = ({
   player,
   health: 10,
   position,
-  nextAction: null,
+  onGoingAction: null,
+  nextActions: [],
 });
 
 export const createState = () => ({
@@ -28,7 +30,7 @@ export const setState = (newState: State) => (state = newState);
 
 export type State = ReturnType<typeof createState>;
 
-type Action = {
+export type Action = {
   type: "move";
   direction: "up" | "right" | "left" | "down";
 };

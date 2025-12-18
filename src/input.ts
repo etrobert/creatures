@@ -23,8 +23,13 @@ export const setupEventListeners = () => {
       ...state,
       creatures: state.creatures.map((creature) =>
         creature.player === 0
-          ? { ...creature, nextAction: { type: "move", direction } }
-          : creature,
+          ? {
+              ...creature,
+              nextActions: [{ type: "move", direction }].concat(
+                creature.nextActions
+              ),
+            }
+          : creature
       ),
     });
   });
