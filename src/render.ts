@@ -7,10 +7,14 @@ if (canvas === null) throw new Error("Could not get canvas");
 const ctx = canvas.getContext("2d");
 if (ctx === null) throw new Error("Could not get ctx");
 
+const cellWidth = 40;
+const cellHeight = 40;
+
 const countColumns = 10;
 const countRow = 7;
-const cellWidth = canvas.width / countColumns;
-const cellHeight = canvas.height / countRow;
+
+canvas.width = cellWidth * countColumns;
+canvas.height = cellHeight * countRow;
 
 const positionOnCanvas = ({ x, y }: Position) => ({
   canvasX: x * cellWidth,
@@ -30,6 +34,23 @@ export const render = (state: State) => {
       canvasPosition.canvasY,
       cellWidth,
       cellHeight
+    );
+
+    const img = new Image();
+    const imgWidth = 40;
+    const imgHeigth = 40;
+    img.src = "./animations/bulbasaur/Walk-Anim.png";
+
+    ctx.drawImage(
+      img,
+      0,
+      0,
+      imgWidth,
+      imgHeigth,
+      canvasPosition.canvasX,
+      canvasPosition.canvasY,
+      imgWidth,
+      imgHeigth
     );
   }
 };

@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Animations (on utilise les sprite pokemon)
+- [ ] (P) Animations (on utilise les sprite pokemon)
 - [ ] Background (statique pour commencer)
 - [ ] (P) Grille
 - [ ] (E) Handle user input
