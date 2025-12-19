@@ -29,7 +29,7 @@ const renderCreature = (creature: Creature) => {
     canvasPosition.canvasX,
     canvasPosition.canvasY,
     cellWidth,
-    cellHeight
+    cellHeight,
   );
 
   const img = new Image();
@@ -46,7 +46,7 @@ const renderCreature = (creature: Creature) => {
     canvasPosition.canvasX,
     canvasPosition.canvasY,
     imgWidth,
-    imgHeigth
+    imgHeigth,
   );
 };
 
