@@ -70,16 +70,13 @@ export const render = (state: State, currentTime: number) => {
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };
 
-const createBackground = (width: number, height: number, tile: string) =>
-  new Array(width * height).fill(tile);
-
 const getTile = (background: string[], position: { x: number; y: number }) => {
   const tile = background[position.x + position.y * countColumns];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
 };
 
-const initBackground = createBackground(countColumns, countRow, "grass");
+const initBackground = new Array(countColumns * countRow).fill("grass");
 
 const renderOffsetedBackground = (background: string[]) => {
   const bigWidth = countColumns + 1;
