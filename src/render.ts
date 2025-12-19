@@ -12,17 +12,11 @@ if (ctx === null) throw new Error("Could not get ctx");
 const cellWidth = 32;
 const cellHeight = 32;
 
-canvas.width = cellWidth * (countColumns + 1);
-canvas.height = cellHeight * (countRow + 1);
+canvas.width = cellWidth * countColumns;
+canvas.height = cellHeight * countRow;
 
 // translation bwtween grid position and canvas position
 const positionOnCanvas = ({ x, y }: Position) => ({
-  canvasX: (x + 0.5) * cellWidth,
-  canvasY: (y + 0.5) * cellHeight,
-});
-
-// translation bwtween background grid position and canvas position
-const backgroundPositionOnCanvas = ({ x, y }: Position) => ({
   canvasX: x * cellWidth,
   canvasY: y * cellHeight,
 });
@@ -130,15 +124,15 @@ const renderBackgroundTile = (
   if (backgroundTilePosition === undefined) throw new Error("No tile found");
   const imgWidth = 32;
   const imgHeight = 32;
-  const canvasPosition = backgroundPositionOnCanvas({ x, y });
+  const canvasPosition = positionOnCanvas({ x, y });
   ctx.drawImage(
     backgroundTiles,
     backgroundTilePosition.position.x,
     backgroundTilePosition.position.y,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX - imgWidth / 2 + imgWidth,
-    canvasPosition.canvasY - imgHeight / 2 + imgHeight,
+    canvasPosition.canvasX,
+    canvasPosition.canvasY,
     imgWidth,
     imgHeight,
   );
