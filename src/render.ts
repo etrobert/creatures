@@ -65,7 +65,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 };
 
 export const render = (state: State, currentTime: number) => {
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   renderOffsetedBackground(initBackground);
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
