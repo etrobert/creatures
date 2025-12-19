@@ -33,18 +33,29 @@ const updateActions = (creature: Creature) => {
   if (creature.ongoingAction) return creature;
   const ongoingAction = creature.nextActions[0];
   if (!ongoingAction) return creature;
-  creature = {
+  return {
     ...creature,
     ongoingAction,
     nextActions: creature.nextActions.slice(1),
   };
-  if (ongoingAction.type === "move")
-    return updatePosition(creature, ongoingAction);
-  else return creature;
+};
+
+const applyOngoingAction = (creature: Creature) => {
+  switch (creature.ongoingAction?.type) {
+    case "move":
+      return updatePosition(creature, creature.ongoingAction);
+    default:
+      return creature;
+  }
+};
+
+const updateCreature = (creature: Creature) => {
+  creature = updateActions(creature);
+  return applyOngoingAction(creature);
 };
 
 export function update(state: State, deltaTime: number): State {
-  const updatedCreatures = state.creatures.map(updateActions);
+  const updatedCreatures = state.creatures.map(updateCreature);
 
   return { ...state, creatures: updatedCreatures };
 }
