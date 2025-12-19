@@ -31,9 +31,11 @@ export const setState = (newState: State) => (state = newState);
 
 export type State = ReturnType<typeof createState>;
 
+export type Direction = "up" | "right" | "left" | "down";
+
 export type Action = {
   type: "move";
-  direction: "up" | "right" | "left" | "down";
+  direction: Direction;
 };
 
 export type Position = { x: number; y: number };

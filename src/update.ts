@@ -1,32 +1,28 @@
-import type { Creature, State, Action } from "./state.js";
+import type { Creature, State, Action, Position, Direction } from "./state.js";
+
+const getCreatureAtPosition = (state: State, position: Position) =>
+  state.creatures.find(
+    (creature) =>
+      creature.position.x === position.x && creature.position.y === position.y,
+  );
+
+const getNewPosition = ({ x, y }: Position, direction: Direction) => {
+  switch (direction) {
+    case "up":
+      return { x, y: y - 1 };
+    case "down":
+      return { x, y: y + 1 };
+    case "right":
+      return { x: x + 1, y };
+    case "left":
+      return { x: x - 1, y };
+  }
+};
 
 const updatePosition = (creature: Creature, nextAction: Action) => {
-  switch (nextAction.direction) {
-    case "up":
-      return {
-        ...creature,
-        position: { ...creature.position, y: creature.position.y - 1 },
-        ongoingAction: null,
-      };
-    case "left":
-      return {
-        ...creature,
-        position: { ...creature.position, x: creature.position.x - 1 },
-        ongoingAction: null,
-      };
-    case "right":
-      return {
-        ...creature,
-        position: { ...creature.position, x: creature.position.x + 1 },
-        ongoingAction: null,
-      };
-    case "down":
-      return {
-        ...creature,
-        position: { ...creature.position, y: creature.position.y + 1 },
-        ongoingAction: null,
-      };
-  }
+  const newPosition = getNewPosition(creature.position, nextAction.direction);
+
+  return { ...creature, position: newPosition, ongoingAction: null };
 };
 
 const updateActions = (creature: Creature) => {
