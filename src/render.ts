@@ -12,8 +12,8 @@ if (ctx === null) throw new Error("Could not get ctx");
 const cellWidth = 32;
 const cellHeight = 32;
 
-canvas.width = cellWidth * countColumns;
-canvas.height = cellHeight * countRow;
+canvas.width = cellWidth * (countColumns + 2);
+canvas.height = cellHeight * (countRow + 2);
 
 const positionOnCanvas = ({ x, y }: Position) => ({
   canvasX: x * cellWidth,
