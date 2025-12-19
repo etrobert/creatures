@@ -31,14 +31,15 @@ const updatePosition = (creature: Creature, nextAction: Action) => {
 
 const updateActions = (creature: Creature) => {
   if (creature.ongoingAction) return creature;
-  const nextAction = creature.nextActions[0];
-  if (!nextAction) return creature;
+  const ongoingAction = creature.nextActions[0];
+  if (!ongoingAction) return creature;
   creature = {
     ...creature,
-    ongoingAction: nextAction,
+    ongoingAction,
     nextActions: creature.nextActions.slice(1),
   };
-  if (nextAction.type === "move") return updatePosition(creature, nextAction);
+  if (ongoingAction.type === "move")
+    return updatePosition(creature, ongoingAction);
   else return creature;
 };
 
