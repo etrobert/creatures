@@ -35,7 +35,7 @@ const renderCreature = (creature: Creature) => {
   const img = new Image();
   const imgWidth = 40;
   const imgHeigth = 40;
-  img.src = "./animations/bulbasaur/Walk-Anim.png";
+  img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
 
   ctx.drawImage(
     img,
