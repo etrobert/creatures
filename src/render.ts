@@ -115,7 +115,7 @@ const renderBackgroundTile = (
   x: number,
   y: number,
 ) => {
-  const findposition = backgroundTilesPositions.find(
+  const backgroundTilePosition = backgroundTilesPositions.find(
     (data) =>
       data.corners.NE === corners.NE &&
       data.corners.NW === corners.NW &&
@@ -127,8 +127,8 @@ const renderBackgroundTile = (
   const canvasPosition = positionOnCanvas({ x, y });
   ctx.drawImage(
     backgroundTiles,
-    findposition.position.x,
-    findposition.position.y,
+    backgroundTilePosition.position.x,
+    backgroundTilePosition.position.y,
     imgWidth,
     imgHeight,
     canvasPosition.canvasX - imgWidth / 2 + imgWidth,
