@@ -95,44 +95,35 @@ const getTile = (
   return tile;
 };
 
-const forEachTiles = (
-  { width, height, tiles }: GameBackground,
-  f: (value: string, position: { x: number; y: number }) => void,
-) =>
-  tiles.forEach((value, index) =>
-    f(value, { x: index % width, y: Math.floor(index / width) }),
-  );
-
 const initBackground = createBackground(countColumns, countRow, "grass");
 
 const renderOffsetedBackground = (backgroung: GameBackground) => {
-  const tempBiggerBackground = createBackground(
-    backgroung.width + 1,
-    backgroung.height + 1,
-    "void",
-  );
-  forEachTiles(tempBiggerBackground, (_, { x, y }) => {
-    const corners = {
-      NW:
-        x === 0 || y === 0
-          ? "void"
-          : getTile(backgroung, { x: x - 1, y: y - 1 }),
-      NE:
-        x === tempBiggerBackground.width - 1 || y === 0
-          ? "void"
-          : getTile(backgroung, { x: x, y: y - 1 }),
-      SW:
-        x === 0 || y === tempBiggerBackground.height - 1
-          ? "void"
-          : getTile(backgroung, { x: x - 1, y: y }),
-      SE:
-        x === tempBiggerBackground.width - 1 ||
-        y === tempBiggerBackground.height - 1
-          ? "void"
-          : getTile(backgroung, { x: x, y: y }),
-    };
-    renderBackgroundTile(corners, x, y);
-  });
+  const bigWidth = backgroung.width + 1;
+  const bigHeight = backgroung.height + 1;
+
+  for (let x = 0; x < bigWidth; x++) {
+    for (let y = 0; y < bigHeight; y++) {
+      const corners = {
+        NW:
+          x === 0 || y === 0
+            ? "void"
+            : getTile(backgroung, { x: x - 1, y: y - 1 }),
+        NE:
+          x === bigWidth - 1 || y === 0
+            ? "void"
+            : getTile(backgroung, { x: x, y: y - 1 }),
+        SW:
+          x === 0 || y === bigHeight - 1
+            ? "void"
+            : getTile(backgroung, { x: x - 1, y: y }),
+        SE:
+          x === bigWidth - 1 || y === bigHeight - 1
+            ? "void"
+            : getTile(backgroung, { x: x, y: y }),
+      };
+      renderBackgroundTile(corners, x, y);
+    }
+  }
 };
 
 const backgroundTiles = new Image();
