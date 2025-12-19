@@ -12,8 +12,8 @@ if (ctx === null) throw new Error("Could not get ctx");
 const cellWidth = 32;
 const cellHeight = 32;
 
-canvas.width = cellWidth * (countColumns + 2);
-canvas.height = cellHeight * (countRow + 2);
+canvas.width = cellWidth * (countColumns + 1);
+canvas.height = cellHeight * (countRow + 1);
 
 // translation bwtween grid position and canvas position
 const positionOnCanvas = ({ x, y }: Position) => ({
@@ -87,26 +87,23 @@ const getTile = (background: string[], position: { x: number; y: number }) => {
 const initBackground = new Array(countColumns * countRow).fill("grass");
 
 const renderOffsetedBackground = (background: string[]) => {
-  const bigWidth = countColumns + 1;
-  const bigHeight = countRow + 1;
-
-  for (let x = 0; x < bigWidth; x++) {
-    for (let y = 0; y < bigHeight; y++) {
+  for (let x = 0; x < countColumns; x++) {
+    for (let y = 0; y < countRow; y++) {
       const corners = {
         NW:
           x === 0 || y === 0
             ? "void"
             : getTile(background, { x: x - 1, y: y - 1 }),
         NE:
-          x === bigWidth - 1 || y === 0
+          x === countColumns - 1 || y === 0
             ? "void"
             : getTile(background, { x: x, y: y - 1 }),
         SW:
-          x === 0 || y === bigHeight - 1
+          x === 0 || y === countRow - 1
             ? "void"
             : getTile(background, { x: x - 1, y: y }),
         SE:
-          x === bigWidth - 1 || y === bigHeight - 1
+          x === countColumns - 1 || y === countRow - 1
             ? "void"
             : getTile(background, { x: x, y: y }),
       };
