@@ -70,36 +70,20 @@ export const render = (state: State, currentTime: number) => {
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };
 
-type GameBackground = {
-  tiles: string[];
-  width: number;
-  height: number;
-};
+const createBackground = (width: number, height: number, tile: string) =>
+  new Array(width * height).fill(tile);
 
-const createBackground = (
-  width: number,
-  height: number,
-  tile: string,
-): GameBackground => ({
-  width,
-  height,
-  tiles: new Array(width * height).fill(tile),
-});
-
-const getTile = (
-  background: GameBackground,
-  position: { x: number; y: number },
-) => {
-  const tile = background.tiles[position.x + position.y * background.width];
+const getTile = (background: string[], position: { x: number; y: number }) => {
+  const tile = background[position.x + position.y * countColumns];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
 };
 
 const initBackground = createBackground(countColumns, countRow, "grass");
 
-const renderOffsetedBackground = (background: GameBackground) => {
-  const bigWidth = background.width + 1;
-  const bigHeight = background.height + 1;
+const renderOffsetedBackground = (background: string[]) => {
+  const bigWidth = countColumns + 1;
+  const bigHeight = countRow + 1;
 
   for (let x = 0; x < bigWidth; x++) {
     for (let y = 0; y < bigHeight; y++) {
