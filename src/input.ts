@@ -25,11 +25,11 @@ export const setupEventListeners = () => {
         creature.player === 0
           ? {
               ...creature,
-              nextActions: [{ type: "move", direction }].concat(
-                creature.nextActions
+              nextActions: [{ type: "move", direction } as const].concat(
+                creature.nextActions,
               ),
             }
-          : creature
+          : creature,
       ),
     });
   });
