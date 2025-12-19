@@ -90,15 +90,15 @@ const renderBackground = (background: string[]) => {
         NE:
           x === countColumns - 1 || y === 0
             ? "void"
-            : getTile(background, { x: x, y: y - 1 }),
+            : getTile(background, { x, y: y - 1 }),
         SW:
           x === 0 || y === countRow - 1
             ? "void"
-            : getTile(background, { x: x - 1, y: y }),
+            : getTile(background, { x: x - 1, y }),
         SE:
           x === countColumns - 1 || y === countRow - 1
             ? "void"
-            : getTile(background, { x: x, y: y }),
+            : getTile(background, { x, y }),
       };
       renderBackgroundTile(corners, x, y);
     }
