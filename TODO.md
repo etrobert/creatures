@@ -1,11 +1,20 @@
 # TODO
 
-- [ ] (P) Animations (on utilise les sprite pokemon)
-- [ ] Background (statique pour commencer)
+- [x] (P) Animations (on utilise les sprite pokemon)
+- [x] Background (statique pour commencer)
 - [x] (P) Grille
 - [x] (E) Handle user input
 - [x] Ticks
 - [x] Collisions
 - [ ] Proper collisions between creatures (turn order or all at once)
-- [ ] Memoire des inputs/Input stacking
-- [ ] Ghost
+- [x] Memoire des inputs/Input stacking
+- [ ] Walk animation, animer le movement
+- [ ] (P) _Ghost_
+- [ ] UI
+- [ ] Health
+- [ ] Attaque!
+- [ ] Character Death
+- [ ] _Multiplayer (server)_
+- [ ] start screen
+- [ ] sound effects
+- [ ] musique
