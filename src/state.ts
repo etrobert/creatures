@@ -9,7 +9,7 @@ export type Creature = {
 
 const createCreature = ({
   player = 0,
-  position = { x: 0, y: 0 },
+  position = { x: 3, y: 2 },
 } = {}): Creature => ({
   player,
   health: 10,
