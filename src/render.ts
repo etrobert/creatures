@@ -31,6 +31,13 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
+const img = new Image();
+const imgWidth = 40;
+const imgHeight = 40;
+const animationFrames = 6;
+const frameDuration = 100;
+img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
+
 const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === 0 ? "blue" : "red";
   const canvasPosition = positionOnCanvas(creature.position);
@@ -41,13 +48,6 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     cellWidth,
     cellHeight,
   );
-
-  const img = new Image();
-  const imgWidth = 40;
-  const imgHeight = 40;
-  const animationFrames = 6;
-  const frameDuration = 100;
-  img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
 
   ctx.drawImage(
     img,
