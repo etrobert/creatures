@@ -31,13 +31,9 @@ const updatePosition = (creature: Creature, nextAction: Action) => {
 
 const updateActions = (creature: Creature) => {
   if (creature.ongoingAction) return creature;
-  const ongoingAction = creature.nextActions[0];
+  const [ongoingAction, ...nextActions] = creature.nextActions;
   if (!ongoingAction) return creature;
-  return {
-    ...creature,
-    ongoingAction,
-    nextActions: creature.nextActions.slice(1),
-  };
+  return { ...creature, ongoingAction, nextActions };
 };
 
 const applyOngoingAction = (creature: Creature) => {
