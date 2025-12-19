@@ -11,7 +11,6 @@ if (ctx === null) throw new Error("Could not get ctx");
 
 const cellWidth = 32;
 const cellHeight = 32;
-
 canvas.width = cellWidth * countColumns;
 canvas.height = cellHeight * countRow;
 
@@ -68,7 +67,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderOffsetedBackground(initBackground);
+  renderBackground(initBackground);
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };
 
@@ -80,7 +79,7 @@ const getTile = (background: string[], position: { x: number; y: number }) => {
 
 const initBackground = new Array(countColumns * countRow).fill("grass");
 
-const renderOffsetedBackground = (background: string[]) => {
+const renderBackground = (background: string[]) => {
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const corners = {
