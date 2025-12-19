@@ -64,14 +64,14 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 };
 
 export const render = (state: State, currentTime: number) => {
-  ctx.fillStyle = "grey";
+  ctx.fillStyle = "blue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   renderOffsetedBackground(initBackground);
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };
 
 type GameBackground = {
-  tiles: number[];
+  tiles: string[];
   width: number;
   height: number;
 };
@@ -79,7 +79,7 @@ type GameBackground = {
 const createBackground = (
   width: number,
   height: number,
-  tile: number,
+  tile: string,
 ): GameBackground => ({
   width,
   height,
@@ -95,51 +95,43 @@ const getTile = (
   return tile;
 };
 
-const mapTiles = (
-  { width, height, tiles }: GameBackground,
-  f: (value: number, position: { x: number; y: number }) => number,
-) => ({
-  width,
-  height,
-  tiles: tiles.map((value, index) =>
-    f(value, { x: index % width, y: Math.floor(index / width) }),
-  ),
-});
-
 const forEachTiles = (
   { width, height, tiles }: GameBackground,
-  f: (value: number, position: { x: number; y: number }) => void,
+  f: (value: string, position: { x: number; y: number }) => void,
 ) =>
   tiles.forEach((value, index) =>
     f(value, { x: index % width, y: Math.floor(index / width) }),
   );
 
-const initBackground = createBackground(countColumns, countRow, 0);
+const initBackground = createBackground(countColumns, countRow, "grass");
 
 const renderOffsetedBackground = (backgroung: GameBackground) => {
   const tempBiggerBackground = createBackground(
     backgroung.width + 1,
     backgroung.height + 1,
-    0,
+    "void",
   );
   forEachTiles(tempBiggerBackground, (_, { x, y }) => {
-    const tile = {
-      NW: x === 0 || y === 0 ? 1 : getTile(backgroung, { x: x - 1, y: y - 1 }),
+    const corners = {
+      NW:
+        x === 0 || y === 0
+          ? "void"
+          : getTile(backgroung, { x: x - 1, y: y - 1 }),
       NE:
         x === tempBiggerBackground.width - 1 || y === 0
-          ? 1
+          ? "void"
           : getTile(backgroung, { x: x, y: y - 1 }),
       SW:
         x === 0 || y === tempBiggerBackground.height - 1
-          ? 1
+          ? "void"
           : getTile(backgroung, { x: x - 1, y: y }),
       SE:
         x === tempBiggerBackground.width - 1 ||
         y === tempBiggerBackground.height - 1
-          ? 1
+          ? "void"
           : getTile(backgroung, { x: x, y: y }),
     };
-    renderBackgroundTile(tile, x, y);
+    renderBackgroundTile(corners, x, y);
   });
 };
 
@@ -147,25 +139,114 @@ const backgroundTiles = new Image();
 backgroundTiles.src = "./sprites/background/Grass_tiles_v2.png";
 
 const renderBackgroundTile = (
-  tile: { NW: number; NE: number; SW: number; SE: number },
+  corners: { NW: string; NE: string; SW: string; SE: string },
   x: number,
   y: number,
 ) => {
+  const findposition = backgroundTilesPositions.find(
+    (data) =>
+      data.corners.NE === corners.NE &&
+      data.corners.NW === corners.NW &&
+      data.corners.SE === corners.SE &&
+      data.corners.SW === corners.SW,
+  );
   const imgWidth = 32;
   const imgHeight = 32;
   const canvasPosition = positionOnCanvas({ x, y });
   ctx.drawImage(
     backgroundTiles,
-    0,
-    0,
+    findposition.position.x,
+    findposition.position.y,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX - imgWidth / 2,
-    canvasPosition.canvasY - imgHeight / 2,
-    cellWidth,
-    cellHeight,
+    canvasPosition.canvasX - imgWidth / 2 + imgWidth,
+    canvasPosition.canvasY - imgHeight / 2 + imgHeight,
+    imgWidth,
+    imgHeight,
   );
 };
+
+const backgroundTilesPositions = [
+  {
+    corners: { NW: "grass", NE: "grass", SW: "grass", SE: "grass" },
+    position: { x: (16 * 1) / 2 - 1, y: (16 * 1) / 2 - 1 },
+  },
+  {
+    corners: { NW: "grass", NE: "grass", SW: "grass", SE: "void" },
+    position: { x: 16 * 5, y: 16 * 1 },
+  },
+  {
+    corners: { NW: "grass", NE: "grass", SW: "void", SE: "grass" },
+    position: { x: 16 * 6, y: 16 * 1 },
+  },
+  {
+    corners: { NW: "grass", NE: "void", SW: "grass", SE: "grass" },
+    position: { x: 16 * 5, y: 16 * 2 },
+  },
+  {
+    corners: { NW: "void", NE: "grass", SW: "grass", SE: "grass" },
+    position: { x: 16 * 6, y: 16 * 2 },
+  },
+  {
+    corners: { NW: "grass", NE: "grass", SW: "void", SE: "void" },
+    position: { x: (16 * 1) / 2, y: 16 * 2 },
+  },
+  {
+    corners: { NW: "grass", NE: "void", SW: "grass", SE: "void" },
+    position: { x: 16 * 2, y: (16 * 1) / 2 },
+  },
+  {
+    corners: { NW: "void", NE: "grass", SW: "grass", SE: "void" },
+    position: { x: 16 * 9, y: 16 * 1 },
+  },
+  {
+    corners: { NW: "grass", NE: "void", SW: "void", SE: "grass" },
+    position: { x: 16 * 9, y: 16 * 0 },
+  },
+  {
+    corners: { NW: "void", NE: "grass", SW: "void", SE: "grass" },
+    position: { x: 16 * 0, y: (16 * 1) / 2 },
+  },
+  {
+    corners: { NW: "void", NE: "void", SW: "grass", SE: "grass" },
+    position: { x: (16 * 1) / 2, y: 16 * 0 },
+  },
+  {
+    corners: { NW: "grass", NE: "void", SW: "void", SE: "void" },
+    position: { x: 16 * 0, y: 16 * 0 },
+  },
+  {
+    corners: { NW: "void", NE: "grass", SW: "void", SE: "void" },
+    position: { x: 16 * 2, y: 16 * 0 },
+  },
+  {
+    corners: { NW: "void", NE: "void", SW: "grass", SE: "void" },
+    position: { x: 16 * 0, y: 16 * 2 },
+  },
+  {
+    corners: { NW: "void", NE: "void", SW: "void", SE: "grass" },
+    position: { x: 16 * 0, y: 16 * 0 },
+  },
+  {
+    corners: { NW: "void", NE: "void", SW: "void", SE: "void" },
+    position: { x: 16 * 0, y: 16 * 4 },
+  },
+];
+
+// const mapTiles = (
+//   { width, height, tiles }: GameBackground,
+//   f: (value: number, position: { x: number; y: number }) => number,
+// ) => ({
+//   width,
+//   height,
+//   tiles: tiles.map((value, index) =>
+//     f(value, { x: index % width, y: Math.floor(index / width) }),
+//   ),
+// });
+// const findTile = (tile: { NW: number; NE: number; SW: number; SE: number }) => (
+//   if (tile.NW === 1  && tile.NE === 1 && tile.NE === 1&& tile.NE === 1)
+
+// )
 
 // printMap(initBackground);
 // const grassBorderBackground = addGrassBorder(initBackground);
