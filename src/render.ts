@@ -7,8 +7,11 @@ if (canvas === null) throw new Error("Could not get canvas");
 const ctx = canvas.getContext("2d");
 if (ctx === null) throw new Error("Could not get ctx");
 
-const cellWidth = 40;
-const cellHeight = 40;
+const cellWidth = 32;
+const cellHeight = 32;
+
+const countColumns = 10;
+const countRow = 7;
 
 canvas.width = cellWidth * countColumns;
 canvas.height = cellHeight * countRow;
@@ -26,12 +29,12 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     canvasPosition.canvasX,
     canvasPosition.canvasY,
     cellWidth,
-    cellHeight,
+    cellHeight
   );
 
   const img = new Image();
   const imgWidth = 40;
-  const imgHeigth = 40;
+  const imgHeight = 40;
   const animationFrames = 6;
   const frameDuration = 100;
   img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
@@ -41,11 +44,11 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
     0,
     imgWidth,
-    imgHeigth,
-    canvasPosition.canvasX,
-    canvasPosition.canvasY,
+    imgHeight,
+    canvasPosition.canvasX - (imgWidth - cellWidth) / 2,
+    canvasPosition.canvasY - (imgWidth - cellWidth) / 2,
     imgWidth,
-    imgHeigth,
+    imgHeight
   );
 };
 
