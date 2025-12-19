@@ -75,25 +75,27 @@ export const render = (state: State, currentTime: number) => {
       );
       if (creature) renderCreature(creature, currentTime);
       else {
-        const creatureGhost = state.creatures.find((creature) => {
-          const ghostPosition = getGhostPosition(creature);
-          return ghostPosition.x === x && ghostPosition.y === y;
-        });
-        if (creatureGhost)
-          renderCreature({ ...creatureGhost, position: { x, y } }, currentTime);
+        const creatureGhost = state.creatures
+          .map(getGhost)
+          .find((ghost) => ghost.position.x === x && ghost.position.y === y);
+        if (creatureGhost) {
+          ctx.globalAlpha = 0.5;
+          renderCreature(creatureGhost, currentTime);
+          ctx.globalAlpha = 1;
+        }
       }
     }
   }
 };
 
-const getGhostPosition = (creature: Creature) => {
+const getGhost = (creature: Creature) => {
   let dummyCreature = creature;
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
     dummyCreature = { ...dummyCreature, nextActions };
     dummyCreature = updatePosition(dummyCreature, nextAction, collisionWithMap);
   }
-  return dummyCreature.position;
+  return dummyCreature;
 };
 
 const getTile = (background: string[], position: { x: number; y: number }) => {

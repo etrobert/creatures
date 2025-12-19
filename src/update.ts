@@ -44,14 +44,11 @@ export const updatePosition = (
   };
 };
 
-export const collisionWithMap = (newPosition: Position) => {
-  return (
-    newPosition.x < 0 ||
-    newPosition.x >= countColumns ||
-    newPosition.y < 0 ||
-    newPosition.y >= countRow
-  );
-};
+export const collisionWithMap = (newPosition: Position) =>
+  newPosition.x < 0 ||
+  newPosition.x >= countColumns ||
+  newPosition.y < 0 ||
+  newPosition.y >= countRow;
 
 const updateActions = (creature: Creature) => {
   if (creature.ongoingAction) return creature;
