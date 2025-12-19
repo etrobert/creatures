@@ -50,8 +50,14 @@ const updateCreature = (creature: Creature) => {
   return applyOngoingAction(creature);
 };
 
-export function update(state: State, deltaTime: number): State {
-  const updatedCreatures = state.creatures.map(updateCreature);
+const tickDuration = 300;
 
-  return { ...state, creatures: updatedCreatures };
+export function update(state: State, currentTime: number): State {
+  if (currentTime - state.lastTick < tickDuration) return state;
+
+  const lastTick = currentTime;
+
+  const creatures = state.creatures.map(updateCreature);
+
+  return { lastTick, creatures };
 }

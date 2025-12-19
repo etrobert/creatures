@@ -18,6 +18,7 @@ const createCreature = ({
 });
 
 export const createState = () => ({
+  lastTick: 0,
   creatures: [
     createCreature(),
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
