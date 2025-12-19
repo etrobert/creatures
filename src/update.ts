@@ -74,7 +74,7 @@ const updateCreature = (state: State, creature: Creature) => {
   return applyOngoingAction(state, creature);
 };
 
-const tickDuration = 300;
+export const tickDuration = 300;
 
 export function update(state: State, currentTime: number): State {
   if (currentTime - state.lastTick < tickDuration) return state;

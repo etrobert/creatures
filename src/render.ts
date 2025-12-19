@@ -1,5 +1,6 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
+import { tickDuration } from "./update.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
@@ -35,7 +36,7 @@ const img = new Image();
 const imgWidth = 40;
 const imgHeight = 40;
 const animationFrames = 6;
-const frameDuration = 100;
+const frameDuration = tickDuration / animationFrames;
 img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
 
 const renderCreature = (creature: Creature, currentTime: number) => {
