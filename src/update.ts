@@ -1,4 +1,12 @@
-import type { Creature, State, Action, Position, Direction } from "./state.js";
+import {
+  type Creature,
+  type State,
+  type Action,
+  type Position,
+  type Direction,
+  countColumns,
+  countRow,
+} from "./state.js";
 
 const getCreatureAtPosition = (state: State, position: Position) =>
   state.creatures.find(
@@ -28,7 +36,14 @@ const updatePosition = (
 
   const creatureAtPosition = getCreatureAtPosition(state, newPosition);
 
-  if (creatureAtPosition) return { ...creature, ongoingAction: null };
+  if (
+    newPosition.x < 0 ||
+    newPosition.x >= countColumns ||
+    newPosition.y < 0 ||
+    newPosition.y >= countRow ||
+    creatureAtPosition
+  )
+    return { ...creature, ongoingAction: null };
 
   return { ...creature, position: newPosition, ongoingAction: null };
 };

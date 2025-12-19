@@ -39,3 +39,6 @@ export type Action = {
 };
 
 export type Position = { x: number; y: number };
+
+export const countColumns = 10;
+export const countRow = 7;
