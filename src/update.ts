@@ -5,28 +5,24 @@ const updatePosition = (creature: Creature, nextAction: Action) => {
     case "up":
       return {
         ...creature,
-        nextAction: null,
         position: { ...creature.position, y: creature.position.y - 1 },
         ongoingAction: null,
       };
     case "left":
       return {
         ...creature,
-        nextAction: null,
         position: { ...creature.position, x: creature.position.x - 1 },
         ongoingAction: null,
       };
     case "right":
       return {
         ...creature,
-        nextAction: null,
         position: { ...creature.position, x: creature.position.x + 1 },
         ongoingAction: null,
       };
     case "down":
       return {
         ...creature,
-        nextAction: null,
         position: { ...creature.position, y: creature.position.y + 1 },
         ongoingAction: null,
       };
