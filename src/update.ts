@@ -27,23 +27,14 @@ const getNewPosition = ({ x, y }: Position, direction: Direction) => {
   }
 };
 
-const updatePosition = (
-  state: State,
+export const updatePosition = (
   creature: Creature,
   nextAction: Action,
+  collision: (newPosition: Position) => boolean,
 ): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
 
-  const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-
-  if (
-    newPosition.x < 0 ||
-    newPosition.x >= countColumns ||
-    newPosition.y < 0 ||
-    newPosition.y >= countRow ||
-    creatureAtPosition
-  )
-    return { ...creature, ongoingAction: null };
+  if (collision(newPosition)) return { ...creature, ongoingAction: null };
 
   return {
     ...creature,
@@ -51,6 +42,15 @@ const updatePosition = (
     direction: nextAction.direction,
     ongoingAction: null,
   };
+};
+
+export const collisionWithMap = (newPosition: Position) => {
+  return (
+    newPosition.x < 0 ||
+    newPosition.x >= countColumns ||
+    newPosition.y < 0 ||
+    newPosition.y >= countRow
+  );
 };
 
 const updateActions = (creature: Creature) => {
@@ -63,7 +63,13 @@ const updateActions = (creature: Creature) => {
 const applyOngoingAction = (state: State, creature: Creature) => {
   switch (creature.ongoingAction?.type) {
     case "move":
-      return updatePosition(state, creature, creature.ongoingAction);
+      const collision = (newPosition: Position) => {
+        const creatureAtPosition = getCreatureAtPosition(state, newPosition);
+        return (
+          collisionWithMap(newPosition) || creatureAtPosition !== undefined
+        );
+      };
+      return updatePosition(creature, creature.ongoingAction, collision);
     default:
       return creature;
   }

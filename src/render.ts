@@ -1,7 +1,7 @@
 import { backgroundTilesPositions } from "./backgroundTilesPositions.js";
 import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
-import { tickDuration } from "./update.js";
+import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
@@ -68,7 +68,32 @@ export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   renderBackground(initialBackground);
-  state.creatures.forEach((creature) => renderCreature(creature, currentTime));
+  for (let x = 0; x < countColumns; x++) {
+    for (let y = 0; y < countRow; y++) {
+      const creature = state.creatures.find(
+        (creature) => creature.position.x === x && creature.position.y === y,
+      );
+      if (creature) renderCreature(creature, currentTime);
+      else {
+        const creatureGhost = state.creatures.find((creature) => {
+          const ghostPosition = getGhostPosition(creature);
+          return ghostPosition.x === x && ghostPosition.y === y;
+        });
+        if (creatureGhost)
+          renderCreature({ ...creatureGhost, position: { x, y } }, currentTime);
+      }
+    }
+  }
+};
+
+const getGhostPosition = (creature: Creature) => {
+  let dummyCreature = creature;
+  while (dummyCreature.nextActions[0]) {
+    const [nextAction, ...nextActions] = dummyCreature.nextActions;
+    dummyCreature = { ...dummyCreature, nextActions };
+    dummyCreature = updatePosition(dummyCreature, nextAction, collisionWithMap);
+  }
+  return dummyCreature.position;
 };
 
 const getTile = (background: string[], position: { x: number; y: number }) => {
