@@ -2,7 +2,7 @@ export type Creature = {
   player: number;
   health: number;
   position: Position;
-  onGoingAction: Action | null;
+  ongoingAction: Action | null;
   nextActions: Action[];
 };
 
@@ -13,7 +13,7 @@ const createCreature = ({
   player,
   health: 10,
   position,
-  onGoingAction: null,
+  ongoingAction: null,
   nextActions: [],
 });
 

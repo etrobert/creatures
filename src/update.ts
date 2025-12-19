@@ -7,39 +7,39 @@ const updatePosition = (creature: Creature, nextAction: Action) => {
         ...creature,
         nextAction: null,
         position: { ...creature.position, y: creature.position.y - 1 },
-        onGoingAction: null,
+        ongoingAction: null,
       };
     case "left":
       return {
         ...creature,
         nextAction: null,
         position: { ...creature.position, x: creature.position.x - 1 },
-        onGoingAction: null,
+        ongoingAction: null,
       };
     case "right":
       return {
         ...creature,
         nextAction: null,
         position: { ...creature.position, x: creature.position.x + 1 },
-        onGoingAction: null,
+        ongoingAction: null,
       };
     case "down":
       return {
         ...creature,
         nextAction: null,
         position: { ...creature.position, y: creature.position.y + 1 },
-        onGoingAction: null,
+        ongoingAction: null,
       };
   }
 };
 
 const updateActions = (creature: Creature) => {
-  if (creature.onGoingAction) return creature;
+  if (creature.ongoingAction) return creature;
   const nextAction = creature.nextActions[0];
   if (!nextAction) return creature;
   creature = {
     ...creature,
-    onGoingAction: { ...nextAction },
+    ongoingAction: { ...nextAction },
     nextActions: creature.nextActions.slice(1),
   };
   if (nextAction.type === "move") return updatePosition(creature, nextAction);
