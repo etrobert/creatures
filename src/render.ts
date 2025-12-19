@@ -15,7 +15,14 @@ const cellHeight = 32;
 canvas.width = cellWidth * (countColumns + 2);
 canvas.height = cellHeight * (countRow + 2);
 
+// translation bwtween grid position and canvas position
 const positionOnCanvas = ({ x, y }: Position) => ({
+  canvasX: (x + 0.5) * cellWidth,
+  canvasY: (y + 0.5) * cellHeight,
+});
+
+// translation bwtween background grid position and canvas position
+const backgroundPositionOnCanvas = ({ x, y }: Position) => ({
   canvasX: x * cellWidth,
   canvasY: y * cellHeight,
 });
@@ -126,7 +133,7 @@ const renderBackgroundTile = (
   if (backgroundTilePosition === undefined) throw new Error("No tile found");
   const imgWidth = 32;
   const imgHeight = 32;
-  const canvasPosition = positionOnCanvas({ x, y });
+  const canvasPosition = backgroundPositionOnCanvas({ x, y });
   ctx.drawImage(
     backgroundTiles,
     backgroundTilePosition.position.x,
