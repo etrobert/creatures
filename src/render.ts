@@ -10,9 +10,6 @@ if (ctx === null) throw new Error("Could not get ctx");
 const cellWidth = 32;
 const cellHeight = 32;
 
-const countColumns = 10;
-const countRow = 7;
-
 canvas.width = cellWidth * countColumns;
 canvas.height = cellHeight * countRow;
 
@@ -29,7 +26,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     canvasPosition.canvasX,
     canvasPosition.canvasY,
     cellWidth,
-    cellHeight,
+    cellHeight
   );
 
   const img = new Image();
@@ -48,7 +45,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     canvasPosition.canvasX - (imgWidth - cellWidth) / 2,
     canvasPosition.canvasY - (imgWidth - cellWidth) / 2,
     imgWidth,
-    imgHeight,
+    imgHeight
   );
 };
 
