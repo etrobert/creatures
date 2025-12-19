@@ -122,6 +122,7 @@ const renderBackgroundTile = (
       data.corners.SE === corners.SE &&
       data.corners.SW === corners.SW,
   );
+  if (backgroundTilePosition === undefined) throw new Error("No tile found");
   const imgWidth = 32;
   const imgHeight = 32;
   const canvasPosition = positionOnCanvas({ x, y });
