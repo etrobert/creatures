@@ -97,9 +97,9 @@ const getTile = (
 
 const initBackground = createBackground(countColumns, countRow, "grass");
 
-const renderOffsetedBackground = (backgroung: GameBackground) => {
-  const bigWidth = backgroung.width + 1;
-  const bigHeight = backgroung.height + 1;
+const renderOffsetedBackground = (background: GameBackground) => {
+  const bigWidth = background.width + 1;
+  const bigHeight = background.height + 1;
 
   for (let x = 0; x < bigWidth; x++) {
     for (let y = 0; y < bigHeight; y++) {
@@ -107,19 +107,19 @@ const renderOffsetedBackground = (backgroung: GameBackground) => {
         NW:
           x === 0 || y === 0
             ? "void"
-            : getTile(backgroung, { x: x - 1, y: y - 1 }),
+            : getTile(background, { x: x - 1, y: y - 1 }),
         NE:
           x === bigWidth - 1 || y === 0
             ? "void"
-            : getTile(backgroung, { x: x, y: y - 1 }),
+            : getTile(background, { x: x, y: y - 1 }),
         SW:
           x === 0 || y === bigHeight - 1
             ? "void"
-            : getTile(backgroung, { x: x - 1, y: y }),
+            : getTile(background, { x: x - 1, y: y }),
         SE:
           x === bigWidth - 1 || y === bigHeight - 1
             ? "void"
-            : getTile(backgroung, { x: x, y: y }),
+            : getTile(background, { x: x, y: y }),
       };
       renderBackgroundTile(corners, x, y);
     }
