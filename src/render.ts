@@ -18,7 +18,7 @@ const positionOnCanvas = ({ x, y }: Position) => ({
   canvasY: y * cellHeight,
 });
 
-const renderCreature = (creature: Creature) => {
+const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === 0 ? "blue" : "red";
   const canvasPosition = positionOnCanvas(creature.position);
   ctx.fillStyle = color;
@@ -32,11 +32,13 @@ const renderCreature = (creature: Creature) => {
   const img = new Image();
   const imgWidth = 40;
   const imgHeigth = 40;
+  const animationFrames = 6;
+  const frameDuration = 100;
   img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
 
   ctx.drawImage(
     img,
-    0,
+    (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
     0,
     imgWidth,
     imgHeigth,
@@ -47,9 +49,9 @@ const renderCreature = (creature: Creature) => {
   );
 };
 
-export const render = (state: State) => {
+export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "grey";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  state.creatures.forEach((creature) => renderCreature(creature));
+  state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };

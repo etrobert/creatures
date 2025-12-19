@@ -7,7 +7,7 @@ setupEventListeners();
 
 function gameLoop(currentTime: number) {
   setState(update(state, currentTime));
-  render(state);
+  render(state, currentTime);
   requestAnimationFrame(gameLoop);
 }
 
