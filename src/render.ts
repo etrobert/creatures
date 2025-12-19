@@ -1,5 +1,5 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
-import type { Position } from "./state.js";
+import type { Direction, Position } from "./state.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
@@ -17,6 +17,19 @@ const positionOnCanvas = ({ x, y }: Position) => ({
   canvasX: x * cellWidth,
   canvasY: y * cellHeight,
 });
+
+const getDirectionLine = (direction: Direction) => {
+  switch (direction) {
+    case "down":
+      return 0;
+    case "right":
+      return 2;
+    case "left":
+      return 6;
+    case "up":
+      return 4;
+  }
+};
 
 const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === 0 ? "blue" : "red";
@@ -39,7 +52,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
   ctx.drawImage(
     img,
     (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
-    0,
+    getDirectionLine(creature.direction) * imgHeight,
     imgWidth,
     imgHeight,
     canvasPosition.canvasX - (imgWidth - cellWidth) / 2,

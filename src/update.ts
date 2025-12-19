@@ -31,7 +31,7 @@ const updatePosition = (
   state: State,
   creature: Creature,
   nextAction: Action,
-) => {
+): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
 
   const creatureAtPosition = getCreatureAtPosition(state, newPosition);
@@ -45,7 +45,12 @@ const updatePosition = (
   )
     return { ...creature, ongoingAction: null };
 
-  return { ...creature, position: newPosition, ongoingAction: null };
+  return {
+    ...creature,
+    position: newPosition,
+    direction: nextAction.direction,
+    ongoingAction: null,
+  };
 };
 
 const updateActions = (creature: Creature) => {
