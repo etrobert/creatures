@@ -143,18 +143,19 @@ const renderOffsetedBackground = (backgroung: GameBackground) => {
   });
 };
 
+const backgroundTiles = new Image();
+backgroundTiles.src = "./sprites/background/Grass_tiles_v2.png";
+
 const renderBackgroundTile = (
   tile: { NW: number; NE: number; SW: number; SE: number },
   x: number,
   y: number,
 ) => {
-  const img = new Image();
   const imgWidth = 32;
   const imgHeight = 32;
-  img.src = "./sprites/background/Grass_tiles_v2.png";
   const canvasPosition = positionOnCanvas({ x, y });
   ctx.drawImage(
-    img,
+    backgroundTiles,
     0,
     0,
     imgWidth,
