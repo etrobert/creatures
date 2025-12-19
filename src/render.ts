@@ -1,4 +1,4 @@
-import type { Creature, State } from "./state.js";
+import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Position } from "./state.js";
 
 const canvas = document.querySelector("canvas");
@@ -9,9 +9,6 @@ if (ctx === null) throw new Error("Could not get ctx");
 
 const cellWidth = 40;
 const cellHeight = 40;
-
-const countColumns = 10;
-const countRow = 7;
 
 canvas.width = cellWidth * countColumns;
 canvas.height = cellHeight * countRow;
