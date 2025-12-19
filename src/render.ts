@@ -67,7 +67,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(initBackground);
+  renderBackground(initialBackground);
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };
 
@@ -77,7 +77,7 @@ const getTile = (background: string[], position: { x: number; y: number }) => {
   return tile;
 };
 
-const initBackground = new Array(countColumns * countRow).fill("grass");
+const initialBackground = new Array(countColumns * countRow).fill("grass");
 
 const renderBackground = (background: string[]) => {
   for (let x = 0; x < countColumns; x++) {
