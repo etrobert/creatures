@@ -66,6 +66,129 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "grey";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+  renderOffsetedBackground(initBackground);
   state.creatures.forEach((creature) => renderCreature(creature, currentTime));
 };
+
+type GameBackground = {
+  tiles: number[];
+  width: number;
+  height: number;
+};
+
+const createBackground = (
+  width: number,
+  height: number,
+  tile: number,
+): GameBackground => ({
+  width,
+  height,
+  tiles: new Array(width * height).fill(tile),
+});
+
+const getTile = (
+  background: GameBackground,
+  position: { x: number; y: number },
+) => {
+  const tile = background.tiles[position.x + position.y * background.width];
+  if (tile === undefined) throw new Error("incorrect position");
+  return tile;
+};
+
+const mapTiles = (
+  { width, height, tiles }: GameBackground,
+  f: (value: number, position: { x: number; y: number }) => number,
+) => ({
+  width,
+  height,
+  tiles: tiles.map((value, index) =>
+    f(value, { x: index % width, y: Math.floor(index / width) }),
+  ),
+});
+
+const forEachTiles = (
+  { width, height, tiles }: GameBackground,
+  f: (value: number, position: { x: number; y: number }) => void,
+) =>
+  tiles.forEach((value, index) =>
+    f(value, { x: index % width, y: Math.floor(index / width) }),
+  );
+
+const initBackground = createBackground(countColumns, countRow, 0);
+
+const renderOffsetedBackground = (backgroung: GameBackground) => {
+  const tempBiggerBackground = createBackground(
+    backgroung.width + 1,
+    backgroung.height + 1,
+    0,
+  );
+  forEachTiles(tempBiggerBackground, (_, { x, y }) => {
+    const tile = {
+      NW: x === 0 || y === 0 ? 1 : getTile(backgroung, { x: x - 1, y: y - 1 }),
+      NE:
+        x === tempBiggerBackground.width - 1 || y === 0
+          ? 1
+          : getTile(backgroung, { x: x, y: y - 1 }),
+      SW:
+        x === 0 || y === tempBiggerBackground.height - 1
+          ? 1
+          : getTile(backgroung, { x: x - 1, y: y }),
+      SE:
+        x === tempBiggerBackground.width - 1 ||
+        y === tempBiggerBackground.height - 1
+          ? 1
+          : getTile(backgroung, { x: x, y: y }),
+    };
+    renderBackgroundTile(tile, x, y);
+  });
+};
+
+const renderBackgroundTile = (
+  tile: { NW: number; NE: number; SW: number; SE: number },
+  x: number,
+  y: number,
+) => {
+  const img = new Image();
+  const imgWidth = 32;
+  const imgHeight = 32;
+  img.src = "./sprites/background/Grass_tiles_v2.png";
+  const canvasPosition = positionOnCanvas({ x, y });
+  ctx.drawImage(
+    img,
+    0,
+    0,
+    imgWidth,
+    imgHeight,
+    canvasPosition.canvasX - imgWidth / 2,
+    canvasPosition.canvasY - imgHeight / 2,
+    cellWidth,
+    cellHeight,
+  );
+};
+
+// printMap(initBackground);
+// const grassBorderBackground = addGrassBorder(initBackground);
+// printMap(grassBorderBackground);
+
+// const addGrassBorder = (map: GameBackground) => {
+//   const newHeight = map.height + 2;
+//   const newWidth = map.width + 2;
+
+//   const newMap = createBackground(newWidth, newHeight, 0);
+
+//   return mapTiles(newMap, (_, { x, y }) => {
+//     if (x === 0 || x === newWidth - 1 || y === 0 || y === newHeight - 1)
+//       return 1;
+
+//     return getTile(map, { x: x - 1, y: y - 1 });
+//   });
+// };
+
+// const printMap = (map: GameBackground) => {
+//   for (let x = 0; x < map.width; x++) {
+//     for (let y = 0; y < map.height; y++) {
+//       process.stdout.write(getTile(map, { x, y }).toString());
+//     }
+//     process.stdout.write("\n");
+//   }
+// };
