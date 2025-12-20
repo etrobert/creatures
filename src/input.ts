@@ -1,4 +1,5 @@
 import { setState, state } from "./state.js";
+import { canvas } from "./render.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -35,8 +36,9 @@ export const setupEventListeners = () => {
     });
   });
 
-  window.addEventListener("click", (event) => {
-    console.log(event.x);
-    console.log(event.y);
-  });
+  if (canvas)
+    canvas.addEventListener("click", (event) => {
+      console.log(event.offsetX);
+      console.log(event.offsetY);
+    });
 };

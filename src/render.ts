@@ -3,7 +3,7 @@ import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
 import { tickDuration } from "./update.js";
 
-const canvas = document.querySelector("canvas");
+export const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
 
 const ctx = canvas.getContext("2d");
