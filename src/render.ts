@@ -1,11 +1,7 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
 import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
-import {
-  renderBackground,
-  initialBackground,
-  twoCellsBackground,
-} from "./background.js";
+import { renderBackground, twoCellsBackground } from "./background.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
@@ -15,8 +11,8 @@ if (ctx === null) throw new Error("Could not get ctx");
 
 const cellWidth = 32;
 const cellHeight = 32;
-canvas.width = cellWidth * countColumns;
-canvas.height = cellHeight * countRow;
+canvas.width = cellWidth * (countColumns + 1);
+canvas.height = cellHeight * (countRow + 1);
 
 // translation bwtween grid position and canvas position
 const positionOnCanvas = ({ x, y }: Position) => ({
@@ -49,8 +45,8 @@ const renderCreature = (creature: Creature, currentTime: number) => {
   const canvasPosition = positionOnCanvas(creature.position);
   ctx.fillStyle = color;
   ctx.fillRect(
-    canvasPosition.canvasX,
-    canvasPosition.canvasY,
+    canvasPosition.canvasX + cellWidth / 2,
+    canvasPosition.canvasY + cellWidth / 2,
     cellWidth,
     cellHeight,
   );
@@ -61,8 +57,8 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     getDirectionLine(creature.direction) * imgHeight,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX - (imgWidth - cellWidth) / 2,
-    canvasPosition.canvasY - (imgWidth - cellWidth) / 2,
+    canvasPosition.canvasX - (imgWidth - cellWidth) / 2 + cellWidth / 2,
+    canvasPosition.canvasY - (imgWidth - cellWidth) / 2 + cellWidth / 2,
     imgWidth,
     imgHeight,
   );

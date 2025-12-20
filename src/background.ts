@@ -9,15 +9,23 @@ const getTile = (background: string[], position: { x: number; y: number }) => {
   return tile;
 };
 
+const getTile2 = (background: string[], position: { x: number; y: number }) => {
+  const tile = background[position.x + position.y * countColumns * 2];
+  if (tile === undefined) throw new Error("incorrect position");
+  return tile;
+};
+
 export const initialBackground = new Array(countColumns * countRow).fill(
   "grass",
 );
 
-export let twoCellsBackground = new Array(countColumns * countRow * 4).fill(
-  "grass",
-);
-for (let xn = 0; xn < countColumns * 2; xn++) {
-  for (let yn = 0; yn < countRow * 2; yn++) {
+initialBackground[0] = "void";
+initialBackground[1] = "void";
+initialBackground[16] = "void";
+
+export let twoCellsBackground = new Array();
+for (let yn = 0; yn < countRow * 2; yn++) {
+  for (let xn = 0; xn < countColumns * 2; xn++) {
     const x: number = Math.floor(xn / 2);
     const y: number = Math.floor(yn / 2);
     twoCellsBackground = [
@@ -28,25 +36,27 @@ for (let xn = 0; xn < countColumns * 2; xn++) {
 }
 
 export const renderBackground = (background: string[]) => {
-  for (let x = 0; x < countColumns * 2; x++) {
-    for (let y = 0; y < countRow * 2; y++) {
+  const moreRows = countRow * 2 + 1;
+  const moreColumns = countColumns * 2 + 1;
+  for (let y = 0; y < moreRows; y++) {
+    for (let x = 0; x < moreColumns; x++) {
       const corners = {
         NW:
           x === 0 || y === 0
             ? "void"
-            : getTile(background, { x: x - 1, y: y - 1 }),
+            : getTile2(background, { x: x - 1, y: y - 1 }),
         NE:
-          x === countColumns - 1 || y === 0
+          x === moreColumns - 1 || y === 0
             ? "void"
-            : getTile(background, { x, y: y - 1 }),
+            : getTile2(background, { x, y: y - 1 }),
         SW:
-          x === 0 || y === countRow - 1
+          x === 0 || y === moreRows - 1
             ? "void"
-            : getTile(background, { x: x - 1, y }),
+            : getTile2(background, { x: x - 1, y }),
         SE:
-          x === countColumns - 1 || y === countRow - 1
+          x === moreColumns - 1 || y === moreRows - 1
             ? "void"
-            : getTile(background, { x, y }),
+            : getTile2(background, { x, y }),
       };
       renderBackgroundTile(corners, x, y);
     }
@@ -79,8 +89,14 @@ const renderBackgroundTile = (
     backgroundTilePosition.position.y,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX,
-    canvasPosition.canvasY,
+    canvasPosition.canvasX + imgWidth / 2,
+    canvasPosition.canvasY + imgHeight / 2,
+    imgWidth,
+    imgHeight,
+  );
+  ctx.strokeRect(
+    canvasPosition.canvasX + imgWidth / 2,
+    canvasPosition.canvasY + imgHeight / 2,
     imgWidth,
     imgHeight,
   );
