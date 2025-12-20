@@ -1,7 +1,11 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
 import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
-import { renderBackground, initialBackground } from "./background.js";
+import {
+  renderBackground,
+  initialBackground,
+  twoCellsBackground,
+} from "./background.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
@@ -67,7 +71,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(initialBackground);
+  renderBackground(twoCellsBackground);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const creatures = state.creatures.filter(

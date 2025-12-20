@@ -13,9 +13,23 @@ export const initialBackground = new Array(countColumns * countRow).fill(
   "grass",
 );
 
+export let twoCellsBackground = new Array(countColumns * countRow * 4).fill(
+  "grass",
+);
+for (let xn = 0; xn < countColumns * 2; xn++) {
+  for (let yn = 0; yn < countRow * 2; yn++) {
+    const x: number = Math.floor(xn / 2);
+    const y: number = Math.floor(yn / 2);
+    twoCellsBackground = [
+      ...twoCellsBackground,
+      getTile(initialBackground, { x, y }),
+    ];
+  }
+}
+
 export const renderBackground = (background: string[]) => {
-  for (let x = 0; x < countColumns; x++) {
-    for (let y = 0; y < countRow; y++) {
+  for (let x = 0; x < countColumns * 2; x++) {
+    for (let y = 0; y < countRow * 2; y++) {
       const corners = {
         NW:
           x === 0 || y === 0
@@ -55,8 +69,8 @@ const renderBackgroundTile = (
       data.corners.SW === corners.SW,
   );
   if (backgroundTilePosition === undefined) throw new Error("No tile found");
-  const imgWidth = 32;
-  const imgHeight = 32;
+  const imgWidth = 16;
+  const imgHeight = 16;
   const canvasPosition = positionOnCanvas({ x, y });
   if (ctx === null) throw new Error("Could not get ctx");
   ctx.drawImage(
@@ -72,8 +86,8 @@ const renderBackgroundTile = (
   );
 };
 
-const tileWidth = 32;
-const tileHeight = 32;
+const tileWidth = 16;
+const tileHeight = 16;
 
 // translation bwtween grid position and canvas position
 const positionOnCanvas = ({ x, y }: Position) => ({
