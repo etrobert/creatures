@@ -70,20 +70,22 @@ export const render = (state: State, currentTime: number) => {
   renderBackground(initialBackground);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
-      const creature = state.creatures.find(
+      const creatures = state.creatures.filter(
         (creature) => creature.position.x === x && creature.position.y === y,
       );
-      if (creature) renderCreature(creature, currentTime);
-      else {
-        const creatureGhost = state.creatures
-          .map(getGhost)
-          .find((ghost) => ghost.position.x === x && ghost.position.y === y);
-        if (creatureGhost) {
-          ctx.globalAlpha = 0.5;
-          renderCreature(creatureGhost, currentTime);
-          ctx.globalAlpha = 1;
-        }
+      if (creatures[0])
+        creatures.forEach((creature) => renderCreature(creature, currentTime));
+
+      const creatureGhosts = state.creatures
+        .map(getGhost)
+        .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
+      ctx.globalAlpha = 0.5;
+      if (creatureGhosts[0]) {
+        creatureGhosts.forEach((creature) =>
+          renderCreature(creature, currentTime),
+        );
       }
+      ctx.globalAlpha = 1;
     }
   }
 };
