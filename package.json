@@ -4,7 +4,8 @@
   "description": "",
   "workspaces": [
     "apps/client",
-    "./apps/server"
+    "./apps/server",
+    "./packages/shared"
   ],
   "scripts": {
     "dev:client": "npm run dev --workspace=@creatures/client",
