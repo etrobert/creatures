@@ -22,22 +22,22 @@ backgroundMap[1] = "void";
 backgroundMap[16] = "void";
 
 const getBackgroundTilesMap = (backgroundMap: string[]) => {
-  let BackgroundTilesMap = new Array();
+  let backgroundTilesMap = new Array();
   for (let yn = 0; yn < countRow * 2; yn++) {
     for (let xn = 0; xn < countColumns * 2; xn++) {
       const x = Math.floor(xn / 2);
       const y = Math.floor(yn / 2);
-      BackgroundTilesMap = [
-        ...BackgroundTilesMap,
+      backgroundTilesMap = [
+        ...backgroundTilesMap,
         getTile(backgroundMap, { x, y }),
       ];
     }
   }
-  return BackgroundTilesMap;
+  return backgroundTilesMap;
 };
 
 export const renderBackground = (background: string[]) => {
-  const BackgroundTilesMap = getBackgroundTilesMap(backgroundMap);
+  const backgroundTilesMap = getBackgroundTilesMap(backgroundMap);
   const moreRows = countRow * 2 + 1;
   const moreColumns = countColumns * 2 + 1;
   for (let y = 0; y < moreRows; y++) {
@@ -46,19 +46,19 @@ export const renderBackground = (background: string[]) => {
         NW:
           x === 0 || y === 0
             ? "void"
-            : getBackgroundTile(BackgroundTilesMap, { x: x - 1, y: y - 1 }),
+            : getBackgroundTile(backgroundTilesMap, { x: x - 1, y: y - 1 }),
         NE:
           x === moreColumns - 1 || y === 0
             ? "void"
-            : getBackgroundTile(BackgroundTilesMap, { x, y: y - 1 }),
+            : getBackgroundTile(backgroundTilesMap, { x, y: y - 1 }),
         SW:
           x === 0 || y === moreRows - 1
             ? "void"
-            : getBackgroundTile(BackgroundTilesMap, { x: x - 1, y }),
+            : getBackgroundTile(backgroundTilesMap, { x: x - 1, y }),
         SE:
           x === moreColumns - 1 || y === moreRows - 1
             ? "void"
-            : getBackgroundTile(BackgroundTilesMap, { x, y }),
+            : getBackgroundTile(backgroundTilesMap, { x, y }),
       };
       renderBackgroundTile(corners, x, y);
     }
@@ -81,20 +81,18 @@ const renderBackgroundTile = (
       data.corners.SW === corners.SW,
   );
   if (backgroundTilePosition === undefined) throw new Error("No tile found");
-  const imgWidth = 16;
-  const imgHeight = 16;
+
   const canvasPosition = backgroundTileToCanvas({ x, y });
-  if (ctx === null) throw new Error("Could not get ctx");
   ctx.drawImage(
     backgroundTiles,
     backgroundTilePosition.position.x,
     backgroundTilePosition.position.y,
-    imgWidth,
-    imgHeight,
-    canvasPosition.x - (imgWidth - backgroundTileWidth) / 2,
-    canvasPosition.y - (imgWidth - backgroundTileHeight) / 2,
-    imgWidth,
-    imgHeight,
+    backgroundTileWidth,
+    backgroundTileHeight,
+    canvasPosition.x,
+    canvasPosition.y,
+    backgroundTileWidth,
+    backgroundTileHeight,
   );
 };
 
