@@ -6,15 +6,17 @@
 - [x] (E) Handle user input
 - [x] Ticks
 - [x] Collisions
-- [ ] Proper collisions between creatures (turn order or all at once)
 - [x] Memoire des inputs/Input stacking
-- [ ] Walk animation, animer le movement
+- [ ] _Multiplayer (server)_
 - [ ] (P) _Ghost_ + nb ticks
 - [ ] UI
 - [ ] Health
 - [ ] Attaque!
 - [ ] Character Death
-- [ ] _Multiplayer (server)_
 - [ ] start screen
+- [ ] Proper collision with map
+- [ ] Proper Pathfinding system
+- [ ] Proper collisions between creatures (turn order or all at once)
+- [ ] Walk animation, animer le movement
 - [ ] sound effects
 - [ ] musique
