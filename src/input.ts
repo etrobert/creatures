@@ -86,6 +86,6 @@ const findActiveCreature = (creature: Creature, player: number) => {
 
 // translation bwtween grid position and canvas position
 const canvasToGrid = ({ x, y }: Position) => ({
-  x: Math.floor(x / cellWidth),
-  y: Math.floor(y / cellHeight),
+  x: Math.floor((x - cellWidth / 2) / cellWidth),
+  y: Math.floor((y - cellHeight / 2) / cellHeight),
 });
