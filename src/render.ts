@@ -9,8 +9,8 @@ if (canvas === null) throw new Error("Could not get canvas");
 const ctx = canvas.getContext("2d");
 if (ctx === null) throw new Error("Could not get ctx");
 
-const cellWidth = 32;
-const cellHeight = 32;
+export const cellWidth = 32;
+export const cellHeight = 32;
 canvas.width = cellWidth * countColumns;
 canvas.height = cellHeight * countRow;
 

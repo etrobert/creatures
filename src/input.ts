@@ -1,5 +1,6 @@
 import { setState, state } from "./state.js";
-import { canvas } from "./render.js";
+import { canvas, cellWidth, cellHeight } from "./render.js";
+import type { Position } from "./state.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -38,7 +39,14 @@ export const setupEventListeners = () => {
 
   if (canvas)
     canvas.addEventListener("click", (event) => {
-      console.log(event.offsetX);
-      console.log(event.offsetY);
+      const { x, y } = canvasOnPosition({ x: event.offsetX, y: event.offsetY });
+      console.log(x);
+      console.log(y);
     });
 };
+
+// translation bwtween grid position and canvas position
+const canvasOnPosition = ({ x, y }: Position) => ({
+  x: Math.floor(x / cellWidth),
+  y: Math.floor(y / cellHeight),
+});
