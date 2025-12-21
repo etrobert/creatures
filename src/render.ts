@@ -82,6 +82,7 @@ export const render = (state: State, currentTime: number) => {
         creatures.forEach((creature) => renderCreature(creature, currentTime));
 
       const creatureGhosts = state.creatures
+        .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
         .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
       ctx.globalAlpha = 0.5;
