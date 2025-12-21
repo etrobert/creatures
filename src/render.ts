@@ -16,8 +16,8 @@ canvas.height = cellHeight * countRow;
 
 // translation bwtween grid position and canvas position
 const positionOnCanvas = ({ x, y }: Position) => ({
-  canvasX: x * cellWidth,
-  canvasY: y * cellHeight,
+  x: x * cellWidth,
+  y: y * cellHeight,
 });
 
 const getDirectionLine = (direction: Direction) => {
@@ -44,12 +44,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === 0 ? "blue" : "red";
   const canvasPosition = positionOnCanvas(creature.position);
   ctx.fillStyle = color;
-  ctx.fillRect(
-    canvasPosition.canvasX,
-    canvasPosition.canvasY,
-    cellWidth,
-    cellHeight,
-  );
+  ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
 
   ctx.drawImage(
     img,
@@ -57,8 +52,8 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     getDirectionLine(creature.direction) * imgHeight,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX - (imgWidth - cellWidth) / 2,
-    canvasPosition.canvasY - (imgWidth - cellWidth) / 2,
+    canvasPosition.x - (imgWidth - cellWidth) / 2,
+    canvasPosition.y - (imgWidth - cellWidth) / 2,
     imgWidth,
     imgHeight,
   );
@@ -157,8 +152,8 @@ const renderBackgroundTile = (
     backgroundTilePosition.position.y,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX,
-    canvasPosition.canvasY,
+    canvasPosition.x,
+    canvasPosition.y,
     imgWidth,
     imgHeight,
   );
