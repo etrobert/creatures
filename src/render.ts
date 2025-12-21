@@ -3,8 +3,13 @@ import type { Direction, Position } from "./state.js";
 import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
 import { renderBackground, backgroundMap } from "./background.js";
 
-const canvas = document.querySelector("canvas");
-if (canvas === null) throw new Error("Could not get canvas");
+const getCanvas = () => {
+  const canvas = document.querySelector("canvas");
+  if (canvas === null) throw new Error("Could not get canvas");
+  return canvas;
+};
+
+export const canvas = getCanvas();
 
 const getCtx = () => {
   const ctx = canvas.getContext("2d");
@@ -14,8 +19,8 @@ const getCtx = () => {
 
 export const ctx = getCtx();
 
-const cellWidth = 32;
-const cellHeight = 32;
+export const cellWidth = 32;
+export const cellHeight = 32;
 canvas.width = cellWidth * (countColumns + 1); //The canvas is 1 cell bigger because a half cell is added at left and right
 canvas.height = cellHeight * (countRow + 1);
 
@@ -23,7 +28,7 @@ canvas.height = cellHeight * (countRow + 1);
 const gridToCanvas = ({ x, y }: Position) => ({
   x: x * cellWidth + cellWidth / 2,
   y: y * cellHeight + cellHeight / 2,
-});
+  
 
 const getDirectionLine = (direction: Direction) => {
   switch (direction) {
@@ -88,7 +93,7 @@ export const render = (state: State, currentTime: number) => {
   }
 };
 
-const getGhost = (creature: Creature) => {
+export const getGhost = (creature: Creature) => {
   let dummyCreature = creature;
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
