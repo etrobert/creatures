@@ -1,3 +1,6 @@
 {
-  "name": "@creatures/shared"
+  "name": "@creatures/shared",
+  "exports": {
+    "./test": "./test.ts"
+  }
 }
