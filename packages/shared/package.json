@@ -1,5 +1,6 @@
 {
   "name": "@creatures/shared",
+  "type": "module",
   "exports": {
     "./test": "./test.ts"
   }
