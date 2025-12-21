@@ -9,7 +9,7 @@
 - [ ] Proper collisions between creatures (turn order or all at once)
 - [x] Memoire des inputs/Input stacking
 - [ ] Walk animation, animer le movement
-- [ ] (P) _Ghost_
+- [ ] (P) _Ghost_ + nb ticks
 - [ ] UI
 - [ ] Health
 - [ ] Attaque!
