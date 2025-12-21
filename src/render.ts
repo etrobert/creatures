@@ -3,14 +3,19 @@ import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
 import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
 
-const canvas = document.querySelector("canvas");
-if (canvas === null) throw new Error("Could not get canvas");
+const getCanvas = () => {
+  const canvas = document.querySelector("canvas");
+  if (canvas === null) throw new Error("Could not get canvas");
+  return canvas;
+};
+
+export const canvas = getCanvas();
 
 const ctx = canvas.getContext("2d");
 if (ctx === null) throw new Error("Could not get ctx");
 
-const cellWidth = 32;
-const cellHeight = 32;
+export const cellWidth = 32;
+export const cellHeight = 32;
 canvas.width = cellWidth * countColumns;
 canvas.height = cellHeight * countRow;
 
