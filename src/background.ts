@@ -83,7 +83,7 @@ const renderBackgroundTile = (
   if (backgroundTilePosition === undefined) throw new Error("No tile found");
   const imgWidth = 16;
   const imgHeight = 16;
-  const canvasPosition = BackgroundTileToCanvas({ x, y });
+  const canvasPosition = backgroundTileToCanvas({ x, y });
   if (ctx === null) throw new Error("Could not get ctx");
   ctx.drawImage(
     backgroundTiles,
@@ -91,18 +91,18 @@ const renderBackgroundTile = (
     backgroundTilePosition.position.y,
     imgWidth,
     imgHeight,
-    canvasPosition.x - (imgWidth - BackgroundTileWidth) / 2,
-    canvasPosition.y - (imgWidth - BackgroundTileWidth) / 2,
+    canvasPosition.x - (imgWidth - backgroundTileWidth) / 2,
+    canvasPosition.y - (imgWidth - backgroundTileHeight) / 2,
     imgWidth,
     imgHeight,
   );
 };
 
-const BackgroundTileWidth = 16;
-const BackgroundTileHeight = 16;
+const backgroundTileWidth = 16;
+const backgroundTileHeight = 16;
 
 // translation bewtween grid position and canvas position
-const BackgroundTileToCanvas = ({ x, y }: Position) => ({
-  x: x * BackgroundTileWidth + BackgroundTileWidth / 2,
-  y: y * BackgroundTileHeight + BackgroundTileWidth / 2,
+const backgroundTileToCanvas = ({ x, y }: Position) => ({
+  x: x * backgroundTileWidth + backgroundTileWidth / 2,
+  y: y * backgroundTileHeight + backgroundTileHeight / 2,
 });
