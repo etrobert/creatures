@@ -38,32 +38,29 @@ export const setupEventListeners = () => {
   });
 
   canvas.addEventListener("click", (event) => {
-    const { x, y } = canvasOnPosition({ x: event.offsetX, y: event.offsetY });
-    console.log(x);
-    console.log(y);
-    if (x === undefined) return;
+    const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.creatures.find((creature) =>
       findActiveCreature(creature, 0),
     );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const nextActionsX =
-      activeCreature?.position.x < x
-        ? new Array(x - activeCreature?.position.x).fill({
+      activeCreature.position.x < x
+        ? new Array(x - activeCreature.position.x).fill({
             type: "move",
             direction: "right",
           })
-        : new Array(activeCreature?.position.x - x).fill({
+        : new Array(activeCreature.position.x - x).fill({
             type: "move",
             direction: "left",
           });
     const nextActionsY =
-      activeCreature?.position.y < y
-        ? new Array(y - activeCreature?.position.y).fill({
+      activeCreature.position.y < y
+        ? new Array(y - activeCreature.position.y).fill({
             type: "move",
             direction: "down",
           })
-        : new Array(activeCreature?.position.y - y).fill({
+        : new Array(activeCreature.position.y - y).fill({
             type: "move",
             direction: "up",
           });
@@ -71,7 +68,7 @@ export const setupEventListeners = () => {
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
-        creature.player === 0 && creature.selected
+        creature.player === 0
           ? {
               ...creature,
               nextActions: [
@@ -90,7 +87,7 @@ const findActiveCreature = (creature: Creature, player: number) => {
 };
 
 // translation bwtween grid position and canvas position
-const canvasOnPosition = ({ x, y }: Position) => ({
+const canvasToGrid = ({ x, y }: Position) => ({
   x: Math.floor(x / cellWidth),
   y: Math.floor(y / cellHeight),
 });
