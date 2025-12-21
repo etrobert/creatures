@@ -1,5 +1,6 @@
 export type Creature = {
   player: number;
+  selected: boolean;
   health: number;
   position: Position;
   ongoingAction: Action | null;
@@ -9,9 +10,11 @@ export type Creature = {
 
 const createCreature = ({
   player = 0,
+  selected = false,
   position = { x: 3, y: 2 },
 } = {}): Creature => ({
   player,
+  selected,
   health: 10,
   position,
   direction: "down",
@@ -22,7 +25,7 @@ const createCreature = ({
 export const createState = () => ({
   lastTick: 0,
   creatures: [
-    createCreature(),
+    createCreature({ selected: true }),
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
   ],
 });
