@@ -80,11 +80,9 @@ export const render = (state: State, currentTime: number) => {
         .map(getGhost)
         .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
       ctx.globalAlpha = 0.5;
-      if (creatureGhosts[0]) {
-        creatureGhosts.forEach((creature) =>
-          renderCreature(creature, currentTime),
-        );
-      }
+      creatureGhosts.forEach((creature) =>
+        renderCreature(creature, currentTime),
+      );
       ctx.globalAlpha = 1;
     }
   }
