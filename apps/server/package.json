@@ -1,0 +1,9 @@
+{
+  "name": "@creatures/server",
+  "scripts": {
+    "dev": "tsx index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}
