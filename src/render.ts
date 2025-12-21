@@ -88,7 +88,7 @@ export const render = (state: State, currentTime: number) => {
   }
 };
 
-const getGhost = (creature: Creature) => {
+export const getGhost = (creature: Creature) => {
   let dummyCreature = creature;
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
