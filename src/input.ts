@@ -1,5 +1,5 @@
 import { setState, state } from "./state.js";
-import { canvas, cellWidth, cellHeight } from "./render.js";
+import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import type { Creature, Position } from "./state.js";
 
 export const setupEventListeners = () => {
@@ -44,23 +44,24 @@ export const setupEventListeners = () => {
     );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
+    const ghost = getGhost(activeCreature);
     const nextActionsX =
-      activeCreature.position.x < x
-        ? new Array(x - activeCreature.position.x).fill({
+      ghost.position.x < x
+        ? new Array(x - ghost.position.x).fill({
             type: "move",
             direction: "right",
           })
-        : new Array(activeCreature.position.x - x).fill({
+        : new Array(ghost.position.x - x).fill({
             type: "move",
             direction: "left",
           });
     const nextActionsY =
-      activeCreature.position.y < y
-        ? new Array(y - activeCreature.position.y).fill({
+      ghost.position.y < y
+        ? new Array(y - ghost.position.y).fill({
             type: "move",
             direction: "down",
           })
-        : new Array(activeCreature.position.y - y).fill({
+        : new Array(ghost.position.y - y).fill({
             type: "move",
             direction: "up",
           });
@@ -71,10 +72,7 @@ export const setupEventListeners = () => {
         creature.player === 0
           ? {
               ...creature,
-              nextActions: [
-                // ...creature.nextActions, to be added when ghost is there
-                ...nextActions,
-              ],
+              nextActions: [...creature.nextActions, ...nextActions],
             }
           : creature,
       ),
