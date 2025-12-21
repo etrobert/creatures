@@ -28,7 +28,7 @@ canvas.height = cellHeight * (countRow + 1);
 const gridToCanvas = ({ x, y }: Position) => ({
   x: x * cellWidth + cellWidth / 2,
   y: y * cellHeight + cellHeight / 2,
-  
+});
 
 const getDirectionLine = (direction: Direction) => {
   switch (direction) {
