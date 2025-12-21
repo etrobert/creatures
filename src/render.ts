@@ -1,7 +1,7 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
 import type { Direction, Position } from "./state.js";
 import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
-import { renderBackground, twoCellsBackground } from "./background.js";
+import { renderBackground, backgroundMap } from "./background.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas === null) throw new Error("Could not get canvas");
@@ -11,13 +11,13 @@ if (ctx === null) throw new Error("Could not get ctx");
 
 const cellWidth = 32;
 const cellHeight = 32;
-canvas.width = cellWidth * (countColumns + 1);
+canvas.width = cellWidth * (countColumns + 1); //The canvas is 1 cell bigger because a half cell is added at left and right
 canvas.height = cellHeight * (countRow + 1);
 
 // translation bwtween grid position and canvas position
-const positionOnCanvas = ({ x, y }: Position) => ({
-  canvasX: x * cellWidth,
-  canvasY: y * cellHeight,
+const gridToCanvas = ({ x, y }: Position) => ({
+  x: x * cellWidth + cellWidth / 2,
+  y: y * cellHeight + cellHeight / 2,
 });
 
 const getDirectionLine = (direction: Direction) => {
@@ -42,14 +42,9 @@ img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
 
 const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === 0 ? "blue" : "red";
-  const canvasPosition = positionOnCanvas(creature.position);
+  const canvasPosition = gridToCanvas(creature.position);
   ctx.fillStyle = color;
-  ctx.fillRect(
-    canvasPosition.canvasX + cellWidth / 2,
-    canvasPosition.canvasY + cellWidth / 2,
-    cellWidth,
-    cellHeight,
-  );
+  ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
 
   ctx.drawImage(
     img,
@@ -57,8 +52,8 @@ const renderCreature = (creature: Creature, currentTime: number) => {
     getDirectionLine(creature.direction) * imgHeight,
     imgWidth,
     imgHeight,
-    canvasPosition.canvasX - (imgWidth - cellWidth) / 2 + cellWidth / 2,
-    canvasPosition.canvasY - (imgWidth - cellWidth) / 2 + cellWidth / 2,
+    canvasPosition.x - (imgWidth - cellWidth) / 2,
+    canvasPosition.y - (imgWidth - cellWidth) / 2,
     imgWidth,
     imgHeight,
   );
@@ -67,7 +62,7 @@ const renderCreature = (creature: Creature, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(twoCellsBackground);
+  renderBackground(backgroundMap);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const creatures = state.creatures.filter(
