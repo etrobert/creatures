@@ -41,7 +41,10 @@ export const render = (state: State, currentTime: number) => {
         (creature) => creature.position.x === x && creature.position.y === y,
       );
       if (creatures[0])
-        creatures.forEach((creature) => renderCreature(creature, currentTime));
+        creatures.forEach((creature) => {
+          renderCreature(creature, currentTime);
+          renderCreatureInfo(creature);
+        });
 
       const creatureGhosts = state.creatures
         .filter((creature) => creature.nextActions.length !== 0)
@@ -54,6 +57,20 @@ export const render = (state: State, currentTime: number) => {
       ctx.globalAlpha = 1;
     }
   }
+};
+
+const renderCreatureInfo = (creature: Creature) => {
+  const canvasPosition = gridToCanvas(creature.position);
+  ctx.fillStyle = "white";
+  const xPad = cellWidth / 8;
+  const yPadTop = cellHeight / 16;
+  const yPadBot = (cellHeight * 11) / 16;
+  ctx.fillRect(
+    canvasPosition.x + xPad,
+    canvasPosition.y + yPadTop,
+    cellWidth - 2 * xPad,
+    cellHeight - (yPadTop + yPadBot),
+  );
 };
 
 export const getGhost = (creature: Creature) => {
