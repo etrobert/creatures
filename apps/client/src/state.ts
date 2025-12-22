@@ -1,6 +1,7 @@
 export type Creature = {
   player: number;
   health: number;
+  maxHealth: number;
   position: Position;
   ongoingAction: Action | null;
   nextActions: Action[];
@@ -12,7 +13,8 @@ const createCreature = ({
   position = { x: 3, y: 2 },
 } = {}): Creature => ({
   player,
-  health: 10,
+  health: 9,
+  maxHealth: 10,
   position,
   direction: "down",
   ongoingAction: null,
