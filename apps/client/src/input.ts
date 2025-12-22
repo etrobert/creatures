@@ -1,25 +1,27 @@
 import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import type { Creature, Position } from "./state.js";
+import type { Action, Creature, Position } from "./state.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
     const getDirection = () => {
       switch (event.code) {
         case "KeyW":
-          return "up";
+          return { type: "move", direction: "up" } as Action;
         case "KeyA":
-          return "left";
+          return { type: "move", direction: "left" } as Action;
         case "KeyS":
-          return "down";
+          return { type: "move", direction: "down" } as Action;
         case "KeyD":
-          return "right";
+          return { type: "move", direction: "right" } as Action;
+        case "KeyQ":
+          return { type: "attack", direction: "up" } as Action;
       }
     };
 
-    const direction = getDirection();
+    const newAction = getDirection();
 
-    if (direction === undefined) return;
+    if (newAction === undefined) return;
 
     setState({
       ...state,
@@ -27,10 +29,7 @@ export const setupEventListeners = () => {
         creature.player === 0
           ? {
               ...creature,
-              nextActions: [
-                ...creature.nextActions,
-                { type: "move", direction } as const,
-              ],
+              nextActions: [...creature.nextActions, newAction],
             }
           : creature,
       ),
