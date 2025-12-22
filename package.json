@@ -6,7 +6,9 @@
     "apps/client"
   ],
   "scripts": {
-    "dev:client": "npm run dev --workspace=@creatures/client"
+    "dev:client": "npm run dev --workspace=@creatures/client",
+    "typecheck": "npm run typecheck --workspace=@creatures/client",
+    "format": "npm run format --workspace=@creatures/client"
   },
   "keywords": [],
   "author": "",
