@@ -31,6 +31,7 @@ const applyOngoingAction = (state: State, creature: Creature) => {
       };
       return updatePosition(creature, creature.ongoingAction, collision);
     case "attack":
+      console.log(creature.health);
       const tileAttacked = getNewPosition(
         creature.position,
         creature.ongoingAction.direction,
@@ -38,7 +39,7 @@ const applyOngoingAction = (state: State, creature: Creature) => {
       const attackedCreature = getCreatureAtPosition(state, tileAttacked);
       return {
         ...creature,
-        heath: creature.health - 1,
+        health: creature.health - 1,
         ongoingAction: null,
       };
     default:
