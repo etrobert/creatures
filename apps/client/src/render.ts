@@ -1,8 +1,9 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
-import type { Direction, Position } from "./state.js";
-import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
+import type { Position } from "./state.js";
+import { collisionWithMap } from "./updateCreature.js";
 import { renderBackground, backgroundMap } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
+import { updatePosition } from "./updateCreature.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
