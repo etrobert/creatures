@@ -37,6 +37,8 @@ const applyOngoingAction = (state: State, creature: Creature) => {
         creature.ongoingAction.direction,
       );
       const attackedCreature = getCreatureAtPosition(state, tileAttacked);
+      //   Once Serveur is document, we need to update de attacked creature (not the attacking).
+      // To do SourceBuffer, this function needs to return the state
       return {
         ...creature,
         health: creature.health - 1,
