@@ -46,22 +46,49 @@ export const render = (state: State, currentTime: number) => {
       const creatureGhosts = state.creatures
         .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
-        .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
-      ctx.globalAlpha = 0.5;
-      creatureGhosts.forEach((creature) =>
-        renderCreature(creature, currentTime),
-      );
-      ctx.globalAlpha = 1;
+        .filter(
+          ({ ghost, countRemainingTicks }) =>
+            ghost.position.x === x && ghost.position.y === y,
+        );
+      creatureGhosts.forEach(({ ghost, countRemainingTicks }) => {
+        ctx.globalAlpha = 0.5;
+        renderCreature(ghost, currentTime);
+        ctx.globalAlpha = 1;
+        renderCountRemainingTicks(ghost, countRemainingTicks);
+      });
     }
   }
 };
 
 export const getGhost = (creature: Creature) => {
-  let dummyCreature = creature;
-  while (dummyCreature.nextActions[0]) {
-    const [nextAction, ...nextActions] = dummyCreature.nextActions;
-    dummyCreature = { ...dummyCreature, nextActions };
-    dummyCreature = updatePosition(dummyCreature, nextAction, collisionWithMap);
+  let ghost = creature;
+  let i = 0;
+  while (ghost.nextActions[0]) {
+    i = i + 1;
+    const [nextAction, ...nextActions] = ghost.nextActions;
+    ghost = { ...ghost, nextActions };
+    ghost = updatePosition(ghost, nextAction, collisionWithMap);
   }
-  return dummyCreature;
+  return { ghost, countRemainingTicks: i };
+};
+
+const renderCountRemainingTicks = (
+  creature: Creature,
+  countRemainingTicks: number,
+) => {
+  const canvasPosition = gridToCanvas(creature.position);
+  ctx.fillStyle = "white";
+  const size = 8;
+  ctx.fillRect(
+    canvasPosition.x + cellWidth - size - 2,
+    canvasPosition.y + cellWidth - size - 2,
+    size,
+    size,
+  );
+  creature.nextActions.length;
+  ctx.strokeText(
+    String(countRemainingTicks),
+    canvasPosition.x + cellWidth - size - 2,
+    canvasPosition.y + cellWidth - 2,
+  );
 };
