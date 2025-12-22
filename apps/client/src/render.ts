@@ -93,20 +93,6 @@ const renderCreatureHealth = (creature: Creature) => {
   );
 };
 
-const renderCreatureInfo = (creature: Creature) => {
-  const canvasPosition = gridToCanvas(creature.position);
-  ctx.fillStyle = "white";
-  const xPad = cellWidth / 8;
-  const yPadTop = cellHeight / 16;
-  const yPadBot = (cellHeight * 11) / 16;
-  ctx.fillRect(
-    canvasPosition.x + xPad,
-    canvasPosition.y + yPadTop,
-    cellWidth - 2 * xPad,
-    cellHeight - (yPadTop + yPadBot),
-  );
-};
-
 export const getGhost = (creature: Creature) => {
   let dummyCreature = creature;
   while (dummyCreature.nextActions[0]) {
