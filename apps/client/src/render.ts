@@ -99,7 +99,12 @@ export const getGhost = (creature: Creature) => {
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
     dummyCreature = { ...dummyCreature, nextActions };
-    dummyCreature = updatePosition(dummyCreature, nextAction, collisionWithMap);
+    if (nextAction.type === "move")
+      dummyCreature = updatePosition(
+        dummyCreature,
+        nextAction,
+        collisionWithMap,
+      );
   }
   return dummyCreature;
 };
