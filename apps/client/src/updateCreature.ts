@@ -45,19 +45,23 @@ const applyAttack = (
   state: State,
   creature: Creature,
   attackAction: AttackAction,
-) => {
+): State => {
   console.log(creature.health);
   const tileAttacked = getNewPosition(
     creature.position,
     attackAction.direction,
   );
   const attackedCreature = getCreatureAtPosition(state, tileAttacked);
-  //   Once Serveur is document, we need to update de attacked creature (not the attacking).
-  // To do SourceBuffer, this function needs to return the state
+
   return {
-    ...creature,
-    health: creature.health - 1,
-    ongoingAction: null,
+    ...state,
+    creatures: state.creatures.map((mappedCreature) => {
+      if (mappedCreature.id === creature.id)
+        return { ...mappedCreature, ongoingAction: null };
+      if (mappedCreature.id === attackedCreature?.id)
+        return { ...mappedCreature, health: mappedCreature.health - 1 };
+      return mappedCreature;
+    }),
   };
 };
 
@@ -65,8 +69,8 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
   switch (creature.ongoingAction?.type) {
     case "move":
       return applyMove(state, creature, creature.ongoingAction);
-    // case "attack":
-    // return applyAttack(state, creature, creature.ongoingAction);
+    case "attack":
+      return applyAttack(state, creature, creature.ongoingAction);
     default:
       return state;
   }
