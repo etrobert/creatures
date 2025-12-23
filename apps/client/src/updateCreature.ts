@@ -6,6 +6,7 @@ import {
   type Direction,
   countColumns,
   countRow,
+  type MoveAction,
 } from "./state.js";
 
 export const updateCreature = (state: State, creature: Creature) => {
@@ -20,16 +21,22 @@ const updateActions = (creature: Creature) => {
   return { ...creature, ongoingAction, nextActions };
 };
 
+const applyMove = (
+  state: State,
+  creature: Creature,
+  moveAction: MoveAction,
+) => {
+  const collision = (newPosition: Position) => {
+    const creatureAtPosition = getCreatureAtPosition(state, newPosition);
+    return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
+  };
+  return updatePosition(creature, moveAction, collision);
+};
+
 const applyOngoingAction = (state: State, creature: Creature) => {
   switch (creature.ongoingAction?.type) {
     case "move":
-      const collision = (newPosition: Position) => {
-        const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-        return (
-          collisionWithMap(newPosition) || creatureAtPosition !== undefined
-        );
-      };
-      return updatePosition(creature, creature.ongoingAction, collision);
+      return applyMove(state, creature, creature.ongoingAction);
     case "attack":
       console.log(creature.health);
       const tileAttacked = getNewPosition(
