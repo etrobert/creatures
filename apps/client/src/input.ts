@@ -1,21 +1,21 @@
 import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import type { Action, Creature, Position } from "./state.js";
+import type { Creature, Position } from "./state.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
     const getDirection = () => {
       switch (event.code) {
         case "KeyW":
-          return { type: "move", direction: "up" } as Action;
+          return { type: "move", direction: "up" } as const;
         case "KeyA":
-          return { type: "move", direction: "left" } as Action;
+          return { type: "move", direction: "left" } as const;
         case "KeyS":
-          return { type: "move", direction: "down" } as Action;
+          return { type: "move", direction: "down" } as const;
         case "KeyD":
-          return { type: "move", direction: "right" } as Action;
+          return { type: "move", direction: "right" } as const;
         case "KeyQ":
-          return { type: "attack", direction: "up" } as Action;
+          return { type: "attack", direction: "up" } as const;
       }
     };
 
