@@ -15,8 +15,15 @@ export const setupEventListeners = () => {
           return { type: "move", direction: "down" } as const;
         case "KeyD":
           return { type: "move", direction: "right" } as const;
-        case "KeyQ":
-          return { type: "attack", direction: "up" } as const;
+        case "KeyQ": {
+          const activeCreature = findActiveCreature(0);
+          if (activeCreature === undefined)
+            throw new Error("Couldn't find active creature");
+          return {
+            type: "attack",
+            direction: activeCreature.direction,
+          } as const;
+        }
       }
     };
 
