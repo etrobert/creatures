@@ -37,10 +37,17 @@ export type State = ReturnType<typeof createState>;
 
 export type Direction = "up" | "right" | "left" | "down";
 
-export type Action = {
-  type: "move" | "attack";
+export type MoveAction = {
+  type: "move";
   direction: Direction;
 };
+
+export type AttackAction = {
+  type: "attack";
+  direction: Direction;
+};
+
+export type Action = MoveAction | AttackAction;
 
 export type Position = { x: number; y: number };
 
