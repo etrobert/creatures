@@ -46,7 +46,6 @@ const applyAttack = (
   creature: Creature,
   attackAction: AttackAction,
 ): State => {
-  console.log(creature.health);
   const tileAttacked = getNewPosition(
     creature.position,
     attackAction.direction,
