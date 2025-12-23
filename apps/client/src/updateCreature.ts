@@ -7,6 +7,7 @@ import {
   countColumns,
   countRow,
   type MoveAction,
+  type AttackAction,
 } from "./state.js";
 
 export const updateCreature = (state: State, creature: Creature) => {
@@ -33,24 +34,32 @@ const applyMove = (
   return updatePosition(creature, moveAction, collision);
 };
 
+const applyAttack = (
+  state: State,
+  creature: Creature,
+  attackAction: AttackAction,
+) => {
+  console.log(creature.health);
+  const tileAttacked = getNewPosition(
+    creature.position,
+    attackAction.direction,
+  );
+  const attackedCreature = getCreatureAtPosition(state, tileAttacked);
+  //   Once Serveur is document, we need to update de attacked creature (not the attacking).
+  // To do SourceBuffer, this function needs to return the state
+  return {
+    ...creature,
+    health: creature.health - 1,
+    ongoingAction: null,
+  };
+};
+
 const applyOngoingAction = (state: State, creature: Creature) => {
   switch (creature.ongoingAction?.type) {
     case "move":
       return applyMove(state, creature, creature.ongoingAction);
     case "attack":
-      console.log(creature.health);
-      const tileAttacked = getNewPosition(
-        creature.position,
-        creature.ongoingAction.direction,
-      );
-      const attackedCreature = getCreatureAtPosition(state, tileAttacked);
-      //   Once Serveur is document, we need to update de attacked creature (not the attacking).
-      // To do SourceBuffer, this function needs to return the state
-      return {
-        ...creature,
-        health: creature.health - 1,
-        ongoingAction: null,
-      };
+      return applyAttack(state, creature, creature.ongoingAction);
     default:
       return creature;
   }
