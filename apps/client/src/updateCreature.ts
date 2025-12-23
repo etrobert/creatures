@@ -10,7 +10,7 @@ import {
   type AttackAction,
 } from "./state.js";
 
-export const updateCreature = (state: State, creature: Creature) => {
+export const updateCreature = (state: State, creature: Creature): State => {
   creature = updateActions(creature);
   return applyOngoingAction(state, creature);
 };
@@ -26,12 +26,19 @@ const applyMove = (
   state: State,
   creature: Creature,
   moveAction: MoveAction,
-) => {
+): State => {
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
     return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
   };
-  return updatePosition(creature, moveAction, collision);
+  return {
+    ...state,
+    creatures: state.creatures.map((mappedCreature) =>
+      mappedCreature.id === creature.id
+        ? updatePosition(creature, moveAction, collision)
+        : mappedCreature,
+    ),
+  };
 };
 
 const applyAttack = (
@@ -54,14 +61,14 @@ const applyAttack = (
   };
 };
 
-const applyOngoingAction = (state: State, creature: Creature) => {
+const applyOngoingAction = (state: State, creature: Creature): State => {
   switch (creature.ongoingAction?.type) {
     case "move":
       return applyMove(state, creature, creature.ongoingAction);
-    case "attack":
-      return applyAttack(state, creature, creature.ongoingAction);
+    // case "attack":
+    // return applyAttack(state, creature, creature.ongoingAction);
     default:
-      return creature;
+      return state;
   }
 };
 

@@ -9,9 +9,10 @@ export function update(state: State, currentTime: number): State {
 
   const lastTick = currentTime;
 
-  const creatures = state.creatures.map((creature) =>
-    updateCreature(state, creature),
+  state = state.creatures.reduce(
+    (state, creature) => updateCreature(state, creature),
+    state,
   );
 
-  return { lastTick, creatures };
+  return { ...state, lastTick };
 }

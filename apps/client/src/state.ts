@@ -1,4 +1,5 @@
 export type Creature = {
+  id: string;
   player: number;
   health: number;
   maxHealth: number;
@@ -8,10 +9,13 @@ export type Creature = {
   direction: Direction;
 };
 
+let nextId = 0;
+
 const createCreature = ({
   player = 0,
   position = { x: 3, y: 2 },
 } = {}): Creature => ({
+  id: String(nextId++),
   player,
   health: 9,
   maxHealth: 10,
