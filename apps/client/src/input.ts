@@ -44,7 +44,7 @@ export const setupEventListeners = () => {
     );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
-    const ghost = getGhost(activeCreature);
+    const { ghost } = getGhost(activeCreature);
     const nextActionsX =
       ghost.position.x < x
         ? new Array(x - ghost.position.x).fill({
