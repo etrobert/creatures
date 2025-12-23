@@ -35,7 +35,10 @@ const applyMove = (
     ...state,
     creatures: state.creatures.map((mappedCreature) =>
       mappedCreature.id === creature.id
-        ? updatePosition(creature, moveAction, collision)
+        ? {
+            ...updatePosition(creature, moveAction, collision),
+            ongoingAction: null,
+          }
         : mappedCreature,
     ),
   };
@@ -82,13 +85,12 @@ export const updatePosition = (
 ): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
 
-  if (collision(newPosition)) return { ...creature, ongoingAction: null };
+  if (collision(newPosition)) return creature;
 
   return {
     ...creature,
     position: newPosition,
     direction: nextAction.direction,
-    ongoingAction: null,
   };
 };
 
