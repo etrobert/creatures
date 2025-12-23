@@ -39,9 +39,7 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
-    const activeCreature = state.creatures.find((creature) =>
-      findActiveCreature(creature, activePlayer),
-    );
+    const activeCreature = findActiveCreature(activePlayer);
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
@@ -80,9 +78,8 @@ export const setupEventListeners = () => {
   });
 };
 
-const findActiveCreature = (creature: Creature, player: number) => {
-  return creature.player === player;
-};
+const findActiveCreature = (player: number) =>
+  state.creatures.find((creature) => creature.player === player);
 
 // translation bwtween grid position and canvas position
 const canvasToGrid = ({ x, y }: Position) => ({
