@@ -2,6 +2,7 @@ import { type Creature, type Position, type Direction } from "./state.js";
 import { ctx } from "./render.js";
 import { cellHeight, cellWidth, gridToCanvas } from "./render.js";
 import { tickDuration } from "./update.js";
+import { activePlayer } from "./index.js";
 
 const getDirectionLine = (direction: Direction) => {
   switch (direction) {
@@ -24,7 +25,7 @@ const frameDuration = tickDuration / animationFrames;
 img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
 
 export const renderCreature = (creature: Creature, currentTime: number) => {
-  const color = creature.player === 0 ? "blue" : "red";
+  const color = creature.player === activePlayer ? "blue" : "red";
   const canvasPosition = gridToCanvas(creature.position);
   ctx.fillStyle = color;
   ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
