@@ -59,7 +59,7 @@ const applyAttack = (
     ...state,
     creatures: state.creatures.map((mappedCreature) => {
       if (mappedCreature.id === creature.id)
-        return { ...mappedCreature, ongoingAction: null };
+        return { ...creature, ongoingAction: null };
       if (mappedCreature.id === attackedCreature?.id)
         return { ...mappedCreature, health: mappedCreature.health - 1 };
       return mappedCreature;
