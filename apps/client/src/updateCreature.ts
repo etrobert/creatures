@@ -1,3 +1,4 @@
+import { backgroundMap, getTile } from "./background.js";
 import {
   type Creature,
   type State,
@@ -100,11 +101,14 @@ export const getCreatureAtPosition = (state: State, position: Position) =>
       creature.position.x === position.x && creature.position.y === position.y,
   );
 
-export const collisionWithMap = (newPosition: Position) =>
-  newPosition.x < 0 ||
-  newPosition.x >= countColumns ||
-  newPosition.y < 0 ||
-  newPosition.y >= countRow;
+export const collisionWithMap = (newPosition: Position) => {
+  return newPosition.x < 0 ||
+    newPosition.x >= countColumns ||
+    newPosition.y < 0 ||
+    newPosition.y >= countRow
+    ? true
+    : getTile(backgroundMap, newPosition) === "void";
+};
 
 const getNewPosition = ({ x, y }: Position, direction: Direction) => {
   switch (direction) {

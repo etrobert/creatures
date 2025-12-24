@@ -3,7 +3,7 @@ import { countColumns, countRow, type Position } from "./state.js";
 
 import { ctx } from "./render.js";
 
-const getTile = (background: string[], position: Position) => {
+export const getTile = (background: string[], position: Position) => {
   const tile = background[position.x + position.y * countColumns];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
