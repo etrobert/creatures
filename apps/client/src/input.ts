@@ -5,6 +5,9 @@ import { activePlayer } from "./index.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
+    const activeCreature = findActiveCreature(0);
+    if (activeCreature === undefined)
+      throw new Error("Couldn't find active creature");
     const getAction = () => {
       switch (event.code) {
         case "KeyW":
@@ -16,9 +19,6 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ": {
-          const activeCreature = findActiveCreature(0);
-          if (activeCreature === undefined)
-            throw new Error("Couldn't find active creature");
           return {
             type: "attack",
             direction: activeCreature.direction,
