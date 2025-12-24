@@ -1,8 +1,9 @@
 import { countColumns, countRow, type Creature, type State } from "./state.js";
-import type { Direction, Position } from "./state.js";
-import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
+import type { Position } from "./state.js";
+import { collisionWithMap } from "./updateCreature.js";
 import { renderBackground, backgroundMap } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
+import { updatePosition } from "./updateCreature.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -45,7 +46,6 @@ export const render = (state: State, currentTime: number) => {
           renderCreature(creature, currentTime);
           renderCreatureHealth(creature);
         });
-
       const creatureGhosts = state.creatures
         .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
@@ -98,7 +98,12 @@ export const getGhost = (creature: Creature) => {
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
     dummyCreature = { ...dummyCreature, nextActions };
-    dummyCreature = updatePosition(dummyCreature, nextAction, collisionWithMap);
+    if (nextAction.type === "move")
+      dummyCreature = updatePosition(
+        dummyCreature,
+        nextAction,
+        collisionWithMap,
+      );
   }
   return dummyCreature;
 };
