@@ -9,3 +9,7 @@ body {
   display: grid;
   place-items: center;
 }
+
+canvas {
+  transform: scale(2);
+}
