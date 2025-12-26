@@ -48,7 +48,7 @@ export type MoveAction = {
 
 export type MovePathAction = {
   type: "movePath";
-  direction: Position;
+  position: Position;
 };
 
 export type AttackAction = {
