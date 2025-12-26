@@ -66,7 +66,10 @@ export const setupEventListeners = () => {
   });
 };
 
-const pathToTarget = (currentPosition: Position, TargetPosition: Position) => {
+export const pathToTarget = (
+  currentPosition: Position,
+  TargetPosition: Position,
+) => {
   const nextActionsX =
     currentPosition.x < TargetPosition.x
       ? new Array(TargetPosition.x - currentPosition.x).fill({

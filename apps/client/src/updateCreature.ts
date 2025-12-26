@@ -1,4 +1,5 @@
 import { backgroundMap, getTile } from "./background.js";
+import { pathToTarget } from "./input.js";
 import {
   type Creature,
   type State,
@@ -9,6 +10,7 @@ import {
   countRow,
   type MoveAction,
   type AttackAction,
+  type MovePathAction,
 } from "./state.js";
 
 export const updateCreature = (state: State, creature: Creature): State => {
@@ -26,8 +28,15 @@ const updateActions = (creature: Creature) => {
 const applyMove = (
   state: State,
   creature: Creature,
-  moveAction: MoveAction,
+  moveAction: MoveAction | MovePathAction,
 ): State => {
+  const newMoveAction: MoveAction =
+    moveAction.type === "movePath"
+      ? ({
+          type: "move",
+          direction: pathToTarget(creature.position, moveAction.position)[0],
+        } as const)
+      : moveAction;
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
     return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
@@ -37,8 +46,8 @@ const applyMove = (
     creatures: state.creatures.map((mappedCreature) =>
       mappedCreature.id === creature.id
         ? {
-            ...updatePosition(creature, moveAction, collision),
-            ongoingAction: null,
+            ...updatePosition(creature, newMoveAction, collision),
+            ongoingAction: moveAction.type === "movePath" ? moveAction : null,
           }
         : mappedCreature,
     ),
