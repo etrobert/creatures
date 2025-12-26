@@ -81,7 +81,7 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
 
 export const updatePosition = (
   creature: Creature,
-  nextAction: Action,
+  nextAction: MoveAction,
   collision: (newPosition: Position) => boolean,
 ): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
