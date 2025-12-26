@@ -45,32 +45,13 @@ export const setupEventListeners = () => {
   });
 
   canvas.addEventListener("click", (event) => {
-    const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
+    const clickPosition = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = findActiveCreature(activePlayer);
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
-    const nextActionsX =
-      ghost.position.x < x
-        ? new Array(x - ghost.position.x).fill({
-            type: "move",
-            direction: "right",
-          })
-        : new Array(ghost.position.x - x).fill({
-            type: "move",
-            direction: "left",
-          });
-    const nextActionsY =
-      ghost.position.y < y
-        ? new Array(y - ghost.position.y).fill({
-            type: "move",
-            direction: "down",
-          })
-        : new Array(ghost.position.y - y).fill({
-            type: "move",
-            direction: "up",
-          });
-    const nextActions = [...nextActionsX, ...nextActionsY];
+    const nextActions = pathToTarget(ghost.position, clickPosition);
+
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
@@ -83,6 +64,30 @@ export const setupEventListeners = () => {
       ),
     });
   });
+};
+
+const pathToTarget = (currentPosition: Position, TargetPosition: Position) => {
+  const nextActionsX =
+    currentPosition.x < TargetPosition.x
+      ? new Array(TargetPosition.x - currentPosition.x).fill({
+          type: "move",
+          direction: "right",
+        })
+      : new Array(currentPosition.x - TargetPosition.x).fill({
+          type: "move",
+          direction: "left",
+        });
+  const nextActionsY =
+    currentPosition.y < TargetPosition.y
+      ? new Array(TargetPosition.y - currentPosition.y).fill({
+          type: "move",
+          direction: "down",
+        })
+      : new Array(currentPosition.y - TargetPosition.y).fill({
+          type: "move",
+          direction: "up",
+        });
+  return [...nextActionsX, ...nextActionsY];
 };
 
 const findActiveCreature = (player: number) =>
