@@ -1,6 +1,6 @@
 import { setState, state } from "./state.js";
-import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import type { Creature, Position } from "./state.js";
+import { canvas, cellWidth, cellHeight } from "./render.js";
+import type { Position } from "./state.js";
 import { activePlayer } from "./index.js";
 
 export const setupEventListeners = () => {
@@ -47,18 +47,17 @@ export const setupEventListeners = () => {
   canvas.addEventListener("click", (event) => {
     const clickPosition = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = findActiveCreature(activePlayer);
-    // add ghost calculation when in
     if (activeCreature === undefined) return;
-    const ghost = getGhost(activeCreature);
-    const nextActions = pathToTarget(ghost.position, clickPosition);
-
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
         creature.player === activePlayer
           ? {
               ...creature,
-              nextActions: [...creature.nextActions, ...nextActions],
+              nextActions: [
+                ...creature.nextActions,
+                { type: "movePath", position: clickPosition },
+              ],
             }
           : creature,
       ),

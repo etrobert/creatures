@@ -30,13 +30,11 @@ const applyMove = (
   creature: Creature,
   moveAction: MoveAction | MovePathAction,
 ): State => {
-  const newMoveAction: MoveAction =
+  const path =
     moveAction.type === "movePath"
-      ? ({
-          type: "move",
-          direction: pathToTarget(creature.position, moveAction.position)[0],
-        } as const)
-      : moveAction;
+      ? pathToTarget(creature.position, moveAction.position)
+      : [moveAction];
+
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
     return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
@@ -46,8 +44,8 @@ const applyMove = (
     creatures: state.creatures.map((mappedCreature) =>
       mappedCreature.id === creature.id
         ? {
-            ...updatePosition(creature, newMoveAction, collision),
-            ongoingAction: moveAction.type === "movePath" ? moveAction : null,
+            ...updatePosition(creature, path[0], collision),
+            ongoingAction: path.length > 1 ? moveAction : null,
           }
         : mappedCreature,
     ),
@@ -81,6 +79,8 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
   switch (creature.ongoingAction?.type) {
     case "move":
       return applyMove(state, creature, creature.ongoingAction);
+    case "movePath":
+      return applyMove(state, creature, creature.ongoingAction);
     case "attack":
       return applyAttack(state, creature, creature.ongoingAction);
     default:
@@ -94,7 +94,7 @@ export const updatePosition = (
   collision: (newPosition: Position) => boolean,
 ): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
-
+  console.log(newPosition);
   if (collision(newPosition)) return creature;
 
   return {
