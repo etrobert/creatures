@@ -34,6 +34,18 @@ const applyMove = (
     moveAction.type === "movePath"
       ? pathToTargetBFS(creature.position, moveAction.position)
       : [moveAction];
+  if (path === null)
+    return {
+      ...state,
+      creatures: state.creatures.map((mappedCreature) =>
+        mappedCreature.id === creature.id
+          ? {
+              ...creature,
+              ongoingAction: null,
+            }
+          : mappedCreature,
+      ),
+    };
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
     return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
