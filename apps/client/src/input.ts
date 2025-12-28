@@ -1,7 +1,7 @@
 import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import type { Creature, Position } from "./state.js";
-import { activePlayer } from "./index.js";
+import { activeCreatureID, activePlayer } from "./index.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -16,7 +16,10 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ": {
-          const activeCreature = findActiveCreature(0);
+          const activeCreature = findActiveCreature(
+            activePlayer,
+            activeCreatureID,
+          );
           if (activeCreature === undefined)
             throw new Error("Couldn't find active creature");
           return {
@@ -34,7 +37,7 @@ export const setupEventListeners = () => {
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer
+        creature.player === activePlayer && creature.id === activeCreatureID
           ? {
               ...creature,
               nextActions: [...creature.nextActions, newAction],
@@ -46,7 +49,7 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
-    const activeCreature = findActiveCreature(activePlayer);
+    const activeCreature = findActiveCreature(activePlayer, activeCreatureID);
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
@@ -74,7 +77,7 @@ export const setupEventListeners = () => {
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer
+        creature.player === activePlayer && creature.id === activeCreatureID
           ? {
               ...creature,
               nextActions: [...creature.nextActions, ...nextActions],
@@ -85,8 +88,10 @@ export const setupEventListeners = () => {
   });
 };
 
-const findActiveCreature = (player: number) =>
-  state.creatures.find((creature) => creature.player === player);
+const findActiveCreature = (player: number, creatureID: string) =>
+  state.creatures.find(
+    (creature) => creature.player === player && creature.id === creatureID,
+  );
 
 // translation bwtween grid position and canvas position
 const canvasToGrid = ({ x, y }: Position) => ({
