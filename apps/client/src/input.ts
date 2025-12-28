@@ -2,6 +2,7 @@ import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight } from "./render.js";
 import type { Position } from "./state.js";
 import { activePlayer } from "./index.js";
+import { collisionWithMap, getCreatureAtPosition } from "./updateCreature.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -90,6 +91,102 @@ export const pathToTarget = (
           direction: "up",
         });
   return [...nextActionsX, ...nextActionsY];
+};
+
+const samePosition = (a: Position, b: Position): boolean =>
+  a.x === b.x && a.y === b.y;
+
+export const pathToTargetBFS = (
+  currentPosition: Position,
+  targetPosition: Position,
+) =>
+  lostLocationsToPathMove(
+    bfs(
+      [{ pos: currentPosition, path: [currentPosition] }],
+      [currentPosition],
+      targetPosition,
+    ),
+  );
+
+type Node = {
+  pos: Position;
+  path: Position[];
+};
+export const bfs = (
+  queue: Node[],
+  visited: Position[],
+  target: Position,
+): Position[] => {
+  if (queue[0] === undefined) throw new Error("Couldn't find a path");
+  const [{ pos, path }, ...rest] = queue;
+
+  if (samePosition(pos, target)) {
+    return path;
+  }
+
+  const neighbors = accessibleNeighbors(pos);
+
+  const notVisited = (p: Position) => !visited.some((v) => samePosition(v, p));
+
+  const neighborsToCheck = neighbors.filter(notVisited);
+
+  const nextNodes: Node[] = neighborsToCheck.map((n) => ({
+    pos: n,
+    path: [...path, n],
+  }));
+
+  return bfs(
+    [...rest, ...nextNodes], // FIFO → BFS
+    [...visited, ...neighborsToCheck],
+    target,
+  );
+};
+
+const accessibleNeighbors = ({ x, y }: Position) => {
+  const pos = [
+    { x: x, y: y + 1 },
+    { x: x, y: y - 1 },
+    { x: x + 1, y: y },
+    { x: x - 1, y: y },
+  ];
+  const collision = (newPosition: Position) => {
+    const creatureAtPosition = getCreatureAtPosition(state, newPosition);
+    return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
+  };
+  return pos.filter((pos) => !collision(pos));
+};
+
+const lostLocationsToPathMove = (positions: Position[]) => {
+  let nextActions: MoveAction[] = [];
+  for (let i = 0; i <= positions.length - 2; i++) {
+    const currentPosition = positions[i];
+    const targetPosition = positions[i + 1];
+    if (currentPosition !== undefined && targetPosition !== undefined) {
+      const nextAction: MoveAction =
+        currentPosition.x < targetPosition.x
+          ? {
+              type: "move",
+              direction: "right",
+            }
+          : currentPosition.x > targetPosition.x
+            ? {
+                type: "move",
+                direction: "left",
+              }
+            : currentPosition.y < targetPosition.y
+              ? {
+                  type: "move",
+                  direction: "down",
+                }
+              : {
+                  type: "move",
+                  direction: "up",
+                };
+      nextActions = [...nextActions, nextAction];
+    }
+  }
+
+  return nextActions;
 };
 
 const findActiveCreature = (player: number) =>

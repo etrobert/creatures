@@ -1,5 +1,5 @@
 import { backgroundMap, getTile } from "./background.js";
-import { pathToTarget } from "./input.js";
+import { pathToTargetBFS } from "./input.js";
 import {
   type Creature,
   type State,
@@ -32,24 +32,27 @@ const applyMove = (
 ): State => {
   const path =
     moveAction.type === "movePath"
-      ? pathToTarget(creature.position, moveAction.position)
+      ? pathToTargetBFS(creature.position, moveAction.position)
       : [moveAction];
-
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
     return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
   };
-  return {
-    ...state,
-    creatures: state.creatures.map((mappedCreature) =>
-      mappedCreature.id === creature.id
-        ? {
-            ...updatePosition(creature, path[0], collision),
-            ongoingAction: path.length > 1 ? moveAction : null,
-          }
-        : mappedCreature,
-    ),
-  };
+  if (path[0] === undefined) throw new Error("Couldn't find a path");
+  else {
+    const nextAction = path[0];
+    return {
+      ...state,
+      creatures: state.creatures.map((mappedCreature) =>
+        mappedCreature.id === creature.id
+          ? {
+              ...updatePosition(creature, nextAction, collision),
+              ongoingAction: path.length > 1 ? moveAction : null,
+            }
+          : mappedCreature,
+      ),
+    };
+  }
 };
 
 const applyAttack = (
@@ -94,7 +97,6 @@ export const updatePosition = (
   collision: (newPosition: Position) => boolean,
 ): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
-  console.log(newPosition);
   if (collision(newPosition)) return creature;
 
   return {
