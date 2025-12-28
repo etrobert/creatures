@@ -1,7 +1,12 @@
 import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import type { Creature, Position } from "./state.js";
-import { activeCreatureID, activePlayer } from "./index.js";
+import {
+  activeCreatureID,
+  activePlayer,
+  activePlayerCreaturesID,
+  setActiveCreatureID,
+} from "./index.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -49,7 +54,10 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
-    const activeCreature = findActiveCreature(activePlayer, activeCreatureID);
+    const activeCreature = state.creatures.find(
+      (creature) =>
+        creature.player === activePlayer && creature.id === activeCreatureID,
+    );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
@@ -85,6 +93,25 @@ export const setupEventListeners = () => {
           : creature,
       ),
     });
+  });
+
+  window.addEventListener("keydown", (event) => {
+    const getActiveCharacter = () => {
+      switch (event.code) {
+        case "Digit1":
+          return activePlayerCreaturesID[0];
+        case "Digit2":
+          return activePlayerCreaturesID[1];
+        case "Digit3":
+          return activePlayerCreaturesID[2];
+        case "Digit4":
+          return activePlayerCreaturesID[3];
+      }
+    };
+
+    const newActiveCharacter = getActiveCharacter();
+    if (newActiveCharacter === undefined) return;
+    setActiveCreatureID(newActiveCharacter);
   });
 };
 

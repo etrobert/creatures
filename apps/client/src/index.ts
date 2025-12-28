@@ -14,8 +14,10 @@ const getActiveCreatureID = () => {
   if (activeCreatureID === undefined) throw new Error("Could not get canvas");
   return activeCreatureID;
 };
+export let activeCreatureID = getActiveCreatureID();
 
-export const activeCreatureID = getActiveCreatureID();
+export const setActiveCreatureID = (newActiveCreatureID: string) =>
+  (activeCreatureID = newActiveCreatureID);
 
 setupEventListeners();
 
