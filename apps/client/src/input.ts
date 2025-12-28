@@ -99,14 +99,14 @@ const samePosition = (a: Position, b: Position): boolean =>
 export const pathToTargetBFS = (
   currentPosition: Position,
   targetPosition: Position,
-) =>
-  lostLocationsToPathMove(
-    bfs(
-      [{ pos: currentPosition, path: [currentPosition] }],
-      [currentPosition],
-      targetPosition,
-    ),
+): MoveAction[] | null => {
+  const bfsPath = bfs(
+    [{ pos: currentPosition, path: [currentPosition] }],
+    [currentPosition],
+    targetPosition,
   );
+  return bfsPath === null ? null : lostLocationsToPathMove(bfsPath);
+};
 
 type Node = {
   pos: Position;
@@ -116,8 +116,9 @@ export const bfs = (
   queue: Node[],
   visited: Position[],
   target: Position,
-): Position[] => {
-  if (queue[0] === undefined) throw new Error("Couldn't find a path");
+): Position[] | null => {
+  if (queue[0] === undefined) return null;
+  //  throw new Error("Couldn't find a path");
   const [{ pos, path }, ...rest] = queue;
 
   if (samePosition(pos, target)) {
