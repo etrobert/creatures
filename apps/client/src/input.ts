@@ -36,7 +36,6 @@ export const setupEventListeners = () => {
     };
 
     const newAction = getDirection();
-
     if (newAction === undefined) return;
 
     setState({
