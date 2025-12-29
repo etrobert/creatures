@@ -35,12 +35,6 @@ export const setupEventListeners = () => {
         }
 
         case "KeyE": {
-          const activeCreature = findActiveCreature(
-            activePlayer,
-            activeCreatureID,
-          );
-          if (activeCreature === undefined)
-            throw new Error("Couldn't find active creature");
           return {
             type: "attackFireball",
             direction: activeCreature.direction,

@@ -8,6 +8,7 @@ import {
   type Position,
   type State,
   type Creature,
+  type Projectile,
 } from "@creatures/shared/state";
 
 const getCanvas = () => {
@@ -60,8 +61,31 @@ export const render = (state: State, currentTime: number) => {
         renderCreature(creature, currentTime),
       );
       ctx.globalAlpha = 1;
+      const projectiles = state.projectiles.filter(
+        (projectile) =>
+          projectile.position.x === x && projectile.position.y === y,
+      );
+      if (projectiles[0])
+        projectiles.forEach((projectile) => {
+          renderProjectile(projectile);
+        });
     }
   }
+};
+
+const renderProjectile = (projectile: Projectile) => {
+  const canvasPosition = gridToCanvas(projectile.position);
+  ctx.fillStyle = "red";
+
+  ctx.beginPath();
+  ctx.arc(
+    canvasPosition.x + cellWidth / 2,
+    canvasPosition.y + cellHeight / 2,
+    cellWidth / 2 - 4,
+    0,
+    2 * Math.PI,
+  );
+  ctx.fill();
 };
 
 const renderCreatureHealth = (creature: Creature) => {

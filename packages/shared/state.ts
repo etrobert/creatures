@@ -41,17 +41,26 @@ export const creatureSchema = z.object({
   direction: directionSchema,
 });
 
+export const projectileSchema = z.object({
+  id: z.string(),
+  position: positionSchema,
+  direction: directionSchema,
+});
+
 export const stateSchema = z.object({
   lastTick: z.number(),
   creatures: z.array(creatureSchema),
+  projectiles: z.array(projectileSchema),
 });
 
 export type Position = z.infer<typeof positionSchema>;
 export type Direction = z.infer<typeof directionSchema>;
 export type MoveAction = z.infer<typeof moveActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
+export type AttackFireballAction = z.infer<typeof attackFireballActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
 export type Creature = z.infer<typeof creatureSchema>;
+export type Projectile = z.infer<typeof projectileSchema>;
 export type State = z.infer<typeof stateSchema>;
 
 export const countColumns = 10;
