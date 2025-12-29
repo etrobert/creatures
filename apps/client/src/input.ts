@@ -152,7 +152,8 @@ const accessibleNeighbors = ({ x, y }: Position) => {
   ];
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-    return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
+    return collisionWithMap(newPosition);
+    // || creatureAtPosition !== undefined;
   };
   return pos.filter((pos) => !collision(pos));
 };
