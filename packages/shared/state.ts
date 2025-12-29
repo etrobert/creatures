@@ -19,9 +19,15 @@ export const attackActionSchema = z.object({
   direction: directionSchema,
 });
 
+export const attackFireballActionSchema = z.object({
+  type: z.literal("attackFireball"),
+  direction: directionSchema,
+});
+
 export const actionSchema = z.discriminatedUnion("type", [
   moveActionSchema,
   attackActionSchema,
+  attackFireballActionSchema,
 ]);
 
 export const creatureSchema = z.object({
@@ -55,7 +61,10 @@ export const tickDuration = 300;
 
 // Game logic utilities
 
-export const getNewPosition = ({ x, y }: Position, direction: Direction): Position => {
+export const getNewPosition = (
+  { x, y }: Position,
+  direction: Direction,
+): Position => {
   switch (direction) {
     case "up":
       return { x, y: y - 1 };
