@@ -1,5 +1,5 @@
 import { canvas, cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
-import type { Creature } from "./state.js";
+import type { Action, Creature, Position } from "./state.js";
 
 export const renderCreatureHealth = (creature: Creature) => {
   const canvasPosition = gridToCanvas(creature.position);
@@ -35,10 +35,37 @@ export const renderCreatureHealth = (creature: Creature) => {
   );
 };
 
-export const renderAttackList = (creature: Creature) => {
-  const actionCellWidth = 10;
-  const borderWidth = 2;
-  const topLeftCorner = canvas.width - actionCellWidth - borderWidth;
+const actionCellWidth = 10;
+const borderWidth = 2;
+
+export const renderActionList = (creature: Creature) => {
+  const topLeftCorner: Position = {
+    x: canvas.width - actionCellWidth - borderWidth,
+    y: borderWidth,
+  };
+
   ctx.fillStyle = "white";
-  ctx.fillRect(topLeftCorner, borderWidth, actionCellWidth, actionCellWidth);
+  ctx.fillRect(
+    topLeftCorner.x,
+    topLeftCorner.y,
+    actionCellWidth,
+    actionCellWidth,
+  );
+
+  creature.nextActions.forEach((action, i) =>
+    renderActionElement(action, {
+      x: topLeftCorner.x,
+      y: topLeftCorner.y + (i + 1) * (actionCellWidth + borderWidth),
+    }),
+  );
+};
+
+const renderActionElement = (action: Action, topLeftCorner: Position) => {
+  ctx.fillStyle = "white";
+  ctx.fillRect(
+    topLeftCorner.x,
+    topLeftCorner.y,
+    actionCellWidth,
+    actionCellWidth,
+  );
 };

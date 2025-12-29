@@ -3,7 +3,7 @@ import type { Direction, Position } from "./state.js";
 import { tickDuration, updatePosition, collisionWithMap } from "./update.js";
 import { renderBackground, backgroundMap } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
-import { renderAttackList, renderCreatureHealth } from "./renderUI.js";
+import { renderActionList, renderCreatureHealth } from "./renderUI.js";
 import { activePlayer } from "./index.js";
 
 const getCanvas = () => {
@@ -46,7 +46,7 @@ export const render = (state: State, currentTime: number) => {
         creatures.forEach((creature) => {
           renderCreature(creature, currentTime);
           renderCreatureHealth(creature);
-          if (creature.player === activePlayer) renderAttackList(creature);
+          if (creature.player === activePlayer) renderActionList(creature);
         });
 
       const creatureGhosts = state.creatures
