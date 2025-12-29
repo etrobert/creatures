@@ -1,4 +1,4 @@
-import { cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
+import { canvas, cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
 import type { Creature } from "./state.js";
 
 export const renderCreatureHealth = (creature: Creature) => {
@@ -33,4 +33,12 @@ export const renderCreatureHealth = (creature: Creature) => {
     endCurrentHP,
     cellHeight - (yPadTop + yPadBot),
   );
+};
+
+export const renderAttackList = (creature: Creature) => {
+  const actionCellWidth = 10;
+  const borderWidth = 2;
+  const topLeftCorner = canvas.width - actionCellWidth - borderWidth;
+  ctx.fillStyle = "white";
+  ctx.fillRect(topLeftCorner, borderWidth, actionCellWidth, actionCellWidth);
 };
