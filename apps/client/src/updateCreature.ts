@@ -78,10 +78,7 @@ const applyAttackFireball = (
   //   creature.position,
   //   attackAction.direction,
   // );
-  const spawnedFireball = createFireball(
-    creature.position,
-    attackAction.direction,
-  );
+  const spawnedFireball = createFireball(creature.position, creature.direction);
   return {
     ...state,
     projectiles: [...state.projectiles, spawnedFireball],
