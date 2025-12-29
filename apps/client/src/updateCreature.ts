@@ -8,6 +8,8 @@ import {
   countRow,
   type MoveAction,
   type AttackAction,
+  type Projectile,
+  createFireball,
 } from "./state.js";
 
 export const updateCreature = (state: State, creature: Creature): State => {
@@ -67,12 +69,38 @@ const applyAttack = (
   };
 };
 
+const applyAttackFireball = (
+  state: State,
+  creature: Creature,
+  attackAction: AttackAction,
+): State => {
+  // const tileAttacked = getNewPosition(
+  //   creature.position,
+  //   attackAction.direction,
+  // );
+  const spawnedFireball = createFireball(
+    creature.position,
+    attackAction.direction,
+  );
+  return {
+    ...state,
+    projectiles: [...state.projectiles, spawnedFireball],
+    creatures: state.creatures.map((mappedCreature) => {
+      if (mappedCreature.id === creature.id)
+        return { ...creature, ongoingAction: null };
+      return mappedCreature;
+    }),
+  };
+};
+
 const applyOngoingAction = (state: State, creature: Creature): State => {
   switch (creature.ongoingAction?.type) {
     case "move":
       return applyMove(state, creature, creature.ongoingAction);
     case "attack":
       return applyAttack(state, creature, creature.ongoingAction);
+    case "attackFireball":
+      return applyAttackFireball(state, creature, creature.ongoingAction);
     default:
       return state;
   }
@@ -117,4 +145,33 @@ const getNewPosition = ({ x, y }: Position, direction: Direction) => {
     case "left":
       return { x: x - 1, y };
   }
+};
+
+export const updateProjectile = (
+  state: State,
+  projectile: Projectile,
+): State => {
+  const newPosition = getNewPosition(projectile.position, projectile.direction);
+  const updatedProjectile = state.projectiles.map((mappedProjectile) => {
+    if (mappedProjectile.id === projectile.id)
+      return {
+        ...projectile,
+        position: newPosition,
+      };
+    return mappedProjectile;
+  });
+  const updatedCreatures = state.creatures.map((mappedCreature) => {
+    if (samePosition(mappedCreature.position, newPosition))
+      return { ...mappedCreature, health: mappedCreature.health - 1 };
+    return mappedCreature;
+  });
+  return {
+    ...state,
+    projectiles: updatedProjectile,
+    creatures: updatedCreatures,
+  };
+};
+
+const samePosition = (position1: Position, position2: Position) => {
+  return position1.x === position2.x && position1.y === position2.y;
 };

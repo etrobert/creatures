@@ -25,14 +25,18 @@ const createCreature = ({
   nextActions: [],
 });
 
-export const createState = () => ({
-  lastTick: 0,
-  creatures: [
-    createCreature(),
-    createCreature({ player: 1, position: { x: 1, y: 1 } }),
-    createCreature({ player: 0, position: { x: 5, y: 5 } }),
-  ],
-});
+export const createState = () => {
+  const projectiles: Projectile[] = [];
+  return {
+    lastTick: 0,
+    creatures: [
+      createCreature(),
+      createCreature({ player: 1, position: { x: 1, y: 1 } }),
+      createCreature({ player: 0, position: { x: 5, y: 5 } }),
+    ],
+    projectiles,
+  };
+};
 
 export let state = createState();
 
@@ -60,6 +64,24 @@ export type AttackAction =
 export type Action = MoveAction | AttackAction;
 
 export type Position = { x: number; y: number };
+export type Projectile = {
+  position: Position;
+  direction: Direction;
+  id: string;
+};
+
+let nextProjectileId = 0;
+
+export const createFireball = (
+  tileAttacked: Position,
+  direction: Direction,
+): Projectile => {
+  return {
+    position: tileAttacked,
+    direction,
+    id: String(nextProjectileId++),
+  } as const;
+};
 
 export const countColumns = 10;
 export const countRow = 7;
