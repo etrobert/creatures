@@ -67,25 +67,52 @@ export const render = (state: State, currentTime: number) => {
       );
       if (projectiles[0])
         projectiles.forEach((projectile) => {
-          renderProjectile(projectile);
+          renderProjectile(projectile, currentTime);
         });
     }
   }
 };
 
-const renderProjectile = (projectile: Projectile) => {
-  const canvasPosition = gridToCanvas(projectile.position);
-  ctx.fillStyle = "red";
+const imgFireball1 = new Image();
+const imgWidth = 32;
+const imgHeight = 32;
+const animationFrames = 2;
+const frameDuration = 400;
+imgFireball1.src = "./sprites/animations/Fireball/FireBall1.png";
 
-  ctx.beginPath();
-  ctx.arc(
-    canvasPosition.x + cellWidth / 2,
-    canvasPosition.y + cellHeight / 2,
-    cellWidth / 2 - 4,
+const imgFireball2 = new Image();
+imgFireball2.src = "./sprites/animations/Fireball/FireBall2.png";
+
+const renderProjectile = (projectile: Projectile, currentTime: number) => {
+  const canvasPosition = gridToCanvas(projectile.position);
+  // ctx.fillStyle = "red";
+
+  // ctx.beginPath();
+  // ctx.arc(
+  //   canvasPosition.x + cellWidth / 2,
+  //   canvasPosition.y + cellHeight / 2,
+  //   cellWidth / 2 - 4,
+  //   0,
+  //   2 * Math.PI,
+  // );
+  // (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
+
+  // ctx.fill();
+  const img =
+    Math.floor(currentTime / frameDuration) % animationFrames === 0
+      ? imgFireball1
+      : imgFireball2;
+  ctx.drawImage(
+    img,
     0,
-    2 * Math.PI,
+    0,
+    imgWidth,
+    imgHeight,
+    canvasPosition.x - (imgWidth - cellWidth) / 2,
+    canvasPosition.y - (imgWidth - cellWidth) / 2,
+    imgWidth,
+    imgHeight,
   );
-  ctx.fill();
 };
 
 const renderCreatureHealth = (creature: Creature) => {
