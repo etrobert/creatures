@@ -9,9 +9,6 @@ ws.onopen = () => console.log("Connected to WebSocket server");
 ws.onmessage = (event) => {
   const data = serverMessageSchema.parse(JSON.parse(event.data));
   switch (data.type) {
-    case "console":
-      console.log("From server: ", data.message);
-      break;
     case "state update":
       setState(data.state);
       break;

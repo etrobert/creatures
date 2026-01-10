@@ -16,11 +16,6 @@ const wss = new WebSocketServer({ server });
 wss.on("connection", (ws) => {
   console.log("Client connected");
 
-  const sendMessage = (message: ServerMessage) =>
-    ws.send(JSON.stringify(message));
-
-  sendMessage({ type: "console", message: "Hello from server!" });
-
   ws.on("message", (data) => {
     const message = clientMessageSchema.parse(JSON.parse(data.toString()));
 
