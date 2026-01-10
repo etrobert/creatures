@@ -14,7 +14,8 @@ ws.onopen = () => {
 };
 
 ws.onmessage = (event) => {
-  console.log("Message from server:", event.data);
+  const data: unknown = JSON.parse(event.data);
+  console.log("Message from server:", data);
 };
 
 ws.onerror = (error) => {
