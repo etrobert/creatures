@@ -1,4 +1,3 @@
-import { j } from "@creatures/shared/test";
 import type { ServerMessage } from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";
 import { WebSocketServer } from "ws";
@@ -6,8 +5,6 @@ import { createServer } from "http";
 import { createState } from "./state.js";
 import { update } from "./update.js";
 import { tickDuration } from "@creatures/shared/state";
-
-console.log(" This is coming from shared: " + j);
 
 const port = 3000;
 const server = createServer();
