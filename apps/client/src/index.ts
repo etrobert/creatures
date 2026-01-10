@@ -8,9 +8,7 @@ export const activePlayer = 0;
 // WebSocket connection
 export const ws = new WebSocket("ws://localhost:3000");
 
-ws.onopen = () => {
-  console.log("Connected to WebSocket server");
-};
+ws.onopen = () => console.log("Connected to WebSocket server");
 
 ws.onmessage = (event) => {
   const data = serverMessageSchema.parse(JSON.parse(event.data));
@@ -24,13 +22,9 @@ ws.onmessage = (event) => {
   }
 };
 
-ws.onerror = (error) => {
-  console.error("WebSocket error:", error);
-};
+ws.onerror = (error) => console.error("WebSocket error:", error);
 
-ws.onclose = () => {
-  console.log("Disconnected from WebSocket server");
-};
+ws.onclose = () => console.log("Disconnected from WebSocket server");
 
 setupEventListeners();
 
