@@ -12,12 +12,10 @@ const wss = new WebSocketServer({ server });
 wss.on("connection", (ws) => {
   console.log("Client connected");
 
-  ws.send(
-    JSON.stringify({
-      type: "console",
-      message: "Hello from server!",
-    } satisfies ServerMessage),
-  );
+  const sendMessage = (message: ServerMessage) =>
+    ws.send(JSON.stringify(message));
+
+  sendMessage({ type: "console", message: "Hello from server!" });
 
   ws.on("message", (data) => {
     console.log("Received:", data.toString());
