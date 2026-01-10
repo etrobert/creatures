@@ -5,6 +5,7 @@ import { WebSocketServer } from "ws";
 import { createServer } from "http";
 import { createState } from "./state.js";
 import { update } from "./update.js";
+import { tickDuration } from "@creatures/shared/state";
 
 console.log(" This is coming from shared: " + j);
 
@@ -39,6 +40,7 @@ wss.on("connection", (ws) => {
               : creature,
           ),
         };
+        broadcastState();
         break;
     }
   });
@@ -50,9 +52,7 @@ wss.on("connection", (ws) => {
 
 let state = createState();
 
-function gameLoop() {
-  state = update(state);
-
+function broadcastState() {
   for (const client of wss.clients)
     client.send(
       JSON.stringify({
@@ -62,7 +62,13 @@ function gameLoop() {
     );
 }
 
-setInterval(gameLoop, 300);
+function gameLoop() {
+  state = update(state);
+
+  broadcastState();
+}
+
+setInterval(gameLoop, tickDuration);
 
 server.listen(port, () => {
   console.log(`WebSocket server is running on ws://localhost:${port}`);

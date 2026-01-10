@@ -2,11 +2,11 @@ import {
   collisionWithMap,
   updatePosition,
   getNewPosition,
-  type Action,
   type AttackAction,
   type Creature,
   type Position,
   type State,
+  type MoveAction,
 } from "@creatures/shared/state";
 
 export const updateCreature = (state: State, creature: Creature): State => {
