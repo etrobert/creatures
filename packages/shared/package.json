@@ -4,5 +4,8 @@
   "exports": {
     "./test": "./test.ts",
     "./messages": "./messages.ts"
+  },
+  "dependencies": {
+    "zod": "^4.3.5"
   }
 }
