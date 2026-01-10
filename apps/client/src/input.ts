@@ -84,7 +84,7 @@ export const setupEventListeners = () => {
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer && creature.id === activeCreatureId
+        creature.id === activeCreatureId
           ? {
               ...creature,
               nextActions: [...creature.nextActions, ...nextActions],
