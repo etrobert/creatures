@@ -27,6 +27,8 @@ export const playerInputMessageSchema = z.object({
   actions: z.array(actionSchema),
 });
 
+export type PlayerInputMessage = z.infer<typeof playerInputMessageSchema>;
+
 export const clientMessageSchema = z.discriminatedUnion("type", [
   playerInputMessageSchema,
 ]);

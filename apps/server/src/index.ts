@@ -1,4 +1,7 @@
-import type { ServerMessage } from "@creatures/shared/messages";
+import type {
+  PlayerInputMessage,
+  ServerMessage,
+} from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";
 import { WebSocketServer } from "ws";
 import { createServer } from "http";
@@ -13,9 +16,6 @@ const wss = new WebSocketServer({ server });
 wss.on("connection", (ws) => {
   console.log("Client connected");
 
-  // TODO: Assign player IDs dynamically
-  const playerId = 0;
-
   const sendMessage = (message: ServerMessage) =>
     ws.send(JSON.stringify(message));
 
@@ -26,18 +26,7 @@ wss.on("connection", (ws) => {
 
     switch (message.type) {
       case "player input":
-        state = {
-          ...state,
-          creatures: state.creatures.map((creature) =>
-            creature.player === playerId
-              ? {
-                  ...creature,
-                  nextActions: [...creature.nextActions, ...message.actions],
-                }
-              : creature,
-          ),
-        };
-        broadcastState();
+        processPlayerInputMessage(message);
         break;
     }
   });
@@ -46,6 +35,24 @@ wss.on("connection", (ws) => {
     console.log("Client disconnected");
   });
 });
+
+function processPlayerInputMessage(message: PlayerInputMessage) {
+  // TODO: Assign player IDs dynamically
+  const playerId = 0;
+
+  state = {
+    ...state,
+    creatures: state.creatures.map((creature) =>
+      creature.player === playerId
+        ? {
+            ...creature,
+            nextActions: [...creature.nextActions, ...message.actions],
+          }
+        : creature,
+    ),
+  };
+  broadcastState();
+}
 
 let state = createState();
 
