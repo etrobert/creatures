@@ -2,10 +2,10 @@ import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import type { Creature, Position } from "./state.js";
 import {
-  activeCreatureID,
+  activeCreatureId,
   activePlayer,
-  activePlayerCreaturesID,
-  setActiveCreatureID,
+  activePlayerCreaturesId,
+  setActiveCreatureId,
 } from "./index.js";
 
 export const setupEventListeners = () => {
@@ -23,7 +23,7 @@ export const setupEventListeners = () => {
         case "KeyQ": {
           const activeCreature = findActiveCreature(
             activePlayer,
-            activeCreatureID,
+            activeCreatureId,
           );
           if (activeCreature === undefined)
             throw new Error("Couldn't find active creature");
@@ -42,7 +42,7 @@ export const setupEventListeners = () => {
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer && creature.id === activeCreatureID
+        creature.player === activePlayer && creature.id === activeCreatureId
           ? {
               ...creature,
               nextActions: [...creature.nextActions, newAction],
@@ -56,7 +56,7 @@ export const setupEventListeners = () => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.creatures.find(
       (creature) =>
-        creature.player === activePlayer && creature.id === activeCreatureID,
+        creature.player === activePlayer && creature.id === activeCreatureId,
     );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
@@ -85,7 +85,7 @@ export const setupEventListeners = () => {
     setState({
       ...state,
       creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer && creature.id === activeCreatureID
+        creature.player === activePlayer && creature.id === activeCreatureId
           ? {
               ...creature,
               nextActions: [...creature.nextActions, ...nextActions],
@@ -99,19 +99,19 @@ export const setupEventListeners = () => {
     const getActiveCharacter = () => {
       switch (event.code) {
         case "Digit1":
-          return activePlayerCreaturesID[0];
+          return activePlayerCreaturesId[0];
         case "Digit2":
-          return activePlayerCreaturesID[1];
+          return activePlayerCreaturesId[1];
         case "Digit3":
-          return activePlayerCreaturesID[2];
+          return activePlayerCreaturesId[2];
         case "Digit4":
-          return activePlayerCreaturesID[3];
+          return activePlayerCreaturesId[3];
       }
     };
 
     const newActiveCharacter = getActiveCharacter();
     if (newActiveCharacter === undefined) return;
-    setActiveCreatureID(newActiveCharacter);
+    setActiveCreatureId(newActiveCharacter);
   });
 };
 

@@ -4,20 +4,19 @@ import { setupEventListeners } from "./input.js";
 import { setState, state } from "./state.js";
 
 export const activePlayer = 0;
-export const activePlayerCreaturesID = state.creatures
+export const activePlayerCreaturesId = state.creatures
   .filter((creature) => creature.player === activePlayer)
   .map((creature) => creature.id);
-// export const activeCreatureID = activePlayerCreaturesID[0];
 
-const getActiveCreatureID = () => {
-  const activeCreatureID = activePlayerCreaturesID[0];
-  if (activeCreatureID === undefined) throw new Error("Could not get canvas");
-  return activeCreatureID;
+const getInitialActiveCreatureId = () => {
+  const activeCreatureId = activePlayerCreaturesId[0];
+  if (activeCreatureId === undefined) throw new Error("Could not get canvas");
+  return activeCreatureId;
 };
-export let activeCreatureID = getActiveCreatureID();
+export let activeCreatureId = getInitialActiveCreatureId();
 
-export const setActiveCreatureID = (newActiveCreatureID: string) =>
-  (activeCreatureID = newActiveCreatureID);
+export const setActiveCreatureId = (newActiveCreatureId: string) =>
+  (activeCreatureId = newActiveCreatureId);
 
 setupEventListeners();
 
