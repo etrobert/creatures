@@ -2,6 +2,7 @@
   "name": "@creatures/shared",
   "type": "module",
   "exports": {
-    "./test": "./test.ts"
+    "./test": "./test.ts",
+    "./messages": "./messages.ts"
   }
 }
