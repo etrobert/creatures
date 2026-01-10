@@ -1,6 +1,6 @@
 import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight } from "./render.js";
-import type { Position } from "./state.js";
+import type { MoveAction, Position } from "./state.js";
 import { activePlayer } from "./index.js";
 import { collisionWithMap, getCreatureAtPosition } from "./updateCreature.js";
 
