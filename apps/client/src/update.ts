@@ -1,81 +1,6 @@
-import {
-  type Creature,
-  type State,
-  type Action,
-  type Position,
-  type Direction,
-  countColumns,
-  countRow,
-} from "./state.js";
+import { type State } from "./state.js";
 
-const getCreatureAtPosition = (state: State, position: Position) =>
-  state.creatures.find(
-    (creature) =>
-      creature.position.x === position.x && creature.position.y === position.y,
-  );
-
-const getNewPosition = ({ x, y }: Position, direction: Direction) => {
-  switch (direction) {
-    case "up":
-      return { x, y: y - 1 };
-    case "down":
-      return { x, y: y + 1 };
-    case "right":
-      return { x: x + 1, y };
-    case "left":
-      return { x: x - 1, y };
-  }
-};
-
-export const updatePosition = (
-  creature: Creature,
-  nextAction: Action,
-  collision: (newPosition: Position) => boolean,
-): Creature => {
-  const newPosition = getNewPosition(creature.position, nextAction.direction);
-
-  if (collision(newPosition)) return { ...creature, ongoingAction: null };
-
-  return {
-    ...creature,
-    position: newPosition,
-    direction: nextAction.direction,
-    ongoingAction: null,
-  };
-};
-
-export const collisionWithMap = (newPosition: Position) =>
-  newPosition.x < 0 ||
-  newPosition.x >= countColumns ||
-  newPosition.y < 0 ||
-  newPosition.y >= countRow;
-
-const updateActions = (creature: Creature) => {
-  if (creature.ongoingAction) return creature;
-  const [ongoingAction, ...nextActions] = creature.nextActions;
-  if (!ongoingAction) return creature;
-  return { ...creature, ongoingAction, nextActions };
-};
-
-const applyOngoingAction = (state: State, creature: Creature) => {
-  switch (creature.ongoingAction?.type) {
-    case "move":
-      const collision = (newPosition: Position) => {
-        const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-        return (
-          collisionWithMap(newPosition) || creatureAtPosition !== undefined
-        );
-      };
-      return updatePosition(creature, creature.ongoingAction, collision);
-    default:
-      return creature;
-  }
-};
-
-const updateCreature = (state: State, creature: Creature) => {
-  creature = updateActions(creature);
-  return applyOngoingAction(state, creature);
-};
+import { updateCreature } from "./updateCreature.js";
 
 export const tickDuration = 300;
 
@@ -84,9 +9,7 @@ export function update(state: State, currentTime: number): State {
 
   const lastTick = currentTime;
 
-  const creatures = state.creatures.map((creature) =>
-    updateCreature(state, creature),
-  );
+  for (let creature of state.creatures) state = updateCreature(state, creature);
 
-  return { lastTick, creatures };
+  return { ...state, lastTick };
 }
