@@ -10,7 +10,6 @@ const ws = new WebSocket("ws://localhost:3000");
 
 ws.onopen = () => {
   console.log("Connected to WebSocket server");
-  ws.send("Hello from client!");
 };
 
 ws.onmessage = (event) => {
