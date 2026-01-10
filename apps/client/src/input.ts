@@ -1,8 +1,9 @@
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import { activePlayer, ws } from "./index.js";
+import { activePlayer } from "./index.js";
 import type { Position, Action } from "@creatures/shared/state";
 import type { ClientMessage } from "@creatures/shared/messages";
 import { state } from "./state.js";
+import { ws } from "./socket.js";
 
 const sendActions = (actions: Action[]) => {
   const message: ClientMessage = {
