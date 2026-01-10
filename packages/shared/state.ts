@@ -50,3 +50,42 @@ export type State = z.infer<typeof stateSchema>;
 
 export const countColumns = 10;
 export const countRow = 7;
+
+export const tickDuration = 300;
+
+// Game logic utilities
+
+export const getNewPosition = ({ x, y }: Position, direction: Direction): Position => {
+  switch (direction) {
+    case "up":
+      return { x, y: y - 1 };
+    case "down":
+      return { x, y: y + 1 };
+    case "right":
+      return { x: x + 1, y };
+    case "left":
+      return { x: x - 1, y };
+  }
+};
+
+export const collisionWithMap = (newPosition: Position): boolean =>
+  newPosition.x < 0 ||
+  newPosition.x >= countColumns ||
+  newPosition.y < 0 ||
+  newPosition.y >= countRow;
+
+export const updatePosition = (
+  creature: Creature,
+  nextAction: Action,
+  collision: (newPosition: Position) => boolean,
+): Creature => {
+  const newPosition = getNewPosition(creature.position, nextAction.direction);
+
+  if (collision(newPosition)) return creature;
+
+  return {
+    ...creature,
+    position: newPosition,
+    direction: nextAction.direction,
+  };
+};

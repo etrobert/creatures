@@ -1,8 +1,8 @@
-import { collisionWithMap } from "./updateCreature.js";
 import { renderBackground, backgroundMap } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
-import { updatePosition } from "./updateCreature.js";
 import {
+  collisionWithMap,
+  updatePosition,
   countColumns,
   countRow,
   type Position,
