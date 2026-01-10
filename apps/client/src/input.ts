@@ -1,7 +1,7 @@
-import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import type { Creature, Position } from "./state.js";
 import { activePlayer } from "./index.js";
+import type { Position } from "@creatures/shared/state";
+import { setState, state } from "./state.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {

@@ -1,8 +1,8 @@
-import { type Creature, type Position, type Direction } from "./state.js";
 import { ctx } from "./render.js";
 import { cellHeight, cellWidth, gridToCanvas } from "./render.js";
 import { tickDuration } from "./update.js";
 import { activePlayer } from "./index.js";
+import type { Creature, Direction } from "@creatures/shared/state";
 
 const getDirectionLine = (direction: Direction) => {
   switch (direction) {

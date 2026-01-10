@@ -2,6 +2,7 @@ import { j } from "@creatures/shared/test";
 import type { ServerMessage } from "@creatures/shared/messages";
 import { WebSocketServer } from "ws";
 import { createServer } from "http";
+import { createState } from "./state.js";
 
 console.log(" This is coming from shared: " + j);
 
@@ -28,8 +29,17 @@ wss.on("connection", (ws) => {
   });
 });
 
+let state = createState();
+
 function gameLoop() {
   console.log("game loop run");
+  for (const client of wss.clients)
+    client.send(
+      JSON.stringify({
+        type: "state update",
+        state,
+      } satisfies ServerMessage),
+    );
 }
 
 setInterval(gameLoop, 300);

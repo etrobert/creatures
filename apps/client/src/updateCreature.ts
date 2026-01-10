@@ -1,13 +1,14 @@
-import type { AttackAction, MoveAction } from "@creatures/shared/state";
 import {
-  type Creature,
-  type State,
-  type Position,
-  type Action,
-  type Direction,
   countColumns,
   countRow,
-} from "./state.js";
+  type Action,
+  type AttackAction,
+  type Creature,
+  type Direction,
+  type MoveAction,
+  type Position,
+  type State,
+} from "@creatures/shared/state";
 
 export const updateCreature = (state: State, creature: Creature): State => {
   creature = updateActions(creature);
