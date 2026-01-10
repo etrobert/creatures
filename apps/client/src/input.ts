@@ -109,9 +109,9 @@ export const setupEventListeners = () => {
       }
     };
 
-    const newActiveCharacter = getActiveCharacter();
-    if (newActiveCharacter === undefined) return;
-    setActiveCreatureId(newActiveCharacter);
+    const newActiveCreature = getActiveCharacter();
+    if (newActiveCreature === undefined) return;
+    setActiveCreatureId(newActiveCreature);
   });
 };
 
