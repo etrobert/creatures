@@ -1,36 +1,52 @@
 // Game state types and constants
 
-export type Position = { x: number; y: number };
+import { z } from "zod";
 
-export type Direction = "up" | "right" | "left" | "down";
+export const positionSchema = z.object({
+  x: z.number(),
+  y: z.number(),
+});
 
-export type MoveAction = {
-  type: "move";
-  direction: Direction;
-};
+export const directionSchema = z.enum(["up", "right", "left", "down"]);
 
-export type AttackAction = {
-  type: "attack";
-  direction: Direction;
-};
+export const moveActionSchema = z.object({
+  type: z.literal("move"),
+  direction: directionSchema,
+});
 
-export type Action = MoveAction | AttackAction;
+export const attackActionSchema = z.object({
+  type: z.literal("attack"),
+  direction: directionSchema,
+});
 
-export type Creature = {
-  id: string;
-  player: number;
-  health: number;
-  maxHealth: number;
-  position: Position;
-  ongoingAction: Action | null;
-  nextActions: Action[];
-  direction: Direction;
-};
+export const actionSchema = z.discriminatedUnion("type", [
+  moveActionSchema,
+  attackActionSchema,
+]);
 
-export type State = {
-  lastTick: number;
-  creatures: Creature[];
-};
+export const creatureSchema = z.object({
+  id: z.string(),
+  player: z.number(),
+  health: z.number(),
+  maxHealth: z.number(),
+  position: positionSchema,
+  ongoingAction: actionSchema.nullable(),
+  nextActions: z.array(actionSchema),
+  direction: directionSchema,
+});
+
+export const stateSchema = z.object({
+  lastTick: z.number(),
+  creatures: z.array(creatureSchema),
+});
+
+export type Position = z.infer<typeof positionSchema>;
+export type Direction = z.infer<typeof directionSchema>;
+export type MoveAction = z.infer<typeof moveActionSchema>;
+export type AttackAction = z.infer<typeof attackActionSchema>;
+export type Action = z.infer<typeof actionSchema>;
+export type Creature = z.infer<typeof creatureSchema>;
+export type State = z.infer<typeof stateSchema>;
 
 export const countColumns = 10;
 export const countRow = 7;
