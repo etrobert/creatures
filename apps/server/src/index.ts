@@ -69,6 +69,6 @@ function gameLoop() {
 
 setInterval(gameLoop, tickDuration);
 
-server.listen(port, () => {
-  console.log(`WebSocket server is running on ws://localhost:${port}`);
-});
+server.listen(port, () =>
+  console.log(`WebSocket server is running on ws://localhost:${port}`),
+);
