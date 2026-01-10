@@ -15,7 +15,14 @@ ws.onopen = () => {
 
 ws.onmessage = (event) => {
   const data = serverMessageSchema.parse(JSON.parse(event.data));
-  console.log("Message from server:", data);
+  switch (data.type) {
+    case "console":
+      console.log("From server: ", data.message);
+      break;
+    case "state update":
+      setState(data.state);
+      break;
+  }
 };
 
 ws.onerror = (error) => {

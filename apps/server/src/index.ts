@@ -17,6 +17,8 @@ wss.on("connection", (ws) => {
 
   sendMessage({ type: "console", message: "Hello from server!" });
 
+  sendMessage({ type: "state update", state: { lastTick: 0, creatures: [] } });
+
   ws.on("message", (data) => {
     console.log("Received:", data.toString());
   });
