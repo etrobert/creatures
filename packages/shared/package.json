@@ -3,7 +3,8 @@
   "type": "module",
   "exports": {
     "./test": "./test.ts",
-    "./messages": "./messages.ts"
+    "./messages": "./messages.ts",
+    "./state": "./state.ts"
   },
   "dependencies": {
     "zod": "^4.3.5"

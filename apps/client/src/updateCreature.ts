@@ -1,3 +1,4 @@
+import type { AttackAction, MoveAction } from "@creatures/shared/state";
 import {
   type Creature,
   type State,
@@ -6,8 +7,6 @@ import {
   type Direction,
   countColumns,
   countRow,
-  type MoveAction,
-  type AttackAction,
 } from "./state.js";
 
 export const updateCreature = (state: State, creature: Creature): State => {

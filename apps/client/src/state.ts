@@ -1,13 +1,7 @@
-export type Creature = {
-  id: string;
-  player: number;
-  health: number;
-  maxHealth: number;
-  position: Position;
-  ongoingAction: Action | null;
-  nextActions: Action[];
-  direction: Direction;
-};
+import type { Creature, State, Position } from "@creatures/shared/state";
+
+export { countColumns, countRow } from "@creatures/shared/state";
+export type { Creature, State, Direction, Action, Position } from "@creatures/shared/state";
 
 let nextId = 0;
 
@@ -25,7 +19,7 @@ const createCreature = ({
   nextActions: [],
 });
 
-export const createState = () => ({
+export const createState = (): State => ({
   lastTick: 0,
   creatures: [
     createCreature(),
@@ -36,24 +30,3 @@ export const createState = () => ({
 export let state = createState();
 
 export const setState = (newState: State) => (state = newState);
-
-export type State = ReturnType<typeof createState>;
-
-export type Direction = "up" | "right" | "left" | "down";
-
-export type MoveAction = {
-  type: "move";
-  direction: Direction;
-};
-
-export type AttackAction = {
-  type: "attack";
-  direction: Direction;
-};
-
-export type Action = MoveAction | AttackAction;
-
-export type Position = { x: number; y: number };
-
-export const countColumns = 10;
-export const countRow = 7;
