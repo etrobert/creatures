@@ -1,3 +1,4 @@
+import { serverMessageSchema } from "@creatures/shared/messages";
 import { render } from "./render.js";
 import { update } from "./update.js";
 import { setupEventListeners } from "./input.js";
@@ -13,7 +14,7 @@ ws.onopen = () => {
 };
 
 ws.onmessage = (event) => {
-  const data: unknown = JSON.parse(event.data);
+  const data: unknown = serverMessageSchema.parse(JSON.parse(event.data));
   console.log("Message from server:", data);
 };
 
