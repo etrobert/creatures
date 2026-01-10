@@ -28,6 +28,12 @@ wss.on("connection", (ws) => {
   });
 });
 
+function gameLoop() {
+  console.log("game loop run");
+}
+
+setInterval(gameLoop, 300);
+
 server.listen(port, () => {
   console.log(`WebSocket server is running on ws://localhost:${port}`);
 });
