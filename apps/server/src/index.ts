@@ -1,5 +1,7 @@
 import { j } from "@creatures/shared/test";
 import express from "express";
+import { WebSocketServer } from "ws";
+import { createServer } from "http";
 
 const app = express();
 
@@ -10,6 +12,25 @@ app.get("/", (req, res) => {
 console.log(" This is coming from shared: " + j);
 
 const port = 3000;
-app.listen(port, () => {
+const server = createServer(app);
+const wss = new WebSocketServer({ server });
+
+wss.on("connection", (ws) => {
+  console.log("Client connected");
+
+  ws.send("Hello from server!");
+
+  ws.on("message", (data) => {
+    console.log("Received:", data.toString());
+    ws.send(`Echo: ${data.toString()}`);
+  });
+
+  ws.on("close", () => {
+    console.log("Client disconnected");
+  });
+});
+
+server.listen(port, () => {
   console.log(`Express app listening on port ${port}`);
+  console.log(`WebSocket server is running on ws://localhost:${port}`);
 });

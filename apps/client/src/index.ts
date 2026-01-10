@@ -5,6 +5,26 @@ import { setState, state } from "./state.js";
 
 export const activePlayer = 0;
 
+// WebSocket test
+const ws = new WebSocket("ws://localhost:3000");
+
+ws.onopen = () => {
+  console.log("Connected to WebSocket server");
+  ws.send("Hello from client!");
+};
+
+ws.onmessage = (event) => {
+  console.log("Message from server:", event.data);
+};
+
+ws.onerror = (error) => {
+  console.error("WebSocket error:", error);
+};
+
+ws.onclose = () => {
+  console.log("Disconnected from WebSocket server");
+};
+
 setupEventListeners();
 
 function gameLoop(currentTime: number) {
