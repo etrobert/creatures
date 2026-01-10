@@ -1,5 +1,6 @@
 import { j } from "@creatures/shared/test";
 import type { ServerMessage } from "@creatures/shared/messages";
+import { clientMessageSchema } from "@creatures/shared/messages";
 import { WebSocketServer } from "ws";
 import { createServer } from "http";
 import { createState } from "./state.js";
@@ -14,15 +15,32 @@ const wss = new WebSocketServer({ server });
 wss.on("connection", (ws) => {
   console.log("Client connected");
 
+  // TODO: Assign player IDs dynamically
+  const playerId = 0;
+
   const sendMessage = (message: ServerMessage) =>
     ws.send(JSON.stringify(message));
 
   sendMessage({ type: "console", message: "Hello from server!" });
 
-  sendMessage({ type: "state update", state: { lastTick: 0, creatures: [] } });
-
   ws.on("message", (data) => {
-    console.log("Received:", data.toString());
+    const message = clientMessageSchema.parse(JSON.parse(data.toString()));
+
+    switch (message.type) {
+      case "player input":
+        state = {
+          ...state,
+          creatures: state.creatures.map((creature) =>
+            creature.player === playerId
+              ? {
+                  ...creature,
+                  nextActions: [...creature.nextActions, ...message.actions],
+                }
+              : creature,
+          ),
+        };
+        break;
+    }
   });
 
   ws.on("close", () => {

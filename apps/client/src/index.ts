@@ -5,8 +5,8 @@ import { setState, state } from "./state.js";
 
 export const activePlayer = 0;
 
-// WebSocket test
-const ws = new WebSocket("ws://localhost:3000");
+// WebSocket connection
+export const ws = new WebSocket("ws://localhost:3000");
 
 ws.onopen = () => {
   console.log("Connected to WebSocket server");

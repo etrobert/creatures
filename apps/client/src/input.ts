@@ -1,7 +1,16 @@
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import { activePlayer } from "./index.js";
-import type { Position } from "@creatures/shared/state";
-import { setState, state } from "./state.js";
+import { activePlayer, ws } from "./index.js";
+import type { Position, Action } from "@creatures/shared/state";
+import type { ClientMessage } from "@creatures/shared/messages";
+import { state } from "./state.js";
+
+const sendActions = (actions: Action[]) => {
+  const message: ClientMessage = {
+    type: "player input",
+    actions,
+  };
+  ws.send(JSON.stringify(message));
+};
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -31,17 +40,7 @@ export const setupEventListeners = () => {
 
     if (newAction === undefined) return;
 
-    setState({
-      ...state,
-      creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer
-          ? {
-              ...creature,
-              nextActions: [...creature.nextActions, newAction],
-            }
-          : creature,
-      ),
-    });
+    sendActions([newAction]);
   });
 
   canvas.addEventListener("click", (event) => {
@@ -71,17 +70,7 @@ export const setupEventListeners = () => {
             direction: "up",
           });
     const nextActions = [...nextActionsX, ...nextActionsY];
-    setState({
-      ...state,
-      creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer
-          ? {
-              ...creature,
-              nextActions: [...creature.nextActions, ...nextActions],
-            }
-          : creature,
-      ),
-    });
+    sendActions(nextActions);
   });
 };
 
