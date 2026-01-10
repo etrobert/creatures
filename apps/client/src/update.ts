@@ -1,4 +1,4 @@
-import { type State, type Position, countColumns, countRow } from "./state.js";
+import { type State } from "./state.js";
 
 import { updateCreature } from "./updateCreature.js";
 
@@ -9,10 +9,7 @@ export function update(state: State, currentTime: number): State {
 
   const lastTick = currentTime;
 
-  state = state.creatures.reduce(
-    (state, creature) => updateCreature(state, creature),
-    state,
-  );
+  for (let creature of state.creatures) state = updateCreature(state, creature);
 
   return { ...state, lastTick };
 }
