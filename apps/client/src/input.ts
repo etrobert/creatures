@@ -21,9 +21,8 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ": {
-          const activeCreature = findActiveCreature(
-            activePlayer,
-            activeCreatureId,
+          const activeCreature = state.creatures.find(
+            ({ id }) => id === activeCreatureId,
           );
           if (activeCreature === undefined)
             throw new Error("Couldn't find active creature");
@@ -114,11 +113,6 @@ export const setupEventListeners = () => {
     setActiveCreatureId(newActiveCharacter);
   });
 };
-
-const findActiveCreature = (player: number, creatureID: string) =>
-  state.creatures.find(
-    (creature) => creature.player === player && creature.id === creatureID,
-  );
 
 // translation bwtween grid position and canvas position
 const canvasToGrid = ({ x, y }: Position) => ({
