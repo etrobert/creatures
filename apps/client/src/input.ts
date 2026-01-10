@@ -1,10 +1,10 @@
 import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import type { Creature, Position } from "./state.js";
-import { activePlayer } from "./index.js";
 import {
+  activePlayer,
   activeCreatureId,
-  activePlayerCreaturesId,
+  listPlayerCreaturesId,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
 
@@ -96,15 +96,16 @@ export const setupEventListeners = () => {
 
   window.addEventListener("keydown", (event) => {
     const getActiveCharacter = () => {
+      const listActivePlayerCreaturesId = listPlayerCreaturesId(activePlayer);
       switch (event.code) {
         case "Digit1":
-          return activePlayerCreaturesId[0];
+          return listActivePlayerCreaturesId[0];
         case "Digit2":
-          return activePlayerCreaturesId[1];
+          return listActivePlayerCreaturesId[1];
         case "Digit3":
-          return activePlayerCreaturesId[2];
+          return listActivePlayerCreaturesId[2];
         case "Digit4":
-          return activePlayerCreaturesId[3];
+          return listActivePlayerCreaturesId[3];
       }
     };
 
