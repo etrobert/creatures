@@ -6,10 +6,7 @@ import { state } from "./state.js";
 import { ws } from "./socket.js";
 
 const sendActions = (actions: Action[]) => {
-  const message: ClientMessage = {
-    type: "player input",
-    actions,
-  };
+  const message = { type: "player input", actions } satisfies ClientMessage;
   ws.send(JSON.stringify(message));
 };
 
