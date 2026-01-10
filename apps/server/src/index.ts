@@ -37,13 +37,10 @@ wss.on("connection", (ws) => {
 });
 
 function processPlayerInputMessage(message: PlayerInputMessage) {
-  // TODO: Assign player IDs dynamically
-  const playerId = 0;
-
   state = {
     ...state,
     creatures: state.creatures.map((creature) =>
-      creature.player === playerId
+      creature.id === message.creatureId
         ? {
             ...creature,
             nextActions: [...creature.nextActions, ...message.actions],

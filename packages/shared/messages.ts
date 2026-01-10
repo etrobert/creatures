@@ -24,6 +24,7 @@ export type ServerMessage = z.infer<typeof serverMessageSchema>;
 // Client -> Server messages
 export const playerInputMessageSchema = z.object({
   type: z.literal("player input"),
+  creatureId: z.string(),
   actions: z.array(actionSchema),
 });
 

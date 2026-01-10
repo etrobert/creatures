@@ -5,13 +5,21 @@ import type { ClientMessage } from "@creatures/shared/messages";
 import { state } from "./state.js";
 import { ws } from "./socket.js";
 
-const sendActions = (actions: Action[]) => {
-  const message = { type: "player input", actions } satisfies ClientMessage;
+const sendActions = (creatureId: string, actions: Action[]) => {
+  const message = {
+    type: "player input",
+    creatureId,
+    actions,
+  } satisfies ClientMessage;
   ws.send(JSON.stringify(message));
 };
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
+    const activeCreature = findActiveCreature(0);
+    if (activeCreature === undefined)
+      throw new Error("Couldn't find active creature");
+
     const getAction = () => {
       switch (event.code) {
         case "KeyW":
@@ -23,9 +31,6 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ": {
-          const activeCreature = findActiveCreature(0);
-          if (activeCreature === undefined)
-            throw new Error("Couldn't find active creature");
           return {
             type: "attack",
             direction: activeCreature.direction,
@@ -38,7 +43,7 @@ export const setupEventListeners = () => {
 
     if (newAction === undefined) return;
 
-    sendActions([newAction]);
+    sendActions(activeCreature.id, [newAction]);
   });
 
   canvas.addEventListener("click", (event) => {
@@ -68,7 +73,7 @@ export const setupEventListeners = () => {
             direction: "up",
           });
     const nextActions = [...nextActionsX, ...nextActionsY];
-    sendActions(nextActions);
+    sendActions(activeCreature.id, nextActions);
   });
 };
 
