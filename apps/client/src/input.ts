@@ -4,7 +4,7 @@ import type { Creature, Position } from "./state.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
-    const getDirection = () => {
+    const getAction = () => {
       switch (event.code) {
         case "KeyW":
           return { type: "move", direction: "up" } as const;
@@ -26,7 +26,7 @@ export const setupEventListeners = () => {
       }
     };
 
-    const newAction = getDirection();
+    const newAction = getAction();
 
     if (newAction === undefined) return;
 
