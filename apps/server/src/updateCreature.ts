@@ -130,6 +130,5 @@ export const updateProjectile = (
   };
 };
 
-const samePosition = (position1: Position, position2: Position) => {
-  return position1.x === position2.x && position1.y === position2.y;
-};
+const samePosition = (position1: Position, position2: Position) =>
+  position1.x === position2.x && position1.y === position2.y;
