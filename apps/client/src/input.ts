@@ -1,13 +1,19 @@
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import { activePlayer } from "./index.js";
-import type { Position, Action } from "@creatures/shared/state";
-import type { ClientMessage } from "@creatures/shared/messages";
+import {
+  activeCreatureId,
+  activePlayer,
+  listPlayerCreatureIds,
+  setActiveCreatureId,
+} from "./activePlayerCreature.js";
+import type { Position } from "@creatures/shared/state";
 import { state } from "./state.js";
 import { sendClientMessage, ws } from "./socket.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
-    const activeCreature = findActiveCreature(0);
+    const activeCreature = state.creatures.find(
+      ({ id }) => id === activeCreatureId,
+    );
     if (activeCreature === undefined)
       throw new Error("Couldn't find active creature");
 
@@ -43,7 +49,9 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
-    const activeCreature = findActiveCreature(activePlayer);
+    const activeCreature = state.creatures.find(
+      (creature) => creature.id === activeCreatureId,
+    );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
@@ -73,10 +81,27 @@ export const setupEventListeners = () => {
       actions: [...nextActionsX, ...nextActionsY],
     });
   });
-};
 
-const findActiveCreature = (player: number) =>
-  state.creatures.find((creature) => creature.player === player);
+  window.addEventListener("keydown", (event) => {
+    const getActiveCreature = () => {
+      const listActivePlayerCreatureIds = listPlayerCreatureIds(activePlayer);
+      switch (event.code) {
+        case "Digit1":
+          return listActivePlayerCreatureIds[0];
+        case "Digit2":
+          return listActivePlayerCreatureIds[1];
+        case "Digit3":
+          return listActivePlayerCreatureIds[2];
+        case "Digit4":
+          return listActivePlayerCreatureIds[3];
+      }
+    };
+
+    const newActiveCreature = getActiveCreature();
+    if (newActiveCreature === undefined) return;
+    setActiveCreatureId(newActiveCreature);
+  });
+};
 
 // translation bwtween grid position and canvas position
 const canvasToGrid = ({ x, y }: Position) => ({

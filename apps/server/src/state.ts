@@ -21,5 +21,6 @@ export const createState = (): State => ({
   creatures: [
     createCreature(),
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
+    createCreature({ player: 0, position: { x: 5, y: 5 } }),
   ],
 });
