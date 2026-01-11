@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "workspaces": [
-    "apps/client"
+    "./apps/client",
+    "./apps/server",
+    "./packages/shared"
   ],
   "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "npm run dev --workspace=@creatures/client",
+    "dev:server": "npm run dev --workspace=@creatures/server",
     "typecheck": "npm run typecheck --workspace=@creatures/client",
     "format": "npm run format --workspace=@creatures/client"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }

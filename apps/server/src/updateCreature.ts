@@ -1,14 +1,13 @@
 import {
-  type Creature,
-  type State,
-  type Position,
-  type Action,
-  type Direction,
-  countColumns,
-  countRow,
-  type MoveAction,
+  collisionWithMap,
+  updatePosition,
+  getNewPosition,
   type AttackAction,
-} from "./state.js";
+  type Creature,
+  type Position,
+  type State,
+  type MoveAction,
+} from "@creatures/shared/state";
 
 export const updateCreature = (state: State, creature: Creature): State => {
   creature = updateActions(creature);
@@ -78,43 +77,8 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
   }
 };
 
-export const updatePosition = (
-  creature: Creature,
-  nextAction: Action,
-  collision: (newPosition: Position) => boolean,
-): Creature => {
-  const newPosition = getNewPosition(creature.position, nextAction.direction);
-
-  if (collision(newPosition)) return creature;
-
-  return {
-    ...creature,
-    position: newPosition,
-    direction: nextAction.direction,
-  };
-};
-
 export const getCreatureAtPosition = (state: State, position: Position) =>
   state.creatures.find(
     (creature) =>
       creature.position.x === position.x && creature.position.y === position.y,
   );
-
-export const collisionWithMap = (newPosition: Position) =>
-  newPosition.x < 0 ||
-  newPosition.x >= countColumns ||
-  newPosition.y < 0 ||
-  newPosition.y >= countRow;
-
-const getNewPosition = ({ x, y }: Position, direction: Direction) => {
-  switch (direction) {
-    case "up":
-      return { x, y: y - 1 };
-    case "down":
-      return { x, y: y + 1 };
-    case "right":
-      return { x: x + 1, y };
-    case "left":
-      return { x: x - 1, y };
-  }
-};

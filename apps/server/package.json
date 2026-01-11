@@ -1,0 +1,14 @@
+{
+  "name": "@creatures/server",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.21.0"
+  },
+  "dependencies": {
+    "ws": "^8.19.0"
+  }
+}
