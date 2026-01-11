@@ -2,12 +2,7 @@ import { countColumns, countRow, type Position } from "@creatures/shared/state";
 import { backgroundTilesPositions } from "./backgroundTilesPositions.js";
 
 import { ctx } from "./render.js";
-
-const getTile = (background: string[], position: Position) => {
-  const tile = background[position.x + position.y * countColumns];
-  if (tile === undefined) throw new Error("incorrect position");
-  return tile;
-};
+import { getTile } from "@creatures/shared/gameLogicUtilities";
 
 const getBackgroundTile = (background: string[], position: Position) => {
   const tile = background[position.x + position.y * countColumns * 2];

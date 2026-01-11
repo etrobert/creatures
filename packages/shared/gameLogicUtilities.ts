@@ -2,6 +2,7 @@ import {
   countColumns,
   countRow,
   type Action,
+  type Background,
   type Creature,
   type Direction,
   type Entity,
@@ -54,3 +55,14 @@ export const updatePosition = <T extends Entity>(
 
 export const isCreature = (entity: Entity): entity is Creature =>
   entity.type === "creature";
+
+export const backgroundMapCollision = (
+  background: Background,
+  position: Position,
+) => getTile(background, position) === "void";
+
+export const getTile = (background: string[], position: Position) => {
+  const tile = background[position.x + position.y * countColumns];
+  if (tile === undefined) throw new Error("incorrect position");
+  return tile;
+};
