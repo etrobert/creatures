@@ -8,7 +8,6 @@ import {
   type State,
   type MoveAction,
   type Projectile,
-  type AttackFireballAction,
 } from "@creatures/shared/state";
 import { createFireball } from "./state.js";
 
