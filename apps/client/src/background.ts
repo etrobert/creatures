@@ -1,5 +1,5 @@
+import { countColumns, countRow, type Position } from "@creatures/shared/state";
 import { backgroundTilesPositions } from "./backgroundTilesPositions.js";
-import { countColumns, countRow, type Position } from "./state.js";
 
 import { ctx } from "./render.js";
 

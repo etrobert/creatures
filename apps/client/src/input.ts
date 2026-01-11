@@ -1,10 +1,16 @@
-import { setState, state } from "./state.js";
 import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
-import type { Creature, Position } from "./state.js";
 import { activePlayer } from "./index.js";
+import type { Position, Action } from "@creatures/shared/state";
+import type { ClientMessage } from "@creatures/shared/messages";
+import { state } from "./state.js";
+import { sendClientMessage, ws } from "./socket.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
+    const activeCreature = findActiveCreature(0);
+    if (activeCreature === undefined)
+      throw new Error("Couldn't find active creature");
+
     const getAction = () => {
       switch (event.code) {
         case "KeyW":
@@ -16,9 +22,6 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ": {
-          const activeCreature = findActiveCreature(0);
-          if (activeCreature === undefined)
-            throw new Error("Couldn't find active creature");
           return {
             type: "attack",
             direction: activeCreature.direction,
@@ -31,16 +34,10 @@ export const setupEventListeners = () => {
 
     if (newAction === undefined) return;
 
-    setState({
-      ...state,
-      creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer
-          ? {
-              ...creature,
-              nextActions: [...creature.nextActions, newAction],
-            }
-          : creature,
-      ),
+    sendClientMessage({
+      type: "player input",
+      creatureId: activeCreature.id,
+      actions: [newAction],
     });
   });
 
@@ -70,17 +67,10 @@ export const setupEventListeners = () => {
             type: "move",
             direction: "up",
           });
-    const nextActions = [...nextActionsX, ...nextActionsY];
-    setState({
-      ...state,
-      creatures: state.creatures.map((creature) =>
-        creature.player === activePlayer
-          ? {
-              ...creature,
-              nextActions: [...creature.nextActions, ...nextActions],
-            }
-          : creature,
-      ),
+    sendClientMessage({
+      type: "player input",
+      creatureId: activeCreature.id,
+      actions: [...nextActionsX, ...nextActionsY],
     });
   });
 };
