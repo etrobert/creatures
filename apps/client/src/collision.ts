@@ -1,7 +1,10 @@
 import { countColumns, countRow, type Position } from "./state.js";
 
-export const collisionWithMap = (newPosition: Position) =>
-  newPosition.x < 0 ||
-  newPosition.x >= countColumns ||
-  newPosition.y < 0 ||
-  newPosition.y >= countRow;
+export const collisionWithMap = (positon: Position) =>
+  outerMapCollision(positon);
+
+const outerMapCollision = (positon: Position) =>
+  positon.x < 0 ||
+  positon.x >= countColumns ||
+  positon.y < 0 ||
+  positon.y >= countRow;
