@@ -95,7 +95,7 @@ export const setupEventListeners = () => {
   });
 
   window.addEventListener("keydown", (event) => {
-    const getActiveCharacter = () => {
+    const getActiveCreature = () => {
       const listActivePlayerCreaturesId = listPlayerCreaturesId(activePlayer);
       switch (event.code) {
         case "Digit1":
@@ -109,7 +109,7 @@ export const setupEventListeners = () => {
       }
     };
 
-    const newActiveCreature = getActiveCharacter();
+    const newActiveCreature = getActiveCreature();
     if (newActiveCreature === undefined) return;
     setActiveCreatureId(newActiveCreature);
   });
