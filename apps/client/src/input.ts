@@ -27,16 +27,13 @@ export const setupEventListeners = () => {
           return { type: "move", direction: "down" } as const;
         case "KeyD":
           return { type: "move", direction: "right" } as const;
-        case "KeyQ": {
+        case "KeyQ":
           return {
             type: "attack",
             direction: activeCreature.direction,
           } as const;
-        }
-
-        case "KeyE": {
+        case "KeyE":
           return { type: "fireball" } as const;
-        }
       }
     };
 
