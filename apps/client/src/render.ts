@@ -1,4 +1,4 @@
-import { renderBackground, backgroundMap } from "./background.js";
+import { renderBackground } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
 import {
   countColumns,
@@ -57,7 +57,7 @@ const renderEntity = (entity: Entity, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(backgroundMap);
+  renderBackground(state.background);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const entities = state.entities.filter(

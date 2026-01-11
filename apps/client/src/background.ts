@@ -15,12 +15,6 @@ const getBackgroundTile = (background: string[], position: Position) => {
   return tile;
 };
 
-export const backgroundMap = new Array(countColumns * countRow).fill("grass");
-
-backgroundMap[0] = "void";
-backgroundMap[1] = "void";
-backgroundMap[16] = "void";
-
 const getBackgroundTilesMap = (backgroundMap: string[]) => {
   let backgroundTilesMap = new Array();
   for (let yn = 0; yn < countRow * 2; yn++) {
@@ -37,7 +31,7 @@ const getBackgroundTilesMap = (backgroundMap: string[]) => {
 };
 
 export const renderBackground = (background: string[]) => {
-  const backgroundTilesMap = getBackgroundTilesMap(backgroundMap);
+  const backgroundTilesMap = getBackgroundTilesMap(background);
   const moreRows = countRow * 2 + 1;
   const moreColumns = countColumns * 2 + 1;
   for (let y = 0; y < moreRows; y++) {
