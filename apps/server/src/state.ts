@@ -8,11 +8,13 @@ import type {
 
 let nextId = 0;
 
+const createId = () => String(nextId++);
+
 const createCreature = ({
   player = 0,
   position = { x: 3, y: 2 },
 } = {}): Creature => ({
-  id: String(nextId++),
+  id: createId(),
   player,
   health: 9,
   maxHealth: 10,
@@ -32,8 +34,6 @@ export const createState = (): State => ({
   projectiles: [],
 });
 
-let nextProjectileId = 0;
-
 export const createFireball = (
   tileAttacked: Position,
   direction: Direction,
@@ -41,6 +41,6 @@ export const createFireball = (
   return {
     position: tileAttacked,
     direction,
-    id: String(nextProjectileId++),
+    id: createId(),
   } as const;
 };
