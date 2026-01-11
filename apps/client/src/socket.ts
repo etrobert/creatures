@@ -1,4 +1,7 @@
-import { serverMessageSchema } from "@creatures/shared/messages";
+import {
+  serverMessageSchema,
+  type ClientMessage,
+} from "@creatures/shared/messages";
 import { setState } from "./state.js";
 
 // WebSocket connection
@@ -18,3 +21,6 @@ ws.onmessage = (event) => {
 ws.onerror = (error) => console.error("WebSocket error:", error);
 
 ws.onclose = () => console.log("Disconnected from WebSocket server");
+
+export const sendClientMessage = (message: ClientMessage) =>
+  ws.send(JSON.stringify(message));

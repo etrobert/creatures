@@ -3,16 +3,7 @@ import { activePlayer } from "./index.js";
 import type { Position, Action } from "@creatures/shared/state";
 import type { ClientMessage } from "@creatures/shared/messages";
 import { state } from "./state.js";
-import { ws } from "./socket.js";
-
-const sendActions = (creatureId: string, actions: Action[]) => {
-  const message = {
-    type: "player input",
-    creatureId,
-    actions,
-  } satisfies ClientMessage;
-  ws.send(JSON.stringify(message));
-};
+import { sendClientMessage, ws } from "./socket.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
@@ -43,7 +34,11 @@ export const setupEventListeners = () => {
 
     if (newAction === undefined) return;
 
-    sendActions(activeCreature.id, [newAction]);
+    sendClientMessage({
+      type: "player input",
+      creatureId: activeCreature.id,
+      actions: [newAction],
+    });
   });
 
   canvas.addEventListener("click", (event) => {
@@ -72,8 +67,11 @@ export const setupEventListeners = () => {
             type: "move",
             direction: "up",
           });
-    const nextActions = [...nextActionsX, ...nextActionsY];
-    sendActions(activeCreature.id, nextActions);
+    sendClientMessage({
+      type: "player input",
+      creatureId: activeCreature.id,
+      actions: [...nextActionsX, ...nextActionsY],
+    });
   });
 };
 
