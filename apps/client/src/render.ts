@@ -1,17 +1,20 @@
 import { renderBackground, backgroundMap } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
 import {
-  collisionWithMap,
-  updatePosition,
   countColumns,
   countRow,
   type Position,
   type State,
   type Creature,
   type Entity,
-  isCreature,
 } from "@creatures/shared/state";
 import { renderFireball } from "./renderFireball.js";
+
+import {
+  collisionWithMap,
+  updatePosition,
+  isCreature,
+} from "@creatures/shared/gameLogicUtilities";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");

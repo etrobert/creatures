@@ -5,9 +5,10 @@ import {
   listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
-import { isCreature, type Position } from "@creatures/shared/state";
+import { type Position } from "@creatures/shared/state";
 import { state } from "./state.js";
 import { sendClientMessage, ws } from "./socket.js";
+import { isCreature } from "@creatures/shared/gameLogicUtilities";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {

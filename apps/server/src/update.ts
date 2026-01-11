@@ -1,4 +1,4 @@
-import { isCreature, type State } from "@creatures/shared/state";
+import { type State } from "@creatures/shared/state";
 import { updateEntity } from "./updateEntity.js";
 
 export function update(state: State): State {

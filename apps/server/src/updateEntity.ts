@@ -1,15 +1,19 @@
 import {
-  collisionWithMap,
-  updatePosition,
-  getNewPosition,
   type AttackAction,
   type Position,
   type State,
   type MoveAction,
   type Entity,
   type Creature,
-  isCreature,
 } from "@creatures/shared/state";
+
+import {
+  collisionWithMap,
+  updatePosition,
+  getNewPosition,
+  isCreature,
+} from "@creatures/shared/gameLogicUtilities";
+
 import { createFireball } from "./state.js";
 
 export const updateEntity = (state: State, entity: Entity): State => {
