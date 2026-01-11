@@ -1,10 +1,14 @@
+import { backgroundMap, getTile } from "./background.js";
 import { countColumns, countRow, type Position } from "./state.js";
 
-export const collisionWithMap = (positon: Position) =>
-  outerMapCollision(positon);
+export const collisionWithMap = (position: Position) =>
+  outerMapCollision(position) ? true : backgroundMapCollision(position);
 
-const outerMapCollision = (positon: Position) =>
-  positon.x < 0 ||
-  positon.x >= countColumns ||
-  positon.y < 0 ||
-  positon.y >= countRow;
+const outerMapCollision = (position: Position) =>
+  position.x < 0 ||
+  position.x >= countColumns ||
+  position.y < 0 ||
+  position.y >= countRow;
+
+const backgroundMapCollision = (position: Position) =>
+  getTile(backgroundMap, position) === "void";
