@@ -36,7 +36,7 @@ export const setupEventListeners = () => {
 
         case "KeyE": {
           return {
-            type: "attackFireball",
+            type: "fireball",
             direction: activeCreature.direction,
           } as const;
         }

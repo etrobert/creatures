@@ -92,7 +92,7 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
       return applyMove(state, creature, creature.ongoingAction);
     case "attack":
       return applyAttack(state, creature, creature.ongoingAction);
-    case "attackFireball":
+    case "fireball":
       return applyAttackFireball(state, creature, creature.ongoingAction);
     default:
       return state;
