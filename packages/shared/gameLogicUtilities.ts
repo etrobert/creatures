@@ -28,10 +28,10 @@ export const getNewPosition = (
   }
 };
 
-export const collisionWithMap = (positon: Position) =>
-  outerMapCollision(positon);
+export const collisionWithMap = (background: Background, position: Position) =>
+  outerMapCollision(position) || backgroundMapCollision(background, position);
 
-const outerMapCollision = (positon: Position) =>
+export const outerMapCollision = (positon: Position) =>
   positon.x < 0 ||
   positon.x >= countColumns ||
   positon.y < 0 ||

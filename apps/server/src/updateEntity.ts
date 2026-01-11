@@ -35,7 +35,10 @@ const applyMove = (
 ): State => {
   const collision = (newPosition: Position) => {
     const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-    return collisionWithMap(newPosition) || creatureAtPosition !== undefined;
+    return (
+      collisionWithMap(state.background, newPosition) ||
+      creatureAtPosition !== undefined
+    );
   };
   return {
     ...state,
@@ -123,7 +126,7 @@ export const getCreatureAtPosition = (
 export const applyFireballMove = (state: State, fireball: Entity): State => {
   const newPosition = getNewPosition(fireball.position, fireball.direction);
 
-  if (collisionWithMap(newPosition))
+  if (collisionWithMap(state.background, newPosition))
     return {
       ...state,
       entities: state.entities.filter((entity) => entity.id !== fireball.id),

@@ -12,6 +12,7 @@ import { renderFireball } from "./renderFireball.js";
 
 import {
   collisionWithMap,
+  outerMapCollision,
   updatePosition,
   isCreature,
 } from "@creatures/shared/gameLogicUtilities";
@@ -121,7 +122,7 @@ export const getGhost = (creature: Creature) => {
       dummyCreature = updatePosition(
         dummyCreature,
         nextAction,
-        collisionWithMap,
+        outerMapCollision,
       );
   }
   return dummyCreature;
