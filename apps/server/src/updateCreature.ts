@@ -68,7 +68,7 @@ const applyAttack = (
   };
 };
 
-const applyAttackFireball = (state: State, creature: Creature): State => {
+const applyFireball = (state: State, creature: Creature): State => {
   const spawnedFireball = createFireball(creature.position, creature.direction);
   return {
     ...state,
@@ -88,7 +88,7 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
     case "attack":
       return applyAttack(state, creature, creature.ongoingAction);
     case "fireball":
-      return applyAttackFireball(state, creature);
+      return applyFireball(state, creature);
     default:
       return state;
   }

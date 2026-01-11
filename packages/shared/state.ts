@@ -19,14 +19,14 @@ export const attackActionSchema = z.object({
   direction: directionSchema,
 });
 
-export const attackFireballActionSchema = z.object({
+export const fireballActionSchema = z.object({
   type: z.literal("fireball"),
 });
 
 export const actionSchema = z.discriminatedUnion("type", [
   moveActionSchema,
   attackActionSchema,
-  attackFireballActionSchema,
+  fireballActionSchema,
 ]);
 
 export const creatureSchema = z.object({
@@ -56,7 +56,7 @@ export type Position = z.infer<typeof positionSchema>;
 export type Direction = z.infer<typeof directionSchema>;
 export type MoveAction = z.infer<typeof moveActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
-export type AttackFireballAction = z.infer<typeof attackFireballActionSchema>;
+export type FireballAction = z.infer<typeof fireballActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type Projectile = z.infer<typeof projectileSchema>;
