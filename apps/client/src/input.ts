@@ -2,7 +2,7 @@ import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import {
   activeCreatureId,
   activePlayer,
-  listPlayerCreaturesId,
+  listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
 import type { Position } from "@creatures/shared/state";
@@ -50,8 +50,7 @@ export const setupEventListeners = () => {
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.creatures.find(
-      (creature) =>
-        creature.player === activePlayer && creature.id === activeCreatureId,
+      (creature) => creature.id === activeCreatureId,
     );
     // add ghost calculation when in
     if (activeCreature === undefined) return;
@@ -85,16 +84,16 @@ export const setupEventListeners = () => {
 
   window.addEventListener("keydown", (event) => {
     const getActiveCreature = () => {
-      const listActivePlayerCreaturesId = listPlayerCreaturesId(activePlayer);
+      const listActivePlayerCreatureIds = listPlayerCreatureIds(activePlayer);
       switch (event.code) {
         case "Digit1":
-          return listActivePlayerCreaturesId[0];
+          return listActivePlayerCreatureIds[0];
         case "Digit2":
-          return listActivePlayerCreaturesId[1];
+          return listActivePlayerCreatureIds[1];
         case "Digit3":
-          return listActivePlayerCreaturesId[2];
+          return listActivePlayerCreatureIds[2];
         case "Digit4":
-          return listActivePlayerCreaturesId[3];
+          return listActivePlayerCreatureIds[3];
       }
     };
 

@@ -2,7 +2,7 @@ import { state } from "./state.js";
 
 export const activePlayer = 0;
 
-export const listPlayerCreaturesId = (player: number) => {
+export const listPlayerCreatureIds = (player: number) => {
   return state.creatures
     .filter((creature) => creature.player === player)
     .map((creature) => creature.id);
