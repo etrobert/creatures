@@ -85,19 +85,7 @@ imgFireball2.src = "./sprites/animations/Fireball/FireBall2.png";
 
 const renderProjectile = (projectile: Projectile, currentTime: number) => {
   const canvasPosition = gridToCanvas(projectile.position);
-  // ctx.fillStyle = "red";
 
-  // ctx.beginPath();
-  // ctx.arc(
-  //   canvasPosition.x + cellWidth / 2,
-  //   canvasPosition.y + cellHeight / 2,
-  //   cellWidth / 2 - 4,
-  //   0,
-  //   2 * Math.PI,
-  // );
-  // (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
-
-  // ctx.fill();
   const img =
     Math.floor(currentTime / frameDuration) % animationFrames === 0
       ? imgFireball1
