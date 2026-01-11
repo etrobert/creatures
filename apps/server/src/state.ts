@@ -35,12 +35,6 @@ export const createState = (): State => ({
 });
 
 export const createFireball = (
-  tileAttacked: Position,
+  position: Position,
   direction: Direction,
-): Projectile => {
-  return {
-    position: tileAttacked,
-    direction,
-    id: createId(),
-  } as const;
-};
+): Projectile => ({ position, direction, id: createId() }) as const;
