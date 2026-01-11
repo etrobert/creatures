@@ -21,7 +21,6 @@ export const attackActionSchema = z.object({
 
 export const attackFireballActionSchema = z.object({
   type: z.literal("fireball"),
-  direction: directionSchema,
 });
 
 export const actionSchema = z.discriminatedUnion("type", [
@@ -94,7 +93,7 @@ export const collisionWithMap = (newPosition: Position): boolean =>
 
 export const updatePosition = (
   creature: Creature,
-  nextAction: Action,
+  nextAction: MoveAction,
   collision: (newPosition: Position) => boolean,
 ): Creature => {
   const newPosition = getNewPosition(creature.position, nextAction.direction);
