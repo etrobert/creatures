@@ -10,7 +10,7 @@ export const listPlayerCreaturesId = (player: number) => {
 
 const getInitialActiveCreatureId = () => {
   const activePlayerCreaturesId = listPlayerCreaturesId(activePlayer);
-  const activeCreatureId = activePlayerCreaturesId[0];
+  const activeCreatureId = activePlayerCreaturesId.at(0);
   if (activeCreatureId === undefined)
     throw new Error("Could not get active creature");
   return activeCreatureId;
