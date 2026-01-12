@@ -44,15 +44,16 @@ export const render = (state: State, currentTime: number) => {
   renderBackground(backgroundMap);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
-      const creatures = state.creatures.filter(
-        (creature) => creature.position.x === x && creature.position.y === y,
+      const entities = state.entities.filter(
+        (entity) => entity.position.x === x && entity.position.y === y,
       );
-      if (creatures[0])
-        creatures.forEach((creature) => {
+      if (entities[0])
+        entities.forEach((creature) => {
           renderCreature(creature, currentTime);
           renderCreatureHealth(creature);
         });
-      const creatureGhosts = state.creatures
+      const creatureGhosts = state.entities
+        .filter(({ type }) => type === "creature")
         .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
         .filter((ghost) => ghost.position.x === x && ghost.position.y === y);

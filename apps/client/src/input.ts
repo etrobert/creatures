@@ -11,7 +11,7 @@ import { sendClientMessage, ws } from "./socket.js";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
-    const activeCreature = state.creatures.find(
+    const activeCreature = state.entities.find(
       ({ id }) => id === activeCreatureId,
     );
     if (activeCreature === undefined)
@@ -50,7 +50,7 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
-    const activeCreature = state.creatures.find(
+    const activeCreature = state.entities.find(
       (creature) => creature.id === activeCreatureId,
     );
     // add ghost calculation when in

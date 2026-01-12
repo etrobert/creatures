@@ -31,6 +31,7 @@ export const actionSchema = z.discriminatedUnion("type", [
 
 export const creatureSchema = z.object({
   id: z.string(),
+  type: z.literal("creature"),
   player: z.number(),
   health: z.number(),
   maxHealth: z.number(),
@@ -40,6 +41,8 @@ export const creatureSchema = z.object({
   direction: directionSchema,
 });
 
+export const entitySchema = z.discriminatedUnion("type", [creatureSchema]);
+
 export const projectileSchema = z.object({
   id: z.string(),
   position: positionSchema,
@@ -48,7 +51,7 @@ export const projectileSchema = z.object({
 
 export const stateSchema = z.object({
   lastTick: z.number(),
-  creatures: z.array(creatureSchema),
+  entities: z.array(entitySchema),
   projectiles: z.array(projectileSchema),
 });
 

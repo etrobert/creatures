@@ -15,6 +15,7 @@ const createCreature = ({
   position = { x: 3, y: 2 },
 } = {}): Creature => ({
   id: createId(),
+  type: "creature",
   player,
   health: 9,
   maxHealth: 10,
@@ -26,7 +27,7 @@ const createCreature = ({
 
 export const createState = (): State => ({
   lastTick: 0,
-  creatures: [
+  entities: [
     createCreature(),
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
     createCreature({ player: 0, position: { x: 5, y: 5 } }),

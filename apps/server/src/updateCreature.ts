@@ -34,13 +34,13 @@ const applyMove = (
   };
   return {
     ...state,
-    creatures: state.creatures.map((mappedCreature) =>
-      mappedCreature.id === creature.id
+    entities: state.entities.map((entity) =>
+      entity.id === creature.id
         ? {
             ...updatePosition(creature, moveAction, collision),
             ongoingAction: null,
           }
-        : mappedCreature,
+        : entity,
     ),
   };
 };
@@ -58,12 +58,12 @@ const applyAttack = (
 
   return {
     ...state,
-    creatures: state.creatures.map((mappedCreature) => {
-      if (mappedCreature.id === creature.id)
+    entities: state.entities.map((entity) => {
+      if (entity.id === creature.id)
         return { ...creature, ongoingAction: null };
-      if (mappedCreature.id === attackedCreature?.id)
-        return { ...mappedCreature, health: mappedCreature.health - 1 };
-      return mappedCreature;
+      if (entity.id === attackedCreature?.id)
+        return { ...entity, health: entity.health - 1 };
+      return entity;
     }),
   };
 };
@@ -73,10 +73,10 @@ const applyFireball = (state: State, creature: Creature): State => {
   return {
     ...state,
     projectiles: [...state.projectiles, spawnedFireball],
-    creatures: state.creatures.map((mappedCreature) => {
-      if (mappedCreature.id === creature.id)
+    entities: state.entities.map((entity) => {
+      if (entity.id === creature.id)
         return { ...creature, ongoingAction: null };
-      return mappedCreature;
+      return entity;
     }),
   };
 };
@@ -95,10 +95,13 @@ const applyOngoingAction = (state: State, creature: Creature): State => {
 };
 
 export const getCreatureAtPosition = (state: State, position: Position) =>
-  state.creatures.find(
-    (creature) =>
-      creature.position.x === position.x && creature.position.y === position.y,
-  );
+  state.entities
+    .filter((entity) => entity.type === "creature")
+    .find(
+      (creature) =>
+        creature.position.x === position.x &&
+        creature.position.y === position.y,
+    );
 
 export const updateProjectile = (
   state: State,
@@ -113,15 +116,17 @@ export const updateProjectile = (
       };
     return mappedProjectile;
   });
-  const updatedCreatures = state.creatures.map((mappedCreature) => {
-    if (samePosition(mappedCreature.position, newPosition))
-      return { ...mappedCreature, health: mappedCreature.health - 1 };
-    return mappedCreature;
-  });
+  const updatedEntities = state.entities
+    .filter((entity) => entity.type === "creature")
+    .map((mappedCreature) => {
+      if (samePosition(mappedCreature.position, newPosition))
+        return { ...mappedCreature, health: mappedCreature.health - 1 };
+      return mappedCreature;
+    });
   return {
     ...state,
     projectiles: updatedProjectile,
-    creatures: updatedCreatures,
+    entities: updatedEntities,
   };
 };
 
