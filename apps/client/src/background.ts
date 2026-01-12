@@ -1,16 +1,21 @@
-import { countColumns, countRow, type Position } from "@creatures/shared/state";
+import {
+  countColumns,
+  countRow,
+  type Position,
+  type Map,
+} from "@creatures/shared/state";
 import { backgroundTilesPositions } from "./backgroundTilesPositions.js";
 
 import { ctx } from "./render.js";
 import { getTile } from "@creatures/shared/gameLogicUtilities";
 
-const getBackgroundTile = (background: string[], position: Position) => {
+const getBackgroundTile = (background: Map, position: Position) => {
   const tile = background[position.x + position.y * countColumns * 2];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
 };
 
-const getBackgroundTilesMap = (backgroundMap: string[]) => {
+const getBackgroundTilesMap = (backgroundMap: Map) => {
   let backgroundTilesMap = new Array();
   for (let yn = 0; yn < countRow * 2; yn++) {
     for (let xn = 0; xn < countColumns * 2; xn++) {
@@ -25,7 +30,7 @@ const getBackgroundTilesMap = (backgroundMap: string[]) => {
   return backgroundTilesMap;
 };
 
-export const renderBackground = (background: string[]) => {
+export const renderBackground = (background: Map) => {
   const backgroundTilesMap = getBackgroundTilesMap(background);
   const moreRows = countRow * 2 + 1;
   const moreColumns = countColumns * 2 + 1;
