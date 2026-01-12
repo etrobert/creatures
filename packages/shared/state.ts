@@ -102,11 +102,11 @@ export const collisionWithMap = (newPosition: Position): boolean =>
   newPosition.y < 0 ||
   newPosition.y >= countRow;
 
-export const updatePosition = (
-  entity: Entity,
+export const updatePosition = <T extends Entity>(
+  entity: T,
   nextAction: MoveAction,
   collision: (newPosition: Position) => boolean,
-): Entity => {
+): T => {
   const newPosition = getNewPosition(entity.position, nextAction.direction);
 
   if (collision(newPosition)) return entity;
