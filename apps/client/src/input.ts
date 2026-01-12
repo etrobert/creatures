@@ -5,7 +5,7 @@ import {
   listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
-import type { Position } from "@creatures/shared/state";
+import { isCreature, type Position } from "@creatures/shared/state";
 import { state } from "./state.js";
 import { sendClientMessage, ws } from "./socket.js";
 
@@ -50,9 +50,9 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
-    const activeCreature = state.entities.find(
-      (creature) => creature.id === activeCreatureId,
-    );
+    const activeCreature = state.entities
+      .filter(isCreature)
+      .find((creature) => creature.id === activeCreatureId);
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);

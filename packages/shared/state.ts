@@ -29,19 +29,26 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballActionSchema,
 ]);
 
-export const creatureSchema = z.object({
+const basicEntitySchema = z.object({
   id: z.string(),
-  type: z.literal("creature"),
-  player: z.number(),
-  health: z.number(),
-  maxHealth: z.number(),
+  type: z.literal("entity"),
   position: positionSchema,
   ongoingAction: actionSchema.nullable(),
   nextActions: z.array(actionSchema),
   direction: directionSchema,
 });
 
-export const entitySchema = z.discriminatedUnion("type", [creatureSchema]);
+export const creatureSchema = basicEntitySchema.extend({
+  type: z.literal("creature"),
+  player: z.number(),
+  health: z.number(),
+  maxHealth: z.number(),
+});
+
+export const entitySchema = z.discriminatedUnion("type", [
+  basicEntitySchema,
+  creatureSchema,
+]);
 
 export const projectileSchema = z.object({
   id: z.string(),
@@ -61,6 +68,7 @@ export type MoveAction = z.infer<typeof moveActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
 export type FireballAction = z.infer<typeof fireballActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
+export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type Projectile = z.infer<typeof projectileSchema>;
 export type State = z.infer<typeof stateSchema>;
@@ -109,3 +117,6 @@ export const updatePosition = (
     direction: nextAction.direction,
   };
 };
+
+export const isCreature = (entity: Entity): entity is Creature =>
+  entity.type === "creature";

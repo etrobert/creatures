@@ -58,13 +58,15 @@ const applyAttack = (
 
   return {
     ...state,
-    entities: state.entities.map((entity) => {
-      if (entity.id === creature.id)
-        return { ...creature, ongoingAction: null };
-      if (entity.id === attackedCreature?.id)
-        return { ...entity, health: entity.health - 1 };
-      return entity;
-    }),
+    entities: state.entities
+      .filter((entity) => entity.type === "creature")
+      .map((entity) => {
+        if (entity.id === creature.id)
+          return { ...creature, ongoingAction: null };
+        if (entity.id === attackedCreature?.id)
+          return { ...entity, health: entity.health - 1 };
+        return entity;
+      }),
   };
 };
 

@@ -9,6 +9,8 @@ import {
   type State,
   type Creature,
   type Projectile,
+  type Entity,
+  isCreature,
 } from "@creatures/shared/state";
 
 const getCanvas = () => {
@@ -48,12 +50,15 @@ export const render = (state: State, currentTime: number) => {
         (entity) => entity.position.x === x && entity.position.y === y,
       );
       if (entities[0])
-        entities.forEach((creature) => {
-          renderCreature(creature, currentTime);
-          renderCreatureHealth(creature);
-        });
+        entities
+          .filter(isCreature)
+          .map((e) => e)
+          .forEach((creature) => {
+            renderCreature(creature, currentTime);
+            renderCreatureHealth(creature);
+          });
       const creatureGhosts = state.entities
-        .filter(({ type }) => type === "creature")
+        .filter(isCreature)
         .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
         .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
