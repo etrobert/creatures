@@ -128,13 +128,12 @@ export const applyFireballMove = (state: State, fireball: Entity): State => {
         : entity,
     )
     .map((entity) =>
-      entity.type === "creature" && samePosition(entity.position, newPosition)
+      entity.type === "creature" &&
+      entity.position.x === newPosition.x &&
+      entity.position.y === newPosition.y
         ? { ...entity, health: entity.health - 1 }
         : entity,
     );
 
   return { ...state, entities: updatedEntities };
 };
-
-const samePosition = (position1: Position, position2: Position) =>
-  position1.x === position2.x && position1.y === position2.y;
