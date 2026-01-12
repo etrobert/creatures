@@ -64,7 +64,6 @@ export type Position = z.infer<typeof positionSchema>;
 export type Direction = z.infer<typeof directionSchema>;
 export type MoveAction = z.infer<typeof moveActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
-export type FireballAction = z.infer<typeof fireballActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
 export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
