@@ -72,7 +72,10 @@ const applyAttack = (
 };
 
 const applyFireball = (state: State, creature: Entity): State => {
-  const spawnedFireball = createFireball(creature.position, creature.direction);
+  const spawnedFireball = createFireball(
+    getNewPosition(creature.position, creature.direction),
+    creature.direction,
+  );
   return {
     ...state,
     entities: [
