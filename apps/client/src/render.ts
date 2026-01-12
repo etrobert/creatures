@@ -9,8 +9,7 @@ import {
   type State,
   type Creature,
 } from "@creatures/shared/state";
-import { activePlayer } from "./activePlayerCreature.js";
-import { renderActionList, renderCreatureHealth } from "./renderUI.js";
+import { renderCreatureHealth, renderUI } from "./renderUI.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -52,7 +51,6 @@ export const render = (state: State, currentTime: number) => {
         creatures.forEach((creature) => {
           renderCreature(creature, currentTime);
           renderCreatureHealth(creature);
-          if (creature.player === activePlayer) renderActionList(creature);
         });
       const creatureGhosts = state.creatures
         .filter((creature) => creature.nextActions.length !== 0)
@@ -65,6 +63,7 @@ export const render = (state: State, currentTime: number) => {
       ctx.globalAlpha = 1;
     }
   }
+  renderUI(state);
 };
 
 export const getGhost = (creature: Creature) => {
