@@ -46,7 +46,8 @@ const renderEntity = (entity: Entity, currentTime: number) => {
       renderCreature(entity, currentTime);
       renderCreatureHealth(entity);
       break;
-    // TODO: Render projectile
+    default:
+      renderProjectile(entity, currentTime);
   }
 };
 
