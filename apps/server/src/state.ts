@@ -1,6 +1,7 @@
 import type {
   Creature,
   Direction,
+  Entity,
   Position,
   Projectile,
   State,
@@ -38,4 +39,12 @@ export const createState = (): State => ({
 export const createFireball = (
   position: Position,
   direction: Direction,
-): Projectile => ({ position, direction, id: createId() }) as const;
+): Entity =>
+  ({
+    type: "entity",
+    position,
+    direction,
+    id: createId(),
+    ongoingAction: null,
+    nextActions: [],
+  }) as const;

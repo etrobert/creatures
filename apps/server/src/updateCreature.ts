@@ -77,9 +77,14 @@ const applyFireball = (state: State, creature: Entity): State => {
   return {
     ...state,
     projectiles: [...state.projectiles, spawnedFireball],
-    entities: state.entities.map((entity) =>
-      entity.id === creature.id ? { ...creature, ongoingAction: null } : entity,
-    ),
+    entities: [
+      ...state.entities.map((entity) =>
+        entity.id === creature.id
+          ? { ...creature, ongoingAction: null }
+          : entity,
+      ),
+      spawnedFireball,
+    ],
   };
 };
 
