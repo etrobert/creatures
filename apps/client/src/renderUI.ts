@@ -36,27 +36,27 @@ export const renderCreatureHealth = (creature: Creature) => {
   );
 };
 
-const actionCellWidth = 10;
-const borderWidth = 2;
+const actionSquareWidth = 10;
+const paddingWidth = 2;
 
 export const renderActionList = (creature: Creature) => {
-  const listCreature = listPlayerCreatureIds(creature.player);
-  const columnIndex = listCreature.findIndex(
-    (ListedCreatureId) => ListedCreatureId === creature.id,
+  const creatureList = listPlayerCreatureIds(creature.player);
+  const columnIndex = creatureList.findIndex(
+    (listedCreatureId) => listedCreatureId === creature.id,
   );
   const topLeftCorner: Position = {
     x:
       canvas.width -
-      actionCellWidth -
-      borderWidth -
-      columnIndex * (actionCellWidth + borderWidth),
-    y: borderWidth,
+      actionSquareWidth -
+      paddingWidth -
+      columnIndex * (actionSquareWidth + paddingWidth),
+    y: paddingWidth,
   };
 
   creature.nextActions.forEach((action, i) =>
     renderActionElement(action, {
       x: topLeftCorner.x,
-      y: topLeftCorner.y + i * (actionCellWidth + borderWidth),
+      y: topLeftCorner.y + i * (actionSquareWidth + paddingWidth),
     }),
   );
 };
@@ -66,7 +66,7 @@ const renderActionElement = (action: Action, topLeftCorner: Position) => {
   ctx.fillRect(
     topLeftCorner.x,
     topLeftCorner.y,
-    actionCellWidth,
-    actionCellWidth,
+    actionSquareWidth,
+    actionSquareWidth,
   );
 };
