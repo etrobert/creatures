@@ -40,6 +40,16 @@ export const gridToCanvas = ({ x, y }: Position) => ({
   y: y * cellHeight + cellHeight / 2,
 });
 
+const renderEntity = (entity: Entity, currentTime: number) => {
+  switch (entity.type) {
+    case "creature":
+      renderCreature(entity, currentTime);
+      renderCreatureHealth(entity);
+      break;
+    // TODO: Render projectile
+  }
+};
+
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -49,14 +59,7 @@ export const render = (state: State, currentTime: number) => {
       const entities = state.entities.filter(
         (entity) => entity.position.x === x && entity.position.y === y,
       );
-      if (entities[0])
-        entities
-          .filter(isCreature)
-          .map((e) => e)
-          .forEach((creature) => {
-            renderCreature(creature, currentTime);
-            renderCreatureHealth(creature);
-          });
+      if (entities[0]) entities.forEach(renderEntity);
       const creatureGhosts = state.entities
         .filter(isCreature)
         .filter((creature) => creature.nextActions.length !== 0)
