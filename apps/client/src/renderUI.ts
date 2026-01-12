@@ -44,14 +44,6 @@ export const renderActionList = (creature: Creature) => {
     y: borderWidth,
   };
 
-  ctx.fillStyle = "white";
-  ctx.fillRect(
-    topLeftCorner.x,
-    topLeftCorner.y,
-    actionCellWidth,
-    actionCellWidth,
-  );
-
   creature.nextActions.forEach((action, i) =>
     renderActionElement(action, {
       x: topLeftCorner.x,
