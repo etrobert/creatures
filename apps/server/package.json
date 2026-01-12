@@ -2,7 +2,8 @@
   "name": "@creatures/server",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/ws": "^8.18.1",
