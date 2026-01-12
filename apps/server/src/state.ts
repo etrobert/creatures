@@ -35,7 +35,7 @@ export const createState = (): State => ({
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
     createCreature({ player: 0, position: { x: 5, y: 5 } }),
   ],
-  map: Map,
+  map,
 });
 
 export const createFireball = (

@@ -29,7 +29,7 @@ export const getNewPosition = (
 };
 
 export const collisionWithMap = (background: Map, position: Position) =>
-  outerMapCollision(position) || backgroundMapCollision(background, position);
+  outerMapCollision(position) || mapCollision(background, position);
 
 export const outerMapCollision = (positon: Position) =>
   positon.x < 0 ||
@@ -56,11 +56,11 @@ export const updatePosition = <T extends Entity>(
 export const isCreature = (entity: Entity): entity is Creature =>
   entity.type === "creature";
 
-export const backgroundMapCollision = (background: Map, position: Position) =>
+export const mapCollision = (background: Map, position: Position) =>
   getTile(background, position) === "void";
 
-export const getTile = (background: string[], position: Position) => {
-  const tile = background[position.x + position.y * countColumns];
+export const getTile = (map: Map, position: Position) => {
+  const tile = map[position.x + position.y * countColumns];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
 };
