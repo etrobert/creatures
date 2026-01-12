@@ -94,6 +94,8 @@ const applyOngoingAction = (state: State, entity: Entity): State => {
       return applyAttack(state, entity, entity.ongoingAction);
     case "fireball":
       return applyFireball(state, entity);
+    case "fireball move":
+      return applyFireballMove(state, entity);
     default:
       return state;
   }
@@ -111,32 +113,31 @@ export const getCreatureAtPosition = (
         creature.position.y === position.y,
     );
 
-// export const updateProjectile = (
-//   state: State,
-//   projectile: Projectile,
-// ): State => {
-//   const newPosition = getNewPosition(projectile.position, projectile.direction);
-//   const updatedProjectile = state.projectiles.map((mappedProjectile) => {
-//     if (mappedProjectile.id === projectile.id)
-//       return {
-//         ...projectile,
-//         position: newPosition,
-//       };
-//     return mappedProjectile;
-//   });
-//   const updatedEntities = state.entities
-//     .filter((entity) => entity.type === "creature")
-//     .map((mappedCreature) => {
-//       if (samePosition(mappedCreature.position, newPosition))
-//         return { ...mappedCreature, health: mappedCreature.health - 1 };
-//       return mappedCreature;
-//     });
-//   return {
-//     ...state,
-//     projectiles: updatedProjectile,
-//     entities: updatedEntities,
-//   };
-// };
+export const applyFireballMove = (state: State, fireball: Entity): State => {
+  // TODO: destroy fireball when it goes out of the map
 
-// const samePosition = (position1: Position, position2: Position) =>
-//   position1.x === position2.x && position1.y === position2.y;
+  const newPosition = getNewPosition(fireball.position, fireball.direction);
+
+  let updatedEntities = state.entities.map((mappedEntity) =>
+    mappedEntity.id === fireball.id
+      ? {
+          ...mappedEntity,
+          position: newPosition,
+        }
+      : mappedEntity,
+  );
+
+  updatedEntities = updatedEntities.map((entity) => {
+    if (
+      entity.type === "creature" &&
+      samePosition(entity.position, newPosition)
+    )
+      return { ...entity, health: entity.health - 1 };
+    return entity;
+  });
+
+  return { ...state, entities: updatedEntities };
+};
+
+const samePosition = (position1: Position, position2: Position) =>
+  position1.x === position2.x && position1.y === position2.y;
