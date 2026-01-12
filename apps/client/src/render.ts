@@ -46,7 +46,7 @@ const renderEntity = (entity: Entity, currentTime: number) => {
       renderCreatureHealth(entity);
       break;
     default:
-      renderProjectile(entity, currentTime);
+      renderFireball(entity, currentTime);
   }
 };
 
@@ -85,7 +85,7 @@ imgFireball1.src = "./sprites/animations/Fireball/FireBall1.png";
 const imgFireball2 = new Image();
 imgFireball2.src = "./sprites/animations/Fireball/FireBall2.png";
 
-const renderProjectile = (projectile: Entity, currentTime: number) => {
+const renderFireball = (projectile: Entity, currentTime: number) => {
   const canvasPosition = gridToCanvas(projectile.position);
 
   const img =
