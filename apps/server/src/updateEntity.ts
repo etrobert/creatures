@@ -117,9 +117,13 @@ export const getCreatureAtPosition = (
     );
 
 export const applyFireballMove = (state: State, fireball: Entity): State => {
-  // TODO: destroy fireball when it goes out of the map
-
   const newPosition = getNewPosition(fireball.position, fireball.direction);
+
+  if (collisionWithMap(newPosition))
+    return {
+      ...state,
+      entities: state.entities.filter((entity) => entity.id !== fireball.id),
+    };
 
   const updatedEntities = state.entities.map((entity) => {
     if (entity.id === fireball.id) return { ...entity, position: newPosition };
