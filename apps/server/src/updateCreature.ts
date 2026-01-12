@@ -3,20 +3,22 @@ import {
   updatePosition,
   getNewPosition,
   type AttackAction,
-  type Creature,
   type Position,
   type State,
   type MoveAction,
   type Projectile,
+  type Entity,
+  type Creature,
+  isCreature,
 } from "@creatures/shared/state";
 import { createFireball } from "./state.js";
 
-export const updateCreature = (state: State, creature: Creature): State => {
-  creature = updateActions(creature);
-  return applyOngoingAction(state, creature);
+export const updateEntity = (state: State, entity: Entity): State => {
+  entity = updateActions(entity);
+  return applyOngoingAction(state, entity);
 };
 
-const updateActions = (creature: Creature) => {
+const updateActions = (creature: Entity) => {
   if (creature.ongoingAction) return creature;
   const [ongoingAction, ...nextActions] = creature.nextActions;
   if (!ongoingAction) return creature;
@@ -25,7 +27,7 @@ const updateActions = (creature: Creature) => {
 
 const applyMove = (
   state: State,
-  creature: Creature,
+  creature: Entity,
   moveAction: MoveAction,
 ): State => {
   const collision = (newPosition: Position) => {
@@ -47,7 +49,7 @@ const applyMove = (
 
 const applyAttack = (
   state: State,
-  creature: Creature,
+  creature: Entity,
   attackAction: AttackAction,
 ): State => {
   const tileAttacked = getNewPosition(
@@ -70,7 +72,7 @@ const applyAttack = (
   };
 };
 
-const applyFireball = (state: State, creature: Creature): State => {
+const applyFireball = (state: State, creature: Entity): State => {
   const spawnedFireball = createFireball(creature.position, creature.direction);
   return {
     ...state,
@@ -83,22 +85,25 @@ const applyFireball = (state: State, creature: Creature): State => {
   };
 };
 
-const applyOngoingAction = (state: State, creature: Creature): State => {
-  switch (creature.ongoingAction?.type) {
+const applyOngoingAction = (state: State, entity: Entity): State => {
+  switch (entity.ongoingAction?.type) {
     case "move":
-      return applyMove(state, creature, creature.ongoingAction);
+      return applyMove(state, entity, entity.ongoingAction);
     case "attack":
-      return applyAttack(state, creature, creature.ongoingAction);
+      return applyAttack(state, entity, entity.ongoingAction);
     case "fireball":
-      return applyFireball(state, creature);
+      return applyFireball(state, entity);
     default:
       return state;
   }
 };
 
-export const getCreatureAtPosition = (state: State, position: Position) =>
+export const getCreatureAtPosition = (
+  state: State,
+  position: Position,
+): Creature | undefined =>
   state.entities
-    .filter((entity) => entity.type === "creature")
+    .filter(isCreature)
     .find(
       (creature) =>
         creature.position.x === position.x &&

@@ -103,16 +103,16 @@ export const collisionWithMap = (newPosition: Position): boolean =>
   newPosition.y >= countRow;
 
 export const updatePosition = (
-  creature: Creature,
+  entity: Entity,
   nextAction: MoveAction,
   collision: (newPosition: Position) => boolean,
-): Creature => {
-  const newPosition = getNewPosition(creature.position, nextAction.direction);
+): Entity => {
+  const newPosition = getNewPosition(entity.position, nextAction.direction);
 
-  if (collision(newPosition)) return creature;
+  if (collision(newPosition)) return entity;
 
   return {
-    ...creature,
+    ...entity,
     position: newPosition,
     direction: nextAction.direction,
   };
