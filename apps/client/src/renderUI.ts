@@ -1,5 +1,5 @@
+import type { Action, Creature, Position } from "@creatures/shared/state";
 import { canvas, cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
-import type { Action, Creature, Position } from "./state.js";
 
 export const renderCreatureHealth = (creature: Creature) => {
   const canvasPosition = gridToCanvas(creature.position);
