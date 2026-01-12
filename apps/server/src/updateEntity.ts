@@ -118,22 +118,16 @@ export const applyFireballMove = (state: State, fireball: Entity): State => {
 
   const newPosition = getNewPosition(fireball.position, fireball.direction);
 
-  const updatedEntities = state.entities
-    .map((entity) =>
-      entity.id === fireball.id
-        ? {
-            ...entity,
-            position: newPosition,
-          }
-        : entity,
-    )
-    .map((entity) =>
+  const updatedEntities = state.entities.map((entity) => {
+    if (entity.id === fireball.id) return { ...entity, position: newPosition };
+    else if (
       entity.type === "creature" &&
       entity.position.x === newPosition.x &&
       entity.position.y === newPosition.y
-        ? { ...entity, health: entity.health - 1 }
-        : entity,
-    );
+    )
+      return { ...entity, health: entity.health - 1 };
+    return entity;
+  });
 
   return { ...state, entities: updatedEntities };
 };
