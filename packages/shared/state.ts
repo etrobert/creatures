@@ -50,16 +50,9 @@ export const entitySchema = z.discriminatedUnion("type", [
   creatureSchema,
 ]);
 
-export const projectileSchema = z.object({
-  id: z.string(),
-  position: positionSchema,
-  direction: directionSchema,
-});
-
 export const stateSchema = z.object({
   lastTick: z.number(),
   entities: z.array(entitySchema),
-  projectiles: z.array(projectileSchema),
 });
 
 export type Position = z.infer<typeof positionSchema>;
@@ -70,7 +63,6 @@ export type FireballAction = z.infer<typeof fireballActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
 export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
-export type Projectile = z.infer<typeof projectileSchema>;
 export type State = z.infer<typeof stateSchema>;
 
 export const countColumns = 10;

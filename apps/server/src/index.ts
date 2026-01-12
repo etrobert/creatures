@@ -58,6 +58,7 @@ function broadcastState() {
 
 function gameLoop() {
   state = update(state);
+  console.log(state.entities);
 
   broadcastState();
 }

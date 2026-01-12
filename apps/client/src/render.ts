@@ -8,7 +8,6 @@ import {
   type Position,
   type State,
   type Creature,
-  type Projectile,
   type Entity,
   isCreature,
 } from "@creatures/shared/state";
@@ -72,14 +71,6 @@ export const render = (state: State, currentTime: number) => {
         renderCreature(creature, currentTime),
       );
       ctx.globalAlpha = 1;
-      const projectiles = state.projectiles.filter(
-        (projectile) =>
-          projectile.position.x === x && projectile.position.y === y,
-      );
-      if (projectiles[0])
-        projectiles.forEach((projectile) => {
-          renderProjectile(projectile, currentTime);
-        });
     }
   }
 };
@@ -94,7 +85,7 @@ imgFireball1.src = "./sprites/animations/Fireball/FireBall1.png";
 const imgFireball2 = new Image();
 imgFireball2.src = "./sprites/animations/Fireball/FireBall2.png";
 
-const renderProjectile = (projectile: Projectile, currentTime: number) => {
+const renderProjectile = (projectile: Entity, currentTime: number) => {
   const canvasPosition = gridToCanvas(projectile.position);
 
   const img =
