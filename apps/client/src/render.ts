@@ -60,7 +60,8 @@ export const render = (state: State, currentTime: number) => {
       const entities = state.entities.filter(
         (entity) => entity.position.x === x && entity.position.y === y,
       );
-      if (entities[0]) entities.forEach(renderEntity);
+      if (entities[0])
+        entities.forEach((entity) => renderEntity(entity, currentTime));
       const creatureGhosts = state.entities
         .filter(isCreature)
         .filter((creature) => creature.nextActions.length !== 0)
