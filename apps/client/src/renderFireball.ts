@@ -1,3 +1,5 @@
+// TODO: Use the same code to render all the animations
+
 import type { Entity } from "@creatures/shared/state";
 import { cellWidth, ctx, gridToCanvas } from "./render.js";
 
