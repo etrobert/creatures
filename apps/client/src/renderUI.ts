@@ -1,5 +1,6 @@
 import type { Action, Creature, Position } from "@creatures/shared/state";
 import { canvas, cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
+import { listPlayerCreatureIds } from "./activePlayerCreature.js";
 
 export const renderCreatureHealth = (creature: Creature) => {
   const canvasPosition = gridToCanvas(creature.position);
@@ -39,15 +40,23 @@ const actionCellWidth = 10;
 const borderWidth = 2;
 
 export const renderActionList = (creature: Creature) => {
+  const listCreature = listPlayerCreatureIds(creature.player);
+  const columnIndex = listCreature.findIndex(
+    (ListedCreatureId) => ListedCreatureId === creature.id,
+  );
   const topLeftCorner: Position = {
-    x: canvas.width - actionCellWidth - borderWidth,
+    x:
+      canvas.width -
+      actionCellWidth -
+      borderWidth -
+      columnIndex * (actionCellWidth + borderWidth),
     y: borderWidth,
   };
 
   creature.nextActions.forEach((action, i) =>
     renderActionElement(action, {
       x: topLeftCorner.x,
-      y: topLeftCorner.y + (i + 1) * (actionCellWidth + borderWidth),
+      y: topLeftCorner.y + i * (actionCellWidth + borderWidth),
     }),
   );
 };
