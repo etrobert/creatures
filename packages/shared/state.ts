@@ -57,12 +57,12 @@ export const entitySchema = z.discriminatedUnion("type", [
 
 const tileSchema = z.enum(["grass", "void"]);
 
-export const backgroundSchema = z.array(tileSchema);
+export const mapSchema = z.array(tileSchema);
 
 export const stateSchema = z.object({
   lastTick: z.number(),
   entities: z.array(entitySchema),
-  background: backgroundSchema,
+  map: mapSchema,
 });
 
 export type Position = z.infer<typeof positionSchema>;
@@ -73,7 +73,7 @@ export type Action = z.infer<typeof actionSchema>;
 export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
-export type Background = z.infer<typeof backgroundSchema>;
+export type Map = z.infer<typeof mapSchema>;
 
 export const countColumns = 10;
 export const countRow = 7;
