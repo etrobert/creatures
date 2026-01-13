@@ -69,6 +69,17 @@ export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
 
+export const creatureNameSchema = z.enum(["bulbizard"]);
+export const creatureKitSchema = z.object({
+  type: creatureNameSchema,
+  ActionQ: z.function,
+  ActionW: z.function,
+  ActionE: z.function,
+});
+
+export type CreatureName = z.infer<typeof creatureNameSchema>;
+export type CreatureKit = z.infer<typeof creatureKitSchema>;
+
 export const countColumns = 10;
 export const countRow = 7;
 
