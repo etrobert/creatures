@@ -24,7 +24,7 @@ export const fireballActionSchema = z.object({
 });
 
 const fireballMoveActionSchema = z.object({
-  type: z.literal("fireball move"),
+  type: z.literal("fireball:move"),
 });
 
 export const actionSchema = z.discriminatedUnion("type", [

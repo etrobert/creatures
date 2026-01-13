@@ -97,7 +97,7 @@ const applyOngoingAction = (state: State, entity: Entity): State => {
       return applyAttack(state, entity, entity.ongoingAction);
     case "fireball":
       return applyFireball(state, entity);
-    case "fireball move":
+    case "fireball:move":
       return applyFireballMove(state, entity);
     default:
       return state;

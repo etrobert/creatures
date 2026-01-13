@@ -44,5 +44,5 @@ export const createFireball = (
     direction,
     id: createId(),
     ongoingAction: null,
-    nextActions: [{ type: "fireball move" }],
+    nextActions: [{ type: "fireball:move" }],
   }) as const;
