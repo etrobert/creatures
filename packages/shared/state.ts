@@ -19,25 +19,45 @@ export const attackActionSchema = z.object({
   direction: directionSchema,
 });
 
+export const fireballActionSchema = z.object({
+  type: z.literal("fireball"),
+});
+
+const fireballMoveActionSchema = z.object({
+  type: z.literal("fireball:move"),
+});
+
 export const actionSchema = z.discriminatedUnion("type", [
   moveActionSchema,
   attackActionSchema,
+  fireballActionSchema,
+  fireballMoveActionSchema,
 ]);
 
-export const creatureSchema = z.object({
+const basicEntitySchema = z.object({
   id: z.string(),
-  player: z.number(),
-  health: z.number(),
-  maxHealth: z.number(),
+  type: z.literal("entity"),
   position: positionSchema,
   ongoingAction: actionSchema.nullable(),
   nextActions: z.array(actionSchema),
   direction: directionSchema,
 });
 
+export const creatureSchema = basicEntitySchema.extend({
+  type: z.literal("creature"),
+  player: z.number(),
+  health: z.number(),
+  maxHealth: z.number(),
+});
+
+export const entitySchema = z.discriminatedUnion("type", [
+  basicEntitySchema,
+  creatureSchema,
+]);
+
 export const stateSchema = z.object({
   lastTick: z.number(),
-  creatures: z.array(creatureSchema),
+  entities: z.array(entitySchema),
 });
 
 export type Position = z.infer<typeof positionSchema>;
@@ -45,6 +65,7 @@ export type Direction = z.infer<typeof directionSchema>;
 export type MoveAction = z.infer<typeof moveActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
+export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
 
@@ -55,7 +76,10 @@ export const tickDuration = 300;
 
 // Game logic utilities
 
-export const getNewPosition = ({ x, y }: Position, direction: Direction): Position => {
+export const getNewPosition = (
+  { x, y }: Position,
+  direction: Direction,
+): Position => {
   switch (direction) {
     case "up":
       return { x, y: y - 1 };
@@ -74,18 +98,21 @@ export const collisionWithMap = (newPosition: Position): boolean =>
   newPosition.y < 0 ||
   newPosition.y >= countRow;
 
-export const updatePosition = (
-  creature: Creature,
-  nextAction: Action,
+export const updatePosition = <T extends Entity>(
+  entity: T,
+  nextAction: MoveAction,
   collision: (newPosition: Position) => boolean,
-): Creature => {
-  const newPosition = getNewPosition(creature.position, nextAction.direction);
+): T => {
+  const newPosition = getNewPosition(entity.position, nextAction.direction);
 
-  if (collision(newPosition)) return creature;
+  if (collision(newPosition)) return entity;
 
   return {
-    ...creature,
+    ...entity,
     position: newPosition,
     direction: nextAction.direction,
   };
 };
+
+export const isCreature = (entity: Entity): entity is Creature =>
+  entity.type === "creature";

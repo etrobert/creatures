@@ -32,13 +32,13 @@ wss.on("connection", (ws) => {
 function processPlayerInputMessage(message: PlayerInputMessage) {
   state = {
     ...state,
-    creatures: state.creatures.map((creature) =>
-      creature.id === message.creatureId
+    entities: state.entities.map((entity) =>
+      entity.id === message.creatureId
         ? {
-            ...creature,
-            nextActions: [...creature.nextActions, ...message.actions],
+            ...entity,
+            nextActions: [...entity.nextActions, ...message.actions],
           }
-        : creature,
+        : entity,
     ),
   };
   broadcastState();
