@@ -34,6 +34,9 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballMoveActionSchema,
 ]);
 
+export const creatureNameSchema = z.enum(["bulbizard"]);
+export type CreatureName = z.infer<typeof creatureNameSchema>;
+
 const basicEntitySchema = z.object({
   id: z.string(),
   type: z.literal("entity"),
@@ -44,6 +47,7 @@ const basicEntitySchema = z.object({
 });
 
 export const creatureSchema = basicEntitySchema.extend({
+  name: creatureNameSchema,
   type: z.literal("creature"),
   player: z.number(),
   health: z.number(),
@@ -69,7 +73,6 @@ export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
 
-export const creatureNameSchema = z.enum(["bulbizard"]);
 export const creatureKitSchema = z.object({
   type: creatureNameSchema,
   ActionQ: z.function,
@@ -77,7 +80,6 @@ export const creatureKitSchema = z.object({
   ActionE: z.function,
 });
 
-export type CreatureName = z.infer<typeof creatureNameSchema>;
 export type CreatureKit = z.infer<typeof creatureKitSchema>;
 
 export const countColumns = 10;

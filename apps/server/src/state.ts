@@ -14,6 +14,7 @@ const createCreature = ({
   player = 0,
   position = { x: 3, y: 2 },
 } = {}): Creature => ({
+  name: "bulbizard",
   id: createId(),
   type: "creature",
   player,
