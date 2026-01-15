@@ -34,7 +34,7 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballMoveActionSchema,
 ]);
 
-export const creatureNameSchema = z.enum(["bulbizard"]);
+export const creatureNameSchema = z.enum(["bulbizard", "salameche"]);
 export type CreatureName = z.infer<typeof creatureNameSchema>;
 
 const basicEntitySchema = z.object({

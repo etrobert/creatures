@@ -1,4 +1,5 @@
 import { bulbizard } from "./creatures/bulbizard.js";
+import { salameche } from "./creatures/salameche.js";
 import { type CreatureKit, type CreatureName } from "./state.js";
 
 export const getCreatureKit = (creatureName: CreatureName): CreatureKit => {
@@ -9,4 +10,4 @@ export const getCreatureKit = (creatureName: CreatureName): CreatureKit => {
   return kit;
 };
 
-const creaturePoolKits = [bulbizard];
+const creaturePoolKits = [bulbizard, salameche];

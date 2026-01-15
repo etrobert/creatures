@@ -5,8 +5,8 @@ import {
   type Action,
 } from "../state.js";
 
-export const bulbizard: CreatureKit = {
-  type: "bulbizard" as CreatureName,
+export const salameche: CreatureKit = {
+  type: "salameche" as CreatureName,
   actionQ: (creature: Creature): Action => {
     return {
       type: "attack",
@@ -20,9 +20,6 @@ export const bulbizard: CreatureKit = {
     };
   },
   actionE: (creature: Creature): Action => {
-    return {
-      type: "attack",
-      direction: creature.direction,
-    };
+    return { type: "fireball" };
   },
 };

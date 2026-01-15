@@ -1,10 +1,12 @@
 import type {
   Creature,
+  CreatureName,
   Direction,
   Entity,
   Position,
   State,
 } from "@creatures/shared/state";
+import { setDefaultAutoSelectFamily } from "net";
 
 let nextId = 0;
 
@@ -13,8 +15,9 @@ const createId = () => String(nextId++);
 const createCreature = ({
   player = 0,
   position = { x: 3, y: 2 },
+  name = "bulbizard" as CreatureName,
 } = {}): Creature => ({
-  name: "bulbizard",
+  name,
   id: createId(),
   type: "creature",
   player,
@@ -31,7 +34,11 @@ export const createState = (): State => ({
   entities: [
     createCreature(),
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
-    createCreature({ player: 0, position: { x: 5, y: 5 } }),
+    createCreature({
+      player: 0,
+      name: "salameche",
+      position: { x: 5, y: 5 },
+    }),
   ],
 });
 
