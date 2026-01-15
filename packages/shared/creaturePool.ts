@@ -1,10 +1,12 @@
-import { bulbizard } from "./creatures/bulbizard";
-import { type CreatureKit, type CreatureName } from "./state";
+import { bulbizard } from "./creatures/bulbizard.js";
+import { type CreatureKit, type CreatureName } from "./state.js";
 
-export const accessKit = (creatureName: CreatureName) => {
-  creaturePoolKits.filter(
+export const getCreatureKit = (creatureName: CreatureName): CreatureKit => {
+  const kit = creaturePoolKits.find(
     (creatureKit: CreatureKit) => creatureKit.type === creatureName,
   );
+  if (kit === undefined) throw new Error("Creature has no kit");
+  return kit;
 };
 
 const creaturePoolKits = [bulbizard];

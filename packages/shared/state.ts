@@ -75,9 +75,9 @@ export type State = z.infer<typeof stateSchema>;
 
 export const creatureKitSchema = z.object({
   type: creatureNameSchema,
-  ActionQ: z.function,
-  ActionW: z.function,
-  ActionE: z.function,
+  actionQ: z.function({ input: [z.any()], output: actionSchema }),
+  actionW: z.function({ input: [z.any()], output: actionSchema }),
+  actionE: z.function({ input: [z.any()], output: actionSchema }),
 });
 
 export type CreatureKit = z.infer<typeof creatureKitSchema>;
@@ -129,3 +129,17 @@ export const updatePosition = <T extends Entity>(
 
 export const isCreature = (entity: Entity): entity is Creature =>
   entity.type === "creature";
+
+export const findActiveCreature = (
+  state: State,
+  activeCreatureId: string,
+): Creature => {
+  const activeCreature = state.entities.find(
+    ({ id }) => id === activeCreatureId,
+  );
+  if (activeCreature === undefined)
+    throw new Error("Couldn't find active creature");
+  if (activeCreature.type !== "creature")
+    throw new Error("Active creature is not a creature");
+  return activeCreature;
+};

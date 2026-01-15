@@ -3,7 +3,9 @@
   "type": "module",
   "exports": {
     "./messages": "./messages.ts",
-    "./state": "./state.ts"
+    "./state": "./state.ts",
+    "./creaturePool": "./creaturePool.ts",
+    "./creatures/bulbizard": "./creatures/bulbizard.ts"
   },
   "dependencies": {
     "zod": "^4.3.5"
