@@ -6,9 +6,11 @@ import type {
 } from "@creatures/shared/state";
 import { canvas, ctx } from "./render.js";
 import { activePlayer } from "./activePlayerCreature.js";
+import { isCreature } from "@creatures/shared/gameLogicUtilities";
 
 export const renderUi = (state: State) =>
-  state.creatures
+  state.entities
+    .filter(isCreature)
     .filter((creature) => creature.player === activePlayer)
     .forEach((creature, columnIndex) =>
       renderActionList(creature, columnIndex),
