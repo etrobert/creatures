@@ -15,22 +15,22 @@ export const renderUI = (state: State) =>
     );
 
 const actionSquareWidth = 10;
-const paddingWidth = 2;
+const padding = 2;
 
 export const renderActionList = (creature: Creature, columnIndex: number) => {
   const topLeftCorner: Position = {
     x:
       canvas.width -
       actionSquareWidth -
-      paddingWidth -
-      columnIndex * (actionSquareWidth + paddingWidth),
-    y: paddingWidth,
+      padding -
+      columnIndex * (actionSquareWidth + padding),
+    y: padding,
   };
 
   creature.nextActions.forEach((action, i) =>
     renderActionElement(action, {
       x: topLeftCorner.x,
-      y: topLeftCorner.y + i * (actionSquareWidth + paddingWidth),
+      y: topLeftCorner.y + i * (actionSquareWidth + padding),
     }),
   );
 };
