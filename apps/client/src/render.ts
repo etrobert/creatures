@@ -9,7 +9,7 @@ import {
   type State,
   type Creature,
 } from "@creatures/shared/state";
-import { renderUI } from "./renderUI.js";
+import { renderUi } from "./renderUi.js";
 import { renderCreatureHealth } from "./renderCreatureHealth.js";
 
 const getCanvas = () => {
@@ -64,7 +64,7 @@ export const render = (state: State, currentTime: number) => {
       ctx.globalAlpha = 1;
     }
   }
-  renderUI(state);
+  renderUi(state);
 };
 
 export const getGhost = (creature: Creature) => {

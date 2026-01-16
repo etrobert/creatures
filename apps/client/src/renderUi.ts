@@ -7,7 +7,7 @@ import type {
 import { canvas, ctx } from "./render.js";
 import { activePlayer } from "./activePlayerCreature.js";
 
-export const renderUI = (state: State) =>
+export const renderUi = (state: State) =>
   state.creatures
     .filter((creature) => creature.player === activePlayer)
     .forEach((creature, columnIndex) =>
