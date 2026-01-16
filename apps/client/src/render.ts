@@ -9,7 +9,8 @@ import {
   type State,
   type Creature,
 } from "@creatures/shared/state";
-import { renderCreatureHealth, renderUI } from "./renderUI.js";
+import { renderUI } from "./renderUI.js";
+import { renderCreatureHealth } from "./renderCreatureHealth.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
