@@ -30,8 +30,8 @@ const getBackgroundTilesMap = (backgroundMap: GameMap) => {
   return backgroundTilesMap;
 };
 
-export const renderBackground = (background: GameMap) => {
-  const backgroundTilesMap = getBackgroundTilesMap(background);
+export const renderBackground = (map: GameMap) => {
+  const backgroundTilesMap = getBackgroundTilesMap(map);
   const moreRows = countRow * 2 + 1;
   const moreColumns = countColumns * 2 + 1;
   for (let y = 0; y < moreRows; y++) {
