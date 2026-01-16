@@ -1,17 +1,21 @@
-import { renderBackground, backgroundMap } from "./background.js";
+import { renderBackground } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
 import {
-  collisionWithMap,
-  updatePosition,
   countColumns,
   countRow,
   type Position,
   type State,
   type Creature,
   type Entity,
-  isCreature,
 } from "@creatures/shared/state";
 import { renderFireball } from "./renderFireball.js";
+
+import {
+  collisionWithMap,
+  outerMapCollision,
+  updatePosition,
+  isCreature,
+} from "@creatures/shared/gameLogicUtilities";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -54,7 +58,7 @@ const renderEntity = (entity: Entity, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(backgroundMap);
+  renderBackground(state.map);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const entities = state.entities.filter(
@@ -118,7 +122,7 @@ export const getGhost = (creature: Creature) => {
       dummyCreature = updatePosition(
         dummyCreature,
         nextAction,
-        collisionWithMap,
+        outerMapCollision,
       );
   }
   return dummyCreature;

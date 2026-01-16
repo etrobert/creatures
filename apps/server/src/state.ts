@@ -1,9 +1,11 @@
-import type {
-  Creature,
-  Direction,
-  Entity,
-  Position,
-  State,
+import {
+  type Direction,
+  type Entity,
+  type Position,
+  countColumns,
+  countRow,
+  type Creature,
+  type State,
 } from "@creatures/shared/state";
 
 let nextId = 0;
@@ -32,6 +34,7 @@ export const createState = (): State => ({
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
     createCreature({ player: 0, position: { x: 5, y: 5 } }),
   ],
+  map,
 });
 
 export const createFireball = (
@@ -46,3 +49,9 @@ export const createFireball = (
     ongoingAction: null,
     nextActions: [{ type: "fireball:move" }],
   }) as const;
+
+const map = new Array(countColumns * countRow).fill("grass");
+
+map[0] = "void";
+map[1] = "void";
+map[16] = "void";

@@ -1,27 +1,21 @@
-import { countColumns, countRow, type Position } from "@creatures/shared/state";
+import {
+  countColumns,
+  countRow,
+  type GameMap,
+  type Position,
+} from "@creatures/shared/state";
 import { backgroundTilesPositions } from "./backgroundTilesPositions.js";
 
 import { ctx } from "./render.js";
+import { getTile } from "@creatures/shared/gameLogicUtilities";
 
-const getTile = (background: string[], position: Position) => {
-  const tile = background[position.x + position.y * countColumns];
-  if (tile === undefined) throw new Error("incorrect position");
-  return tile;
-};
-
-const getBackgroundTile = (background: string[], position: Position) => {
+const getBackgroundTile = (background: GameMap, position: Position) => {
   const tile = background[position.x + position.y * countColumns * 2];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
 };
 
-export const backgroundMap = new Array(countColumns * countRow).fill("grass");
-
-backgroundMap[0] = "void";
-backgroundMap[1] = "void";
-backgroundMap[16] = "void";
-
-const getBackgroundTilesMap = (backgroundMap: string[]) => {
+const getBackgroundTilesMap = (backgroundMap: GameMap) => {
   let backgroundTilesMap = new Array();
   for (let yn = 0; yn < countRow * 2; yn++) {
     for (let xn = 0; xn < countColumns * 2; xn++) {
@@ -36,8 +30,8 @@ const getBackgroundTilesMap = (backgroundMap: string[]) => {
   return backgroundTilesMap;
 };
 
-export const renderBackground = (background: string[]) => {
-  const backgroundTilesMap = getBackgroundTilesMap(backgroundMap);
+export const renderBackground = (map: GameMap) => {
+  const backgroundTilesMap = getBackgroundTilesMap(map);
   const moreRows = countRow * 2 + 1;
   const moreColumns = countColumns * 2 + 1;
   for (let y = 0; y < moreRows; y++) {

@@ -5,12 +5,14 @@ import {
   listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
-import { isCreature, type Position } from "@creatures/shared/state";
+import { type Position } from "@creatures/shared/state";
 import { state } from "./state.js";
 import { sendClientMessage, ws } from "./socket.js";
+import { isCreature } from "@creatures/shared/gameLogicUtilities";
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
+    if (state === undefined) throw new Error("state is undefined");
     const activeCreature = state.entities.find(
       ({ id }) => id === activeCreatureId,
     );
@@ -49,6 +51,7 @@ export const setupEventListeners = () => {
   });
 
   canvas.addEventListener("click", (event) => {
+    if (state === undefined) throw new Error("state is undefined");
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.entities
       .filter(isCreature)
