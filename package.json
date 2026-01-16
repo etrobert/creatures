@@ -11,7 +11,9 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "npm run dev --workspace=@creatures/client",
     "dev:server": "npm run dev --workspace=@creatures/server",
-    "typecheck": "npm run typecheck --workspace=@creatures/client",
+    "typecheck": "npm run typecheck:client && npm run typecheck:server",
+    "typecheck:client": "npm run typecheck --workspace=@creatures/client",
+    "typecheck:server": "npm run typecheck --workspace=@creatures/server",
     "format": "npm run format --workspace=@creatures/client"
   },
   "keywords": [],

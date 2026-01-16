@@ -1,16 +1,22 @@
-import { renderBackground, backgroundMap } from "./background.js";
+import { renderBackground } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
 import {
-  collisionWithMap,
-  updatePosition,
   countColumns,
   countRow,
   type Position,
   type State,
   type Creature,
+  type Entity,
 } from "@creatures/shared/state";
 import { renderUi } from "./renderUi.js";
 import { renderCreatureHealth } from "./renderCreatureHealth.js";
+import { renderFireball } from "./renderFireball.js";
+
+import {
+  outerMapCollision,
+  updatePosition,
+  isCreature,
+} from "@creatures/shared/gameLogicUtilities";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -39,21 +45,29 @@ export const gridToCanvas = ({ x, y }: Position) => ({
   y: y * cellHeight + cellHeight / 2,
 });
 
+const renderEntity = (entity: Entity, currentTime: number) => {
+  switch (entity.type) {
+    case "creature":
+      renderCreature(entity, currentTime);
+      renderCreatureHealth(entity);
+      break;
+    default:
+      renderFireball(entity, currentTime);
+  }
+};
+
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(backgroundMap);
+  renderBackground(state.map);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
-      const creatures = state.creatures.filter(
-        (creature) => creature.position.x === x && creature.position.y === y,
+      const entities = state.entities.filter(
+        (entity) => entity.position.x === x && entity.position.y === y,
       );
-      if (creatures[0])
-        creatures.forEach((creature) => {
-          renderCreature(creature, currentTime);
-          renderCreatureHealth(creature);
-        });
-      const creatureGhosts = state.creatures
+      entities.forEach((entity) => renderEntity(entity, currentTime));
+      const creatureGhosts = state.entities
+        .filter(isCreature)
         .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
         .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
@@ -76,7 +90,7 @@ export const getGhost = (creature: Creature) => {
       dummyCreature = updatePosition(
         dummyCreature,
         nextAction,
-        collisionWithMap,
+        outerMapCollision,
       );
   }
   return dummyCreature;
