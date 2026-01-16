@@ -7,14 +7,12 @@ import type {
 import { canvas, cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
 import { activePlayer } from "./activePlayerCreature.js";
 
-export const renderUI = (state: State) => {
-  const creatures = state.creatures.filter(
-    (creature) => creature.player === activePlayer,
-  );
-  creatures.forEach((creature, columnIndex) =>
-    renderActionList(creature, columnIndex),
-  );
-};
+export const renderUI = (state: State) =>
+  state.creatures
+    .filter((creature) => creature.player === activePlayer)
+    .forEach((creature, columnIndex) =>
+      renderActionList(creature, columnIndex),
+    );
 
 export const renderCreatureHealth = (creature: Creature) => {
   const canvasPosition = gridToCanvas(creature.position);
