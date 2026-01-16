@@ -6,7 +6,6 @@ import type {
   Position,
   State,
 } from "@creatures/shared/state";
-import { setDefaultAutoSelectFamily } from "net";
 
 let nextId = 0;
 
@@ -15,7 +14,11 @@ const createId = () => String(nextId++);
 const createCreature = ({
   player = 0,
   position = { x: 3, y: 2 },
-  name = "bulbizard" as CreatureName,
+  name = "bulbizard",
+}: {
+  player?: number;
+  position?: Position;
+  name?: CreatureName;
 } = {}): Creature => ({
   name,
   id: createId(),
