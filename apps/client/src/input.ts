@@ -5,17 +5,19 @@ import {
   listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
-import { isCreature, type Position } from "@creatures/shared/state";
+import {
+  findActiveCreature,
+  isCreature,
+  type Position,
+} from "@creatures/shared/state";
 import { state } from "./state.js";
 import { sendClientMessage, ws } from "./socket.js";
 
+import { getCreatureKit } from "@creatures/shared/creaturePool";
+
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
-    const activeCreature = state.entities.find(
-      ({ id }) => id === activeCreatureId,
-    );
-    if (activeCreature === undefined)
-      throw new Error("Couldn't find active creature");
+    const activeCreature = findActiveCreature(state, activeCreatureId);
 
     const getAction = () => {
       switch (event.code) {
@@ -28,12 +30,9 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ":
-          return {
-            type: "attack",
-            direction: activeCreature.direction,
-          } as const;
+          return getCreatureKit(activeCreature.name).actionQ(activeCreature);
         case "KeyE":
-          return { type: "fireball" } as const;
+          return getCreatureKit(activeCreature.name).actionE(activeCreature);
       }
     };
 

@@ -34,6 +34,9 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballMoveActionSchema,
 ]);
 
+export const creatureNameSchema = z.enum(["bulbizard", "salameche"]);
+export type CreatureName = z.infer<typeof creatureNameSchema>;
+
 const basicEntitySchema = z.object({
   id: z.string(),
   type: z.literal("entity"),
@@ -44,6 +47,7 @@ const basicEntitySchema = z.object({
 });
 
 export const creatureSchema = basicEntitySchema.extend({
+  name: creatureNameSchema,
   type: z.literal("creature"),
   player: z.number(),
   health: z.number(),
@@ -68,6 +72,15 @@ export type Action = z.infer<typeof actionSchema>;
 export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
+
+export const creatureKitSchema = z.object({
+  type: creatureNameSchema,
+  actionQ: z.function({ input: [z.any()], output: actionSchema }),
+  actionW: z.function({ input: [z.any()], output: actionSchema }),
+  actionE: z.function({ input: [z.any()], output: actionSchema }),
+});
+
+export type CreatureKit = z.infer<typeof creatureKitSchema>;
 
 export const countColumns = 10;
 export const countRow = 7;
@@ -116,3 +129,17 @@ export const updatePosition = <T extends Entity>(
 
 export const isCreature = (entity: Entity): entity is Creature =>
   entity.type === "creature";
+
+export const findActiveCreature = (
+  state: State,
+  activeCreatureId: string,
+): Creature => {
+  const activeCreature = state.entities.find(
+    ({ id }) => id === activeCreatureId,
+  );
+  if (activeCreature === undefined)
+    throw new Error("Couldn't find active creature");
+  if (activeCreature.type !== "creature")
+    throw new Error("Active creature is not a creature");
+  return activeCreature;
+};
