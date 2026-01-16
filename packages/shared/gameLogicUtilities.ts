@@ -2,7 +2,7 @@ import {
   countColumns,
   countRow,
   type Action,
-  type Map,
+  type GameMap,
   type Creature,
   type Direction,
   type Entity,
@@ -28,8 +28,8 @@ export const getNewPosition = (
   }
 };
 
-export const collisionWithMap = (background: Map, position: Position) =>
-  outerMapCollision(position) || mapCollision(background, position);
+export const collisionWithMap = (map: GameMap, position: Position) =>
+  outerMapCollision(position) || mapCollision(map, position);
 
 export const outerMapCollision = (positon: Position) =>
   positon.x < 0 ||
@@ -56,10 +56,10 @@ export const updatePosition = <T extends Entity>(
 export const isCreature = (entity: Entity): entity is Creature =>
   entity.type === "creature";
 
-export const mapCollision = (background: Map, position: Position) =>
-  getTile(background, position) === "void";
+export const mapCollision = (map: GameMap, position: Position) =>
+  getTile(map, position) === "void";
 
-export const getTile = (map: Map, position: Position) => {
+export const getTile = (map: GameMap, position: Position) => {
   const tile = map[position.x + position.y * countColumns];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;

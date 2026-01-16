@@ -73,7 +73,7 @@ export type Action = z.infer<typeof actionSchema>;
 export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
-export type Map = z.infer<typeof mapSchema>;
+export type GameMap = z.infer<typeof mapSchema>;
 
 export const countColumns = 10;
 export const countRow = 7;

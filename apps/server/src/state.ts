@@ -6,7 +6,6 @@ import {
   countRow,
   type Creature,
   type State,
-  type Map,
 } from "@creatures/shared/state";
 
 let nextId = 0;
