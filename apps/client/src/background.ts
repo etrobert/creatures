@@ -60,7 +60,7 @@ export const renderBackground = (map: GameMap) => {
 };
 
 const backgroundTiles = new Image();
-backgroundTiles.src = "./sprites/background/Grass_tiles_v2.png";
+backgroundTiles.src = "/sprites/background/Grass_tiles_v2.png";
 
 const renderBackgroundTile = (
   corners: { NW: string; NE: string; SW: string; SE: string },
