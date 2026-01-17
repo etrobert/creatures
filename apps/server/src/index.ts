@@ -8,9 +8,26 @@ import { createServer } from "http";
 import { createState } from "./state.js";
 import { update } from "./update.js";
 import { tickDuration } from "@creatures/shared/state";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const port = 3000;
-const server = createServer();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const port = process.env.PORT || 3000;
+const app = express();
+
+// Serve static files from the client build
+const clientDistPath = path.join(__dirname, "../../client/dist");
+app.use(express.static(clientDistPath));
+
+// Serve index.html for all other routes (SPA support)
+app.use((req, res) => {
+  res.sendFile(path.join(clientDistPath, "index.html"));
+});
+
+const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
@@ -64,6 +81,7 @@ function gameLoop() {
 
 setInterval(gameLoop, tickDuration);
 
-server.listen(port, () =>
-  console.log(`WebSocket server is running on ws://localhost:${port}`),
-);
+server.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`WebSocket server is running on ws://localhost:${port}`);
+});

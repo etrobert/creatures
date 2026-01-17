@@ -9,10 +9,10 @@ const animationFrames = 2;
 const frameDuration = 400;
 
 const imgFireball1 = new Image();
-imgFireball1.src = "./sprites/animations/Fireball/FireBall1.png";
+imgFireball1.src = "/sprites/animations/Fireball/FireBall1.png";
 
 const imgFireball2 = new Image();
-imgFireball2.src = "./sprites/animations/Fireball/FireBall2.png";
+imgFireball2.src = "/sprites/animations/Fireball/FireBall2.png";
 
 export const renderFireball = (projectile: Entity, currentTime: number) => {
   const canvasPosition = gridToCanvas(projectile.position);
