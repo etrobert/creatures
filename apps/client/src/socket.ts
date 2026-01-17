@@ -5,7 +5,20 @@ import {
 import { setState } from "./state.js";
 
 // WebSocket connection
-export const ws = new WebSocket("ws://localhost:3000");
+// In development: ws://localhost:3000
+// In production: use the same host as the page (wss:// for https, ws:// for http)
+const getWebSocketUrl = () => {
+  // In development, Vite serves the app separately from the backend
+  if (import.meta.env.DEV) {
+    return "ws://localhost:3000";
+  }
+  // In production, the backend serves the static files
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const host = window.location.host;
+  return `${protocol}//${host}`;
+};
+
+export const ws = new WebSocket(getWebSocketUrl());
 
 ws.onopen = () => console.log("Connected to WebSocket server");
 

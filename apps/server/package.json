@@ -3,13 +3,17 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/ws": "^8.18.1",
-    "tsx": "^4.21.0"
+    "@types/ws": "^8.18.1"
   },
   "dependencies": {
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "tsx": "^4.21.0",
     "ws": "^8.19.0"
   }
 }
