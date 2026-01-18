@@ -10,4 +10,4 @@ export const getCreatureKit = (creatureName: CreatureName): CreatureKit => {
   return kit;
 };
 
-const creaturePoolKits = [bulbizard, salameche];
+const creatureKits = [bulbizard, salameche];
