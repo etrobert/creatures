@@ -3,8 +3,9 @@
   "type": "module",
   "exports": {
     "./messages": "./messages.ts",
+    "./creatureKits": "./creatureKits.ts",
     "./state": "./state.ts",
-    "./creatureKits": "./creatureKits.ts"
+    "./gameLogicUtilities": "./gameLogicUtilities.ts"
   },
   "dependencies": {
     "zod": "^4.3.5"

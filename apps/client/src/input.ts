@@ -5,9 +5,8 @@ import {
   listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
+
 import {
-  findActiveCreature,
-  isCreature,
   type Action,
   type ActionType,
   type AttackAction,
@@ -15,6 +14,12 @@ import {
   type FireballAction,
   type Position,
 } from "@creatures/shared/state";
+
+import {
+  isCreature,
+  findActiveCreature,
+} from "@creatures/shared/gameLogicUtilities";
+
 import { state } from "./state.js";
 import { sendClientMessage } from "./socket.js";
 
@@ -40,6 +45,7 @@ const createAction = (creature: Creature, actionType: ActionType): Action => {
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
+    if (state === undefined) throw new Error("state is undefined");
     const activeCreature = findActiveCreature(state, activeCreatureId);
 
     const getAction = () => {
@@ -77,6 +83,7 @@ export const setupEventListeners = () => {
   });
 
   canvas.addEventListener("click", (event) => {
+    if (state === undefined) throw new Error("state is undefined");
     const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.entities
       .filter(isCreature)

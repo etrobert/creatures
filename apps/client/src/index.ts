@@ -5,7 +5,7 @@ import { state } from "./state.js";
 setupEventListeners();
 
 function gameLoop(currentTime: number) {
-  render(state, currentTime);
+  if (state !== undefined) render(state, currentTime);
   requestAnimationFrame(gameLoop);
 }
 

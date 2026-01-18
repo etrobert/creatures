@@ -1,9 +1,10 @@
-import { isCreature } from "@creatures/shared/state";
+import { isCreature } from "@creatures/shared/gameLogicUtilities";
 import { state } from "./state.js";
 
 export const activePlayer = 0;
 
 export const listPlayerCreatureIds = (player: number) => {
+  if (state === undefined) throw new Error("state is undefined");
   return state.entities
     .filter(isCreature)
     .filter((creature) => creature.player === player)

@@ -1,17 +1,22 @@
-import { renderBackground, backgroundMap } from "./background.js";
+import { renderBackground } from "./background.js";
 import { renderCreature } from "./renderCreature.js";
 import {
-  collisionWithMap,
-  updatePosition,
   countColumns,
   countRow,
   type Position,
   type State,
   type Creature,
   type Entity,
-  isCreature,
 } from "@creatures/shared/state";
+import { renderUi } from "./renderUi.js";
+import { renderCreatureHealth } from "./renderCreatureHealth.js";
 import { renderFireball } from "./renderFireball.js";
+
+import {
+  outerMapCollision,
+  updatePosition,
+  isCreature,
+} from "@creatures/shared/gameLogicUtilities";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -54,7 +59,7 @@ const renderEntity = (entity: Entity, currentTime: number) => {
 export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  renderBackground(backgroundMap);
+  renderBackground(state.map);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const entities = state.entities.filter(
@@ -73,40 +78,7 @@ export const render = (state: State, currentTime: number) => {
       ctx.globalAlpha = 1;
     }
   }
-};
-
-const renderCreatureHealth = (creature: Creature) => {
-  const canvasPosition = gridToCanvas(creature.position);
-  const xPad = cellWidth / 8;
-  const yPadTop = (-1 * cellHeight) / 16;
-  const yPadBot = (cellHeight * 15) / 16;
-  ctx.fillStyle = "black";
-
-  ctx.fillRect(
-    canvasPosition.x + xPad - 1,
-    canvasPosition.y + yPadTop - 1,
-    cellWidth - 2 * xPad + 2,
-    cellHeight - (yPadTop + yPadBot) + 2,
-  );
-  ctx.fillStyle = "LightGray";
-
-  ctx.fillRect(
-    canvasPosition.x + xPad,
-    canvasPosition.y + yPadTop,
-    cellWidth - 2 * xPad,
-    cellHeight - (yPadTop + yPadBot),
-  );
-
-  const percentageHealth = creature.health / creature.maxHealth;
-  ctx.fillStyle = "green";
-  const endCurrentHP = percentageHealth * (cellWidth - 2 * xPad);
-
-  ctx.fillRect(
-    canvasPosition.x + xPad,
-    canvasPosition.y + yPadTop,
-    endCurrentHP,
-    cellHeight - (yPadTop + yPadBot),
-  );
+  renderUi(state);
 };
 
 export const getGhost = (creature: Creature) => {
@@ -118,7 +90,7 @@ export const getGhost = (creature: Creature) => {
       dummyCreature = updatePosition(
         dummyCreature,
         nextAction,
-        collisionWithMap,
+        outerMapCollision,
       );
   }
   return dummyCreature;
