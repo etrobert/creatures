@@ -80,18 +80,16 @@ export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
 export type GameMap = z.infer<typeof mapSchema>;
 
-const actionTypeSchema = z.enum(["attack", "fireball"]); // TODO: to deduce from actions
+// const actionTypeSchema = z.enum(["attack", "fireball"]); // TODO: to deduce from actions
 
-export const creatureKitSchema = z.object({
-  name: creatureNameSchema,
-  actionQ: actionTypeSchema,
-  actionW: actionTypeSchema,
-  actionE: actionTypeSchema,
-});
+export type ActionType = Action[keyof Action];
 
-export type ActionType = z.infer<typeof actionTypeSchema>;
-
-export type CreatureKit = z.infer<typeof creatureKitSchema>;
+export type CreatureKit = {
+  name: CreatureName;
+  actionQ: ActionType;
+  actionW: ActionType;
+  actionE: ActionType;
+};
 
 export const countColumns = 10;
 export const countRow = 7;
