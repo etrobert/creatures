@@ -1,7 +1,7 @@
 import { type CreatureKit } from "../state.js";
 
 export const bulbizard: CreatureKit = {
-  type: "bulbizard",
+  name: "bulbizard",
   actionQ: "attack",
   actionW: "attack",
   actionE: "attack",

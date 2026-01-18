@@ -77,7 +77,7 @@ export type State = z.infer<typeof stateSchema>;
 const actionTypeSchema = z.enum(["attack", "fireball"]); // TODO: to deduce from actions
 
 export const creatureKitSchema = z.object({
-  type: creatureNameSchema,
+  name: creatureNameSchema,
   actionQ: actionTypeSchema,
   actionW: actionTypeSchema,
   actionE: actionTypeSchema,
