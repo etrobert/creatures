@@ -18,7 +18,7 @@ import {
 import { state } from "./state.js";
 import { sendClientMessage } from "./socket.js";
 
-import { getCreatureKit } from "@creatures/shared/creaturePool";
+import { getCreatureKit } from "@creatures/shared/creatureKits";
 
 const createAttack = (creature: Creature): AttackAction => ({
   type: "attack",

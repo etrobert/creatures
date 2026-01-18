@@ -4,7 +4,7 @@
   "exports": {
     "./messages": "./messages.ts",
     "./state": "./state.ts",
-    "./creaturePool": "./creaturePool.ts",
+    "./creatureKits": "./creatureKits.ts",
     "./creatures/bulbizard": "./creatures/bulbizard.ts",
     "./creatures/salameche": "./creatures/salameche.ts"
   },
