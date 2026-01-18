@@ -1,5 +1,5 @@
-import { bulbizard } from "./creatures/bulbizard.js";
-import { salameche } from "./creatures/salameche.js";
+import { bulbizard } from "./creatureKits/bulbizard.js";
+import { salameche } from "./creatureKits/salameche.js";
 import { type CreatureKit, type CreatureName } from "./state.js";
 
 export const getCreatureKit = (creatureName: CreatureName): CreatureKit => {
