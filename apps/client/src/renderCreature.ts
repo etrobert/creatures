@@ -25,7 +25,7 @@ const imgWidth = 40;
 const imgHeight = 40;
 const animationFrames = 6;
 const frameDuration = tickDuration / animationFrames;
-img.src = "./sprites/animations/bulbasaur/Walk-Anim.png";
+img.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
 
 export const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === activePlayer ? "blue" : "red";
