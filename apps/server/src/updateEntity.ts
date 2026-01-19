@@ -63,42 +63,34 @@ const applyMove = (
 
 const applyAttack = (
   state: State,
-  creature: Entity,
+  entity: Entity,
   attackAction: AttackAction,
 ): State => {
-  const tileAttacked = getNewPosition(
-    creature.position,
-    attackAction.direction,
-  );
-  const attackedCreature = getCreatureAtPosition(state, tileAttacked);
+  const tileAttacked = getNewPosition(entity.position, attackAction.direction);
 
-  return {
-    ...state,
-    entities: state.entities
-      .filter((entity) => entity.type === "creature")
-      .map((entity) => {
-        if (entity.id === creature.id)
-          return { ...creature, ongoingAction: null };
-        if (entity.id === attackedCreature?.id)
-          return { ...entity, health: entity.health - 1 };
-        return entity;
-      }),
-  };
+  state = resetEntityOngoingAction(state, entity.id);
+  state = dealDamageAtPosition(state, tileAttacked, 1);
+
+  return state;
 };
 
-const dealFireballDamage = (
+const dealDamageAtPosition = (
   state: State,
-  fireballPosition: Position,
+  position: Position,
+  damage: number,
 ): State => ({
   ...state,
   entities: state.entities.map((entity) =>
     entity.type === "creature" &&
-    entity.position.x === fireballPosition.x &&
-    entity.position.y === fireballPosition.y
-      ? { ...entity, health: entity.health - 1 }
+    entity.position.x === position.x &&
+    entity.position.y === position.y
+      ? { ...entity, health: entity.health - damage }
       : entity,
   ),
 });
+
+const dealFireballDamage = (state: State, position: Position) =>
+  dealDamageAtPosition(state, position, 1);
 
 const resetEntityOngoingAction = (state: State, entityId: string): State => ({
   ...state,
