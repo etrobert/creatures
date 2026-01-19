@@ -89,39 +89,68 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     if (state === undefined) throw new Error("state is undefined");
-    const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
+    // const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
+    const clickPosition = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.entities
       .filter(isCreature)
       .find((creature) => creature.id === activeCreatureId);
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
+    const nextActions = pathToTarget(ghost.position, clickPosition);
+    // const nextActionsX =
+    //   ghost.position.x < x
+    //     ? new Array(x - ghost.position.x).fill({
+    //         type: "move",
+    //         direction: "right",
+    //       })
+    //     : new Array(ghost.position.x - x).fill({
+    //         type: "move",
+    //         direction: "left",
+    //       });
+    // const nextActionsY =
+    //   ghost.position.y < y
+    //     ? new Array(y - ghost.position.y).fill({
+    //         type: "move",
+    //         direction: "down",
+    //       })
+    //     : new Array(ghost.position.y - y).fill({
+    //         type: "move",
+    //         direction: "up",
+    //       });
+    sendClientMessage({
+      type: "player input",
+      creatureId: activeCreature.id,
+      actions: [...nextActions],
+    });
+  });
+
+  const pathToTarget = (
+    currentPosition: Position,
+    TargetPosition: Position,
+  ) => {
     const nextActionsX =
-      ghost.position.x < x
-        ? new Array(x - ghost.position.x).fill({
+      currentPosition.x < TargetPosition.x
+        ? new Array(TargetPosition.x - currentPosition.x).fill({
             type: "move",
             direction: "right",
           })
-        : new Array(ghost.position.x - x).fill({
+        : new Array(currentPosition.x - TargetPosition.x).fill({
             type: "move",
             direction: "left",
           });
     const nextActionsY =
-      ghost.position.y < y
-        ? new Array(y - ghost.position.y).fill({
+      currentPosition.y < TargetPosition.y
+        ? new Array(TargetPosition.y - currentPosition.y).fill({
             type: "move",
             direction: "down",
           })
-        : new Array(ghost.position.y - y).fill({
+        : new Array(currentPosition.y - TargetPosition.y).fill({
             type: "move",
             direction: "up",
           });
-    sendClientMessage({
-      type: "player input",
-      creatureId: activeCreature.id,
-      actions: [...nextActionsX, ...nextActionsY],
-    });
-  });
+    return [...nextActionsX, ...nextActionsY];
+  };
 
   window.addEventListener("keydown", (event) => {
     const getActiveCreature = () => {
