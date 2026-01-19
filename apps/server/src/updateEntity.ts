@@ -79,18 +79,22 @@ const applyAttack = (
 };
 
 const applyFireball = (state: State, creature: Entity): State => {
-  const spawnedFireball = createFireball(
-    getNewPosition(creature.position, creature.direction),
-    creature.direction,
-  );
+  const position = getNewPosition(creature.position, creature.direction);
+  const spawnedFireball = createFireball(position, creature.direction);
   return {
     ...state,
     entities: [
-      ...state.entities.map((entity) =>
-        entity.id === creature.id
-          ? { ...creature, ongoingAction: null }
-          : entity,
-      ),
+      ...state.entities.map((entity) => {
+        if (entity.id === creature.id)
+          return { ...creature, ongoingAction: null };
+        if (
+          entity.type === "creature" &&
+          entity.position.x === position.x &&
+          entity.position.y === position.y
+        )
+          return { ...entity, health: entity.health - 1 };
+        return entity;
+      }),
       spawnedFireball,
     ],
   };
