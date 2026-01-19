@@ -50,14 +50,19 @@ export const setupEventListeners = () => {
 
     const getAction = () => {
       switch (event.code) {
-        case "KeyW":
+        case "ArrowUp":
           return { type: "move", direction: "up" } as const;
-        case "KeyA":
+        case "ArrowLeft":
           return { type: "move", direction: "left" } as const;
-        case "KeyS":
+        case "ArrowDown":
           return { type: "move", direction: "down" } as const;
-        case "KeyD":
+        case "ArrowRight":
           return { type: "move", direction: "right" } as const;
+        case "KeyW":
+          return createAction(
+            activeCreature,
+            getCreatureKit(activeCreature.name).actionQ,
+          );
         case "KeyQ":
           return createAction(
             activeCreature,
