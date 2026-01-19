@@ -1,6 +1,6 @@
 export const salameche = {
   name: "salameche",
-  actionQ: "attack",
-  actionW: "attack",
+  actionQ: "fireball",
+  actionW: "fireball",
   actionE: "fireball",
 } as const;
