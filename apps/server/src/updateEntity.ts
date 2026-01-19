@@ -16,9 +16,9 @@ import {
 
 import { createFireball } from "./state.js";
 
-export const updateEntity = (state: State, entity: Entity): State => {
-  state = updateActions(state, entity.id);
-  return applyOngoingAction(state, entity.id);
+export const updateEntity = (state: State, entityId: string): State => {
+  state = updateActions(state, entityId);
+  return applyOngoingAction(state, entityId);
 };
 
 const updateActions = (state: State, entityId: string): State => {
