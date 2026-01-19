@@ -1,6 +1,7 @@
 // Game state types and constants
 
 import { z } from "zod";
+import { creatureKits } from "./creatureKits.js";
 
 export const positionSchema = z.object({
   x: z.number(),
@@ -34,7 +35,7 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballMoveActionSchema,
 ]);
 
-export const creatureNameSchema = z.enum(["bulbizard", "salameche"]);
+export const creatureNameSchema = z.enum(creatureKits.map(({ name }) => name));
 export type CreatureName = z.infer<typeof creatureNameSchema>;
 
 const basicEntitySchema = z.object({

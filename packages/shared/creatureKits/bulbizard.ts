@@ -1,8 +1,6 @@
-import { type CreatureKit } from "../state.js";
-
-export const bulbizard: CreatureKit = {
+export const bulbizard = {
   name: "bulbizard",
   actionQ: "attack",
   actionW: "attack",
   actionE: "attack",
-};
+} as const;
