@@ -5,19 +5,48 @@ import {
   listPlayerCreatureIds,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
-import { type Position } from "@creatures/shared/state";
+
+import {
+  type Action,
+  type ActionType,
+  type AttackAction,
+  type Creature,
+  type FireballAction,
+  type Position,
+} from "@creatures/shared/state";
+
+import {
+  isCreature,
+  findActiveCreature,
+} from "@creatures/shared/gameLogicUtilities";
+
 import { state } from "./state.js";
-import { sendClientMessage, ws } from "./socket.js";
-import { isCreature } from "@creatures/shared/gameLogicUtilities";
+import { sendClientMessage } from "./socket.js";
+
+import { getCreatureKit } from "@creatures/shared/creatureKits";
+
+const createAttack = (creature: Creature): AttackAction => ({
+  type: "attack",
+  direction: creature.direction,
+});
+
+const createFireball = (): FireballAction => ({ type: "fireball" });
+
+const createAction = (creature: Creature, actionType: ActionType): Action => {
+  switch (actionType) {
+    case "attack":
+      return createAttack(creature);
+    case "fireball":
+      return createFireball();
+    default:
+      throw new Error("unknown action type");
+  }
+};
 
 export const setupEventListeners = () => {
   window.addEventListener("keydown", (event) => {
     if (state === undefined) throw new Error("state is undefined");
-    const activeCreature = state.entities.find(
-      ({ id }) => id === activeCreatureId,
-    );
-    if (activeCreature === undefined)
-      throw new Error("Couldn't find active creature");
+    const activeCreature = findActiveCreature(state, activeCreatureId);
 
     const getAction = () => {
       switch (event.code) {
@@ -30,12 +59,15 @@ export const setupEventListeners = () => {
         case "KeyD":
           return { type: "move", direction: "right" } as const;
         case "KeyQ":
-          return {
-            type: "attack",
-            direction: activeCreature.direction,
-          } as const;
+          return createAction(
+            activeCreature,
+            getCreatureKit(activeCreature.name).actionQ,
+          );
         case "KeyE":
-          return { type: "fireball" } as const;
+          return createAction(
+            activeCreature,
+            getCreatureKit(activeCreature.name).actionE,
+          );
       }
     };
 

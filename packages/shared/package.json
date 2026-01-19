@@ -3,6 +3,7 @@
   "type": "module",
   "exports": {
     "./messages": "./messages.ts",
+    "./creatureKits": "./creatureKits.ts",
     "./state": "./state.ts",
     "./gameLogicUtilities": "./gameLogicUtilities.ts"
   },

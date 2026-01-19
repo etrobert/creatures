@@ -1,6 +1,7 @@
 // Game state types and constants
 
 import { z } from "zod";
+import { creatureKits } from "./creatureKits.js";
 
 export const positionSchema = z.object({
   x: z.number(),
@@ -34,6 +35,9 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballMoveActionSchema,
 ]);
 
+export const creatureNameSchema = z.enum(creatureKits.map(({ name }) => name));
+export type CreatureName = z.infer<typeof creatureNameSchema>;
+
 const basicEntitySchema = z.object({
   id: z.string(),
   type: z.literal("entity"),
@@ -44,6 +48,7 @@ const basicEntitySchema = z.object({
 });
 
 export const creatureSchema = basicEntitySchema.extend({
+  name: creatureNameSchema,
   type: z.literal("creature"),
   player: z.number(),
   health: z.number(),
@@ -69,11 +74,21 @@ export type Position = z.infer<typeof positionSchema>;
 export type Direction = z.infer<typeof directionSchema>;
 export type MoveAction = z.infer<typeof moveActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
+export type FireballAction = z.infer<typeof fireballActionSchema>;
 export type Action = z.infer<typeof actionSchema>;
 export type Entity = z.infer<typeof entitySchema>;
 export type Creature = z.infer<typeof creatureSchema>;
 export type State = z.infer<typeof stateSchema>;
 export type GameMap = z.infer<typeof mapSchema>;
+
+export type ActionType = Action["type"];
+
+export type CreatureKit = {
+  name: CreatureName;
+  actionQ: ActionType;
+  actionW: ActionType;
+  actionE: ActionType;
+};
 
 export const countColumns = 10;
 export const countRow = 7;

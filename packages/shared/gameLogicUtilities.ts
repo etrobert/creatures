@@ -8,6 +8,7 @@ import {
   type Entity,
   type MoveAction,
   type Position,
+  type State,
 } from "@creatures/shared/state";
 
 // Game logic utilities
@@ -63,4 +64,18 @@ export const getTile = (map: GameMap, position: Position) => {
   const tile = map[position.x + position.y * countColumns];
   if (tile === undefined) throw new Error("incorrect position");
   return tile;
+};
+
+export const findActiveCreature = (
+  state: State,
+  activeCreatureId: string,
+): Creature => {
+  const activeCreature = state.entities.find(
+    ({ id }) => id === activeCreatureId,
+  );
+  if (activeCreature === undefined)
+    throw new Error("Couldn't find active creature");
+  if (activeCreature.type !== "creature")
+    throw new Error("Active creature is not a creature");
+  return activeCreature;
 };

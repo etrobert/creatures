@@ -1,4 +1,5 @@
 import {
+  type CreatureName,
   type Direction,
   type Entity,
   type Position,
@@ -15,7 +16,13 @@ const createId = () => String(nextId++);
 const createCreature = ({
   player = 0,
   position = { x: 3, y: 2 },
+  name = "bulbizard",
+}: {
+  player?: number;
+  position?: Position;
+  name?: CreatureName;
 } = {}): Creature => ({
+  name,
   id: createId(),
   type: "creature",
   player,
@@ -32,7 +39,11 @@ export const createState = (): State => ({
   entities: [
     createCreature(),
     createCreature({ player: 1, position: { x: 1, y: 1 } }),
-    createCreature({ player: 0, position: { x: 5, y: 5 } }),
+    createCreature({
+      player: 0,
+      name: "salameche",
+      position: { x: 5, y: 5 },
+    }),
   ],
   map,
 });
