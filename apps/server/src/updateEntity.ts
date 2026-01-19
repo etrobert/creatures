@@ -17,15 +17,23 @@ import {
 import { createFireball } from "./state.js";
 
 export const updateEntity = (state: State, entity: Entity): State => {
-  entity = updateActions(entity);
-  return applyOngoingAction(state, entity);
+  state = updateActions(state, entity.id);
+  return applyOngoingAction(state, entity.id);
 };
 
-const updateActions = (creature: Entity) => {
-  if (creature.ongoingAction) return creature;
-  const [ongoingAction, ...nextActions] = creature.nextActions;
-  if (!ongoingAction) return creature;
-  return { ...creature, ongoingAction, nextActions };
+const updateActions = (state: State, entityId: string): State => {
+  const entity = getEntity(state, entityId);
+  if (entity.ongoingAction) return state;
+  const [ongoingAction, ...nextActions] = entity.nextActions;
+  if (!ongoingAction) return state;
+  return {
+    ...state,
+    entities: state.entities.map((entity) =>
+      entity.id === entityId
+        ? { ...entity, ongoingAction, nextActions }
+        : entity,
+    ),
+  };
 };
 
 const applyMove = (
@@ -78,29 +86,39 @@ const applyAttack = (
   };
 };
 
+const dealFireballDamage = (
+  state: State,
+  fireballPosition: Position,
+): State => ({
+  ...state,
+  entities: state.entities.map((entity) =>
+    entity.type === "creature" &&
+    entity.position.x === fireballPosition.x &&
+    entity.position.y === fireballPosition.y
+      ? { ...entity, health: entity.health - 1 }
+      : entity,
+  ),
+});
+
+const resetEntityOngoingAction = (state: State, entityId: string): State => ({
+  ...state,
+  entities: state.entities.map((entity) =>
+    entity.id === entityId ? { ...entity, ongoingAction: null } : entity,
+  ),
+});
+
 const applyFireball = (state: State, creature: Entity): State => {
   const position = getNewPosition(creature.position, creature.direction);
   const spawnedFireball = createFireball(position, creature.direction);
-  return {
-    ...state,
-    entities: [
-      ...state.entities.map((entity) => {
-        if (entity.id === creature.id)
-          return { ...creature, ongoingAction: null };
-        if (
-          entity.type === "creature" &&
-          entity.position.x === position.x &&
-          entity.position.y === position.y
-        )
-          return { ...entity, health: entity.health - 1 };
-        return entity;
-      }),
-      spawnedFireball,
-    ],
-  };
+
+  state = resetEntityOngoingAction(state, creature.id);
+  state = dealFireballDamage(state, position);
+
+  return { ...state, entities: [...state.entities, spawnedFireball] };
 };
 
-const applyOngoingAction = (state: State, entity: Entity): State => {
+const applyOngoingAction = (state: State, entityId: string): State => {
+  const entity = getEntity(state, entityId);
   switch (entity.ongoingAction?.type) {
     case "move":
       return applyMove(state, entity, entity.ongoingAction);
@@ -136,16 +154,18 @@ export const applyFireballMove = (state: State, fireball: Entity): State => {
       entities: state.entities.filter((entity) => entity.id !== fireball.id),
     };
 
-  const updatedEntities = state.entities.map((entity) => {
-    if (entity.id === fireball.id) return { ...entity, position: newPosition };
-    else if (
-      entity.type === "creature" &&
-      entity.position.x === newPosition.x &&
-      entity.position.y === newPosition.y
-    )
-      return { ...entity, health: entity.health - 1 };
-    return entity;
-  });
+  const updatedEntities = state.entities.map((entity) =>
+    entity.id === fireball.id ? { ...entity, position: newPosition } : entity,
+  );
 
-  return { ...state, entities: updatedEntities };
+  return dealFireballDamage(
+    { ...state, entities: updatedEntities },
+    newPosition,
+  );
+};
+
+const getEntity = (state: State, entityId: string): Entity => {
+  const entity = state.entities.find(({ id }) => id === entityId);
+  if (entity === undefined) throw new Error("entity not found");
+  return entity;
 };
