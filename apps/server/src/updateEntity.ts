@@ -12,6 +12,7 @@ import {
   updatePosition,
   getNewPosition,
   isCreature,
+  getCreatureAtPosition,
 } from "@creatures/shared/gameLogicUtilities";
 
 import { createFireball } from "./state.js";
@@ -110,18 +111,6 @@ const applyOngoingAction = (state: State, entity: Entity): State => {
       return state;
   }
 };
-
-export const getCreatureAtPosition = (
-  state: State,
-  position: Position,
-): Creature | undefined =>
-  state.entities
-    .filter(isCreature)
-    .find(
-      (creature) =>
-        creature.position.x === position.x &&
-        creature.position.y === position.y,
-    );
 
 export const applyFireballMove = (state: State, fireball: Entity): State => {
   const newPosition = getNewPosition(fireball.position, fireball.direction);

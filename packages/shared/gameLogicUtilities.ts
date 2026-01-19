@@ -79,3 +79,18 @@ export const findActiveCreature = (
     throw new Error("Active creature is not a creature");
   return activeCreature;
 };
+
+export const getCreatureAtPosition = (
+  state: State,
+  position: Position,
+): Creature | undefined =>
+  state.entities
+    .filter(isCreature)
+    .find(
+      (creature) =>
+        creature.position.x === position.x &&
+        creature.position.y === position.y,
+    );
+
+export const samePosition = (a: Position, b: Position): boolean =>
+  a.x === b.x && a.y === b.y;

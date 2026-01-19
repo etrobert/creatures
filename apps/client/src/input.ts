@@ -24,6 +24,7 @@ import { state } from "./state.js";
 import { sendClientMessage } from "./socket.js";
 
 import { getCreatureKit } from "@creatures/shared/creatureKits";
+import { pathToTargetUsingBFS } from "./pathfinding.js";
 
 const createAttack = (creature: Creature): AttackAction => ({
   type: "attack",
@@ -89,7 +90,6 @@ export const setupEventListeners = () => {
 
   canvas.addEventListener("click", (event) => {
     if (state === undefined) throw new Error("state is undefined");
-    // const { x, y } = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const clickPosition = canvasToGrid({ x: event.offsetX, y: event.offsetY });
     const activeCreature = state.entities
       .filter(isCreature)
@@ -97,27 +97,12 @@ export const setupEventListeners = () => {
     // add ghost calculation when in
     if (activeCreature === undefined) return;
     const ghost = getGhost(activeCreature);
-    const nextActions = pathToTarget(ghost.position, clickPosition);
-    // const nextActionsX =
-    //   ghost.position.x < x
-    //     ? new Array(x - ghost.position.x).fill({
-    //         type: "move",
-    //         direction: "right",
-    //       })
-    //     : new Array(ghost.position.x - x).fill({
-    //         type: "move",
-    //         direction: "left",
-    //       });
-    // const nextActionsY =
-    //   ghost.position.y < y
-    //     ? new Array(y - ghost.position.y).fill({
-    //         type: "move",
-    //         direction: "down",
-    //       })
-    //     : new Array(ghost.position.y - y).fill({
-    //         type: "move",
-    //         direction: "up",
-    //       });
+    const nextActions = pathToTargetUsingBFS(
+      state,
+      ghost.position,
+      clickPosition,
+    );
+
     sendClientMessage({
       type: "player input",
       creatureId: activeCreature.id,
