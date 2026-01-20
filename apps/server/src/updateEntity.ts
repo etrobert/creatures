@@ -5,6 +5,7 @@ import {
   type MoveAction,
   type Entity,
   type Creature,
+  type DashAction,
 } from "@creatures/shared/state";
 
 import {
@@ -71,6 +72,25 @@ const applyAttack = (
   return state;
 };
 
+const applyDash = (
+  state: State,
+  entity: Entity,
+  dashAction: DashAction,
+): State => {
+  let tileDash = entity.position;
+  for (let i = 0; i < 3; i++) {
+    let tileDashNext = getNewPosition(tileDash, entity.direction);
+    if (collisionWithMap(state.map, tileDashNext)) break;
+    tileDash = tileDashNext;
+    state = dealDamageAtPosition(state, tileDash, 1);
+  }
+  state = resetEntityOngoingAction(state, entity.id);
+  state = updateEntityById(state, entity.id, (entity) => {
+    return { ...entity, position: tileDash };
+  });
+  return state;
+};
+
 const dealDamageAtPosition = (
   state: State,
   position: Position,
@@ -127,6 +147,8 @@ const applyOngoingAction = (state: State, entityId: string): State => {
       return applyFireball(state, entity);
     case "fireball:move":
       return applyFireballMove(state, entity);
+    case "dash":
+      return applyDash(state, entity, entity.ongoingAction);
     default:
       return state;
   }

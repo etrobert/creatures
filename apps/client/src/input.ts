@@ -11,6 +11,7 @@ import {
   type ActionType,
   type AttackAction,
   type Creature,
+  type DashAction,
   type FireballAction,
   type Position,
 } from "@creatures/shared/state";
@@ -30,12 +31,19 @@ const createAttack = (creature: Creature): AttackAction => ({
   direction: creature.direction,
 });
 
+const createDash = (creature: Creature): DashAction => ({
+  type: "dash",
+  direction: creature.direction,
+});
+
 const createFireball = (): FireballAction => ({ type: "fireball" });
 
 const createAction = (creature: Creature, actionType: ActionType): Action => {
   switch (actionType) {
     case "attack":
       return createAttack(creature);
+    case "dash":
+      return createDash(creature);
     case "fireball":
       return createFireball();
     default:
@@ -49,6 +57,7 @@ export const setupEventListeners = () => {
     const activeCreature = findActiveCreature(state, activeCreatureId);
 
     const getAction = () => {
+      console.log(getCreatureKit(activeCreature.name).actionW);
       switch (event.code) {
         case "ArrowUp":
           return { type: "move", direction: "up" } as const;
@@ -58,15 +67,15 @@ export const setupEventListeners = () => {
           return { type: "move", direction: "down" } as const;
         case "ArrowRight":
           return { type: "move", direction: "right" } as const;
-        case "KeyW":
-          return createAction(
-            activeCreature,
-            getCreatureKit(activeCreature.name).actionQ,
-          );
         case "KeyQ":
           return createAction(
             activeCreature,
             getCreatureKit(activeCreature.name).actionQ,
+          );
+        case "KeyW":
+          return createAction(
+            activeCreature,
+            getCreatureKit(activeCreature.name).actionW,
           );
         case "KeyE":
           return createAction(
