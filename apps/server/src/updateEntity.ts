@@ -26,14 +26,11 @@ const updateActions = (state: State, entityId: string): State => {
   if (entity.ongoingAction) return state;
   const [ongoingAction, ...nextActions] = entity.nextActions;
   if (!ongoingAction) return state;
-  return {
-    ...state,
-    entities: state.entities.map((entity) =>
-      entity.id === entityId
-        ? { ...entity, ongoingAction, nextActions }
-        : entity,
-    ),
-  };
+  return updateEntityById(state, entityId, (entity) => ({
+    ...entity,
+    ongoingAction,
+    nextActions,
+  }));
 };
 
 const applyMove = (
@@ -92,12 +89,22 @@ const dealDamageAtPosition = (
 const dealFireballDamage = (state: State, position: Position) =>
   dealDamageAtPosition(state, position, 1);
 
-const resetEntityOngoingAction = (state: State, entityId: string): State => ({
+const updateEntityById = (
+  state: State,
+  entityId: string,
+  update: (entity: Entity) => Entity,
+) => ({
   ...state,
   entities: state.entities.map((entity) =>
-    entity.id === entityId ? { ...entity, ongoingAction: null } : entity,
+    entity.id === entityId ? update(entity) : entity,
   ),
 });
+
+const resetEntityOngoingAction = (state: State, entityId: string) =>
+  updateEntityById(state, entityId, (entity) => ({
+    ...entity,
+    ongoingAction: null,
+  }));
 
 const applyFireball = (state: State, creature: Entity): State => {
   const position = getNewPosition(creature.position, creature.direction);
