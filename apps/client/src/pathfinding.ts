@@ -11,14 +11,18 @@ export const pathToTargetUsingBFS = (
 ) =>
   bfs(
     state,
-    [{ pos: currentPosition, pathPosition: [currentPosition], pathMove: [] }],
+    [
+      {
+        position: currentPosition,
+        pathMove: [],
+      },
+    ],
     [currentPosition],
     targetPosition,
   );
 
 type Node = {
-  pos: Position;
-  pathPosition: Position[];
+  position: Position;
   pathMove: MoveAction[];
 };
 
@@ -28,14 +32,14 @@ const bfs = (
   visited: Position[],
   target: Position,
 ): MoveAction[] => {
-  if (queue[0] === undefined) throw new Error("Couldn't find a path");
-  const [{ pos, pathPosition, pathMove }, ...rest] = queue;
+  if (queue[0] === undefined) return []; // Couldn't find a path
+  const [{ position, pathMove }, ...rest] = queue;
 
-  if (samePosition(pos, target)) {
+  if (samePosition(position, target)) {
     return pathMove;
   }
 
-  const neighbors = accessibleNeighbors(state, pos);
+  const neighbors = accessibleNeighbors(state, position);
 
   const notVisited = (neighbor: {
     position: Position;
@@ -45,8 +49,7 @@ const bfs = (
   const neighborsToCheck = neighbors.filter(notVisited);
 
   const nextNodes: Node[] = neighborsToCheck.map((n) => ({
-    pos: n.position,
-    pathPosition: [...pathPosition, n.position],
+    position: n.position,
     pathMove: [...pathMove, n.moveAction],
   }));
 
