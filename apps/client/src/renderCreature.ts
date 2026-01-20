@@ -25,31 +25,31 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   const canvasPosition = gridToCanvas(creature.position);
   ctx.fillStyle = color;
   ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
-  const renderedCreature = renderCreatures.find(
+  const animatedCreature = animationList.find(
     (render) => render.name === creature.name,
   );
-  if (renderedCreature === undefined)
+  if (animatedCreature === undefined)
     throw new Error("Does not find sprite for the creature");
   ctx.drawImage(
-    renderedCreature.img,
+    animatedCreature.img,
     (Math.floor(
-      (currentTime / tickDuration) * renderedCreature.animationFrames,
+      (currentTime / tickDuration) * animatedCreature.animationFrames,
     ) %
-      renderedCreature.animationFrames) *
-      renderedCreature.imgWidth,
-    getDirectionLine(creature.direction) * renderedCreature.imgHeight,
-    renderedCreature.imgWidth,
-    renderedCreature.imgHeight,
-    canvasPosition.x - (renderedCreature.imgWidth - cellWidth) / 2,
-    canvasPosition.y - (renderedCreature.imgWidth - cellWidth) / 2,
-    renderedCreature.imgWidth,
-    renderedCreature.imgHeight,
+      animatedCreature.animationFrames) *
+      animatedCreature.imgWidth,
+    getDirectionLine(creature.direction) * animatedCreature.imgHeight,
+    animatedCreature.imgWidth,
+    animatedCreature.imgHeight,
+    canvasPosition.x - (animatedCreature.imgWidth - cellWidth) / 2,
+    canvasPosition.y - (animatedCreature.imgWidth - cellWidth) / 2,
+    animatedCreature.imgWidth,
+    animatedCreature.imgHeight,
   );
 };
 
 const imgBulbizard = new Image();
 imgBulbizard.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
-const renderBulbizard = {
+const animationBulbizard = {
   name: "bulbizard",
   img: imgBulbizard,
   imgWidth: 40,
@@ -59,7 +59,7 @@ const renderBulbizard = {
 
 const imgSalameche = new Image();
 imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
-const renderSalameche = {
+const animationSalameche = {
   name: "salameche",
   img: imgSalameche,
   imgWidth: 32,
@@ -67,4 +67,4 @@ const renderSalameche = {
   animationFrames: 4,
 };
 
-const renderCreatures = [renderBulbizard, renderSalameche];
+const animationList = [animationBulbizard, animationSalameche];
