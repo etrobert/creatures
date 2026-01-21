@@ -112,25 +112,25 @@ export const setupEventListeners = () => {
 
   const pathToTarget = (
     currentPosition: Position,
-    TargetPosition: Position,
+    targetPosition: Position,
   ) => {
     const nextActionsX =
-      currentPosition.x < TargetPosition.x
-        ? new Array(TargetPosition.x - currentPosition.x).fill({
+      currentPosition.x < targetPosition.x
+        ? new Array(targetPosition.x - currentPosition.x).fill({
             type: "move",
             direction: "right",
           })
-        : new Array(currentPosition.x - TargetPosition.x).fill({
+        : new Array(currentPosition.x - targetPosition.x).fill({
             type: "move",
             direction: "left",
           });
     const nextActionsY =
-      currentPosition.y < TargetPosition.y
-        ? new Array(TargetPosition.y - currentPosition.y).fill({
+      currentPosition.y < targetPosition.y
+        ? new Array(targetPosition.y - currentPosition.y).fill({
             type: "move",
             direction: "down",
           })
-        : new Array(currentPosition.y - TargetPosition.y).fill({
+        : new Array(currentPosition.y - targetPosition.y).fill({
             type: "move",
             direction: "up",
           });
