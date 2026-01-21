@@ -13,23 +13,11 @@ import type {
   AttackAction,
 } from "@creatures/shared/state";
 import { createFireball } from "./state.js";
-
-export const updateEntityById = (
-  state: State,
-  entityId: string,
-  update: (entity: Entity) => Entity,
-) => ({
-  ...state,
-  entities: state.entities.map((entity) =>
-    entity.id === entityId ? update(entity) : entity,
-  ),
-});
-
-const resetEntityOngoingAction = (state: State, entityId: string) =>
-  updateEntityById(state, entityId, (entity) => ({
-    ...entity,
-    ongoingAction: null,
-  }));
+import {
+  updateEntityById,
+  resetEntityOngoingAction,
+  dealDamageAtPosition,
+} from "./actionUtilities.js";
 
 export const applyMove = (
   state: State,
@@ -100,21 +88,6 @@ export const applyCharge = (state: State, entity: Entity): State => {
   }));
   return state;
 };
-
-const dealDamageAtPosition = (
-  state: State,
-  position: Position,
-  damage: number,
-): State => ({
-  ...state,
-  entities: state.entities.map((entity) =>
-    entity.type === "creature" &&
-    entity.position.x === position.x &&
-    entity.position.y === position.y
-      ? { ...entity, health: entity.health - damage }
-      : entity,
-  ),
-});
 
 const dealFireballDamage = (state: State, position: Position) =>
   dealDamageAtPosition(state, position, 1);

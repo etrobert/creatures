@@ -8,8 +8,8 @@ import {
   applyFireball,
   applyFireballMove,
   applyMove,
-  updateEntityById,
 } from "./applyActions.js";
+import { updateEntityById } from "./actionUtilities.js";
 
 export const updateEntity = (state: State, entityId: string): State => {
   state = updateActions(state, entityId);
