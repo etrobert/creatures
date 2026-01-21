@@ -46,17 +46,10 @@ const applyMove = (
       creatureAtPosition !== undefined
     );
   };
-  return {
-    ...state,
-    entities: state.entities.map((entity) =>
-      entity.id === creature.id
-        ? {
-            ...updatePosition(creature, moveAction, collision),
-            ongoingAction: null,
-          }
-        : entity,
-    ),
-  };
+  return updateEntityById(state, creature.id, (entity) => ({
+    ...updatePosition(entity, moveAction, collision),
+    ongoingAction: null,
+  }));
 };
 
 const applyAttack = (
