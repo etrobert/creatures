@@ -31,9 +31,8 @@ const createAttack = (creature: Creature): AttackAction => ({
   direction: creature.direction,
 });
 
-const createDash = (creature: Creature): DashAction => ({
+const createDash = (): DashAction => ({
   type: "dash",
-  direction: creature.direction,
 });
 
 const createFireball = (): FireballAction => ({ type: "fireball" });
@@ -43,7 +42,7 @@ const createAction = (creature: Creature, actionType: ActionType): Action => {
     case "attack":
       return createAttack(creature);
     case "dash":
-      return createDash(creature);
+      return createDash();
     case "fireball":
       return createFireball();
     default:

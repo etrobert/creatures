@@ -5,7 +5,6 @@ import {
   type MoveAction,
   type Entity,
   type Creature,
-  type DashAction,
 } from "@creatures/shared/state";
 
 import {
@@ -13,9 +12,6 @@ import {
   updatePosition,
   getNewPosition,
   isCreature,
-  getNewPositionLongMove,
-  outerMapCollision,
-  mapCollision,
 } from "@creatures/shared/gameLogicUtilities";
 
 import { createFireball } from "./state.js";
@@ -68,37 +64,42 @@ const applyAttack = (
   return state;
 };
 
-const applyDash = (
-  state: State,
-  entity: Entity,
-  dashAction: DashAction,
-): State => {
-  let tileDash = entity.position;
-  let findTile = true;
-  for (let i = 3; i >= 0; i--) {
-    if (findTile) {
-      tileDash = getNewPositionLongMove(
-        entity.position,
-        Array(i).fill(entity.direction),
-      );
-      const creatureAtPosition = getCreatureAtPosition(state, tileDash);
-      if (
-        !collisionWithMap(state.map, tileDash) &&
-        creatureAtPosition === undefined
-      )
-        findTile = false;
-    } else {
-      const tiledamage = getNewPositionLongMove(
-        entity.position,
-        Array(i).fill(entity.direction),
-      );
-      if (i > 0) state = dealDamageAtPosition(state, tiledamage, 1);
-    }
-  }
-  state = resetEntityOngoingAction(state, entity.id);
-  state = updateEntityById(state, entity.id, (entity) => {
-    return { ...entity, position: tileDash };
-  });
+const isValidDashDestination = (state: State, position: Position) =>
+  !collisionWithMap(state.map, position) &&
+  getCreatureAtPosition(state, position) === undefined;
+
+const getDashDestination = (state: State, entity: Entity) => {
+  const firstTile = getNewPosition(entity.position, entity.direction);
+  const secondTile = getNewPosition(firstTile, entity.direction);
+  const thirdTile = getNewPosition(secondTile, entity.direction);
+
+  if (isValidDashDestination(state, thirdTile)) return thirdTile;
+  if (isValidDashDestination(state, secondTile)) return secondTile;
+  if (isValidDashDestination(state, firstTile)) return firstTile;
+  return entity.position;
+};
+
+const applyDash = (state: State, entity: Entity): State => {
+  const destination = getDashDestination(state, entity);
+
+  if (
+    destination.x === entity.position.x &&
+    destination.y === entity.position.y
+  )
+    return resetEntityOngoingAction(state, entity.id);
+
+  for (
+    let tile = getNewPosition(entity.position, entity.direction);
+    tile.x !== destination.x || tile.y !== destination.y;
+    tile = getNewPosition(tile, entity.direction)
+  )
+    state = dealDamageAtPosition(state, tile, 1);
+
+  state = updateEntityById(state, entity.id, (entity) => ({
+    ...entity,
+    position: destination,
+    ongoingAction: null,
+  }));
   return state;
 };
 
@@ -159,7 +160,7 @@ const applyOngoingAction = (state: State, entityId: string): State => {
     case "fireball:move":
       return applyFireballMove(state, entity);
     case "dash":
-      return applyDash(state, entity, entity.ongoingAction);
+      return applyDash(state, entity);
     default:
       return state;
   }

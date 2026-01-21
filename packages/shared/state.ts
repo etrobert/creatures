@@ -19,9 +19,9 @@ export const attackActionSchema = z.object({
   type: z.literal("attack"),
   direction: directionSchema,
 });
+
 export const dashActionSchema = z.object({
   type: z.literal("dash"),
-  direction: directionSchema,
 });
 
 export const fireballActionSchema = z.object({
