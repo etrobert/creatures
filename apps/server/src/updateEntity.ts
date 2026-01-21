@@ -1,21 +1,15 @@
-import {
-  type AttackAction,
-  type Position,
-  type State,
-  type MoveAction,
-  type Entity,
-  type Creature,
-} from "@creatures/shared/state";
+import { type State } from "@creatures/shared/state";
+
+import { getEntity } from "@creatures/shared/gameLogicUtilities";
 
 import {
-  collisionWithMap,
-  updatePosition,
-  getNewPosition,
-  isCreature,
-  outerMapCollision,
-} from "@creatures/shared/gameLogicUtilities";
-
-import { createFireball } from "./state.js";
+  applyAttack,
+  applyCharge,
+  applyFireball,
+  applyFireballMove,
+  applyMove,
+  updateEntityById,
+} from "./applyActions.js";
 
 export const updateEntity = (state: State, entityId: string): State => {
   state = updateActions(state, entityId);
@@ -34,121 +28,6 @@ const updateActions = (state: State, entityId: string): State => {
   }));
 };
 
-const applyMove = (
-  state: State,
-  creature: Entity,
-  moveAction: MoveAction,
-): State => {
-  const collision = (newPosition: Position) => {
-    const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-    return (
-      collisionWithMap(state.map, newPosition) ||
-      creatureAtPosition !== undefined
-    );
-  };
-  return updateEntityById(state, creature.id, (entity) => ({
-    ...updatePosition(entity, moveAction, collision),
-    ongoingAction: null,
-  }));
-};
-
-const applyAttack = (
-  state: State,
-  entity: Entity,
-  attackAction: AttackAction,
-): State => {
-  const tileAttacked = getNewPosition(entity.position, attackAction.direction);
-
-  state = resetEntityOngoingAction(state, entity.id);
-  state = dealDamageAtPosition(state, tileAttacked, 1);
-
-  return state;
-};
-
-const isValidChargeDestination = (state: State, position: Position) =>
-  !collisionWithMap(state.map, position) &&
-  getCreatureAtPosition(state, position) === undefined;
-
-const getChargeDestination = (state: State, entity: Entity) => {
-  const firstTile = getNewPosition(entity.position, entity.direction);
-  const secondTile = getNewPosition(firstTile, entity.direction);
-  const thirdTile = getNewPosition(secondTile, entity.direction);
-
-  if (isValidChargeDestination(state, thirdTile)) return thirdTile;
-  if (isValidChargeDestination(state, secondTile)) return secondTile;
-  if (isValidChargeDestination(state, firstTile)) return firstTile;
-  return entity.position;
-};
-
-const applyCharge = (state: State, entity: Entity): State => {
-  const destination = getChargeDestination(state, entity);
-
-  if (
-    destination.x === entity.position.x &&
-    destination.y === entity.position.y
-  )
-    return resetEntityOngoingAction(state, entity.id);
-
-  for (
-    let tile = getNewPosition(entity.position, entity.direction);
-    tile.x !== destination.x || tile.y !== destination.y;
-    tile = getNewPosition(tile, entity.direction)
-  )
-    state = dealDamageAtPosition(state, tile, 1);
-
-  state = updateEntityById(state, entity.id, (entity) => ({
-    ...entity,
-    position: destination,
-    ongoingAction: null,
-  }));
-  return state;
-};
-
-const dealDamageAtPosition = (
-  state: State,
-  position: Position,
-  damage: number,
-): State => ({
-  ...state,
-  entities: state.entities.map((entity) =>
-    entity.type === "creature" &&
-    entity.position.x === position.x &&
-    entity.position.y === position.y
-      ? { ...entity, health: entity.health - damage }
-      : entity,
-  ),
-});
-
-const dealFireballDamage = (state: State, position: Position) =>
-  dealDamageAtPosition(state, position, 1);
-
-const updateEntityById = (
-  state: State,
-  entityId: string,
-  update: (entity: Entity) => Entity,
-) => ({
-  ...state,
-  entities: state.entities.map((entity) =>
-    entity.id === entityId ? update(entity) : entity,
-  ),
-});
-
-const resetEntityOngoingAction = (state: State, entityId: string) =>
-  updateEntityById(state, entityId, (entity) => ({
-    ...entity,
-    ongoingAction: null,
-  }));
-
-const applyFireball = (state: State, creature: Entity): State => {
-  const position = getNewPosition(creature.position, creature.direction);
-  const spawnedFireball = createFireball(position, creature.direction);
-
-  state = resetEntityOngoingAction(state, creature.id);
-  state = dealFireballDamage(state, position);
-
-  return { ...state, entities: [...state.entities, spawnedFireball] };
-};
-
 const applyOngoingAction = (state: State, entityId: string): State => {
   const entity = getEntity(state, entityId);
   switch (entity.ongoingAction?.type) {
@@ -165,41 +44,4 @@ const applyOngoingAction = (state: State, entityId: string): State => {
     default:
       return state;
   }
-};
-
-export const getCreatureAtPosition = (
-  state: State,
-  position: Position,
-): Creature | undefined =>
-  state.entities
-    .filter(isCreature)
-    .find(
-      (creature) =>
-        creature.position.x === position.x &&
-        creature.position.y === position.y,
-    );
-
-export const applyFireballMove = (state: State, fireball: Entity): State => {
-  const newPosition = getNewPosition(fireball.position, fireball.direction);
-
-  if (outerMapCollision(newPosition))
-    return {
-      ...state,
-      entities: state.entities.filter((entity) => entity.id !== fireball.id),
-    };
-
-  const updatedEntities = state.entities.map((entity) =>
-    entity.id === fireball.id ? { ...entity, position: newPosition } : entity,
-  );
-
-  return dealFireballDamage(
-    { ...state, entities: updatedEntities },
-    newPosition,
-  );
-};
-
-const getEntity = (state: State, entityId: string): Entity => {
-  const entity = state.entities.find(({ id }) => id === entityId);
-  if (entity === undefined) throw new Error("entity not found");
-  return entity;
 };
