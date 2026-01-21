@@ -11,7 +11,7 @@ import {
   type ActionType,
   type AttackAction,
   type Creature,
-  type DashAction,
+  type ChargeAction,
   type FireballAction,
   type Position,
 } from "@creatures/shared/state";
@@ -31,8 +31,8 @@ const createAttack = (creature: Creature): AttackAction => ({
   direction: creature.direction,
 });
 
-const createDash = (): DashAction => ({
-  type: "dash",
+const createCharge = (): ChargeAction => ({
+  type: "charge",
 });
 
 const createFireball = (): FireballAction => ({ type: "fireball" });
@@ -41,8 +41,8 @@ const createAction = (creature: Creature, actionType: ActionType): Action => {
   switch (actionType) {
     case "attack":
       return createAttack(creature);
-    case "dash":
-      return createDash();
+    case "charge":
+      return createCharge();
     case "fireball":
       return createFireball();
     default:

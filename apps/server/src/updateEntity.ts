@@ -64,23 +64,23 @@ const applyAttack = (
   return state;
 };
 
-const isValidDashDestination = (state: State, position: Position) =>
+const isValidChargeDestination = (state: State, position: Position) =>
   !collisionWithMap(state.map, position) &&
   getCreatureAtPosition(state, position) === undefined;
 
-const getDashDestination = (state: State, entity: Entity) => {
+const getChargeDestination = (state: State, entity: Entity) => {
   const firstTile = getNewPosition(entity.position, entity.direction);
   const secondTile = getNewPosition(firstTile, entity.direction);
   const thirdTile = getNewPosition(secondTile, entity.direction);
 
-  if (isValidDashDestination(state, thirdTile)) return thirdTile;
-  if (isValidDashDestination(state, secondTile)) return secondTile;
-  if (isValidDashDestination(state, firstTile)) return firstTile;
+  if (isValidChargeDestination(state, thirdTile)) return thirdTile;
+  if (isValidChargeDestination(state, secondTile)) return secondTile;
+  if (isValidChargeDestination(state, firstTile)) return firstTile;
   return entity.position;
 };
 
-const applyDash = (state: State, entity: Entity): State => {
-  const destination = getDashDestination(state, entity);
+const applyCharge = (state: State, entity: Entity): State => {
+  const destination = getChargeDestination(state, entity);
 
   if (
     destination.x === entity.position.x &&
@@ -159,8 +159,8 @@ const applyOngoingAction = (state: State, entityId: string): State => {
       return applyFireball(state, entity);
     case "fireball:move":
       return applyFireballMove(state, entity);
-    case "dash":
-      return applyDash(state, entity);
+    case "charge":
+      return applyCharge(state, entity);
     default:
       return state;
   }

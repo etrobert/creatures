@@ -1,6 +1,6 @@
 export const bulbizard = {
   name: "bulbizard",
   actionQ: "attack",
-  actionW: "dash",
+  actionW: "charge",
   actionE: "attack",
 } as const;
