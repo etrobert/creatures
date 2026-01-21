@@ -25,9 +25,7 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   const canvasPosition = gridToCanvas(creature.position);
   ctx.fillStyle = color;
   ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
-  const animatedCreature = animationList.find(
-    (render) => render.name === creature.name,
-  );
+  const animatedCreature = animationList[creature.name];
   if (animatedCreature === undefined)
     throw new Error("Does not find sprite for the creature");
   ctx.drawImage(
@@ -67,4 +65,7 @@ const animationSalameche = {
   animationFrames: 4,
 };
 
-const animationList = [animationBulbizard, animationSalameche];
+const animationList = {
+  bulbizard: animationBulbizard,
+  salameche: animationSalameche,
+};
