@@ -56,7 +56,6 @@ export const setupEventListeners = () => {
     const activeCreature = findActiveCreature(state, activeCreatureId);
 
     const getAction = () => {
-      console.log(getCreatureKit(activeCreature.name).actionW);
       switch (event.code) {
         case "ArrowUp":
           return { type: "move", direction: "up" } as const;
