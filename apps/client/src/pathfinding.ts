@@ -80,10 +80,7 @@ const accessibleNeighbors = (state: State, { x, y }: Position) => {
       moveAction: { type: "move", direction: "left" },
     },
   ] as const;
-  const collision = (state: State, newPosition: Position) => {
-    // const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-    return collisionWithMap(state.map, newPosition);
-    //   creatureAtPosition !== undefined
-  };
-  return neighbors.filter((neighbor) => !collision(state, neighbor.position));
+  return neighbors.filter(
+    (neighbor) => !collisionWithMap(state.map, neighbor.position),
+  );
 };
