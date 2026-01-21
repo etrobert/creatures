@@ -29,6 +29,17 @@ export const getNewPosition = (
   }
 };
 
+export const getNewPositionLongMove = (
+  position: Position,
+  directions: Direction[],
+): Position => {
+  const lastPosition = directions.reduce(
+    (position, direction) => getNewPosition(position, direction),
+    position,
+  );
+  return lastPosition;
+};
+
 export const collisionWithMap = (map: GameMap, position: Position) =>
   outerMapCollision(position) || mapCollision(map, position);
 

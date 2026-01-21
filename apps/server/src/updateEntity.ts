@@ -13,6 +13,9 @@ import {
   updatePosition,
   getNewPosition,
   isCreature,
+  getNewPositionLongMove,
+  outerMapCollision,
+  mapCollision,
 } from "@creatures/shared/gameLogicUtilities";
 
 import { createFireball } from "./state.js";
@@ -71,11 +74,26 @@ const applyDash = (
   dashAction: DashAction,
 ): State => {
   let tileDash = entity.position;
-  for (let i = 0; i < 3; i++) {
-    let tileDashNext = getNewPosition(tileDash, entity.direction);
-    if (collisionWithMap(state.map, tileDashNext)) break;
-    tileDash = tileDashNext;
-    state = dealDamageAtPosition(state, tileDash, 1);
+  let findTile = true;
+  for (let i = 3; i >= 0; i--) {
+    if (findTile) {
+      tileDash = getNewPositionLongMove(
+        entity.position,
+        Array(i).fill(entity.direction),
+      );
+      const creatureAtPosition = getCreatureAtPosition(state, tileDash);
+      if (
+        !collisionWithMap(state.map, tileDash) &&
+        creatureAtPosition === undefined
+      )
+        findTile = false;
+    } else {
+      const tiledamage = getNewPositionLongMove(
+        entity.position,
+        Array(i).fill(entity.direction),
+      );
+      if (i > 0) state = dealDamageAtPosition(state, tiledamage, 1);
+    }
   }
   state = resetEntityOngoingAction(state, entity.id);
   state = updateEntityById(state, entity.id, (entity) => {
