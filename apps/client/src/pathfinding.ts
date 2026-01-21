@@ -1,8 +1,14 @@
 import {
   collisionWithMap,
+  getNewPosition,
   samePosition,
 } from "@creatures/shared/gameLogicUtilities";
-import type { Position, MoveAction, State } from "@creatures/shared/state";
+import {
+  type Position,
+  type MoveAction,
+  type State,
+  allDirections,
+} from "@creatures/shared/state";
 
 export const pathToTargetUsingBFS = (
   state: State,
@@ -62,24 +68,10 @@ const bfs = (
 };
 
 const accessibleNeighbors = (state: State, { x, y }: Position) => {
-  const neighbors = [
-    {
-      position: { x: x, y: y + 1 },
-      moveAction: { type: "move", direction: "down" },
-    },
-    {
-      position: { x: x, y: y - 1 },
-      moveAction: { type: "move", direction: "up" },
-    },
-    {
-      position: { x: x + 1, y: y },
-      moveAction: { type: "move", direction: "right" },
-    },
-    {
-      position: { x: x - 1, y: y },
-      moveAction: { type: "move", direction: "left" },
-    },
-  ] as const;
+  const neighbors = allDirections.map((direction) => ({
+    position: getNewPosition({ x, y }, direction),
+    moveAction: { type: "move", direction } as const,
+  }));
   return neighbors.filter(
     (neighbor) => !collisionWithMap(state.map, neighbor.position),
   );
