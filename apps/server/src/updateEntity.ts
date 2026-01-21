@@ -12,6 +12,7 @@ import {
   updatePosition,
   getNewPosition,
   isCreature,
+  outerMapCollision,
 } from "@creatures/shared/gameLogicUtilities";
 
 import { createFireball } from "./state.js";
@@ -147,7 +148,7 @@ export const getCreatureAtPosition = (
 export const applyFireballMove = (state: State, fireball: Entity): State => {
   const newPosition = getNewPosition(fireball.position, fireball.direction);
 
-  if (collisionWithMap(state.map, newPosition))
+  if (outerMapCollision(newPosition))
     return {
       ...state,
       entities: state.entities.filter((entity) => entity.id !== fireball.id),
