@@ -46,17 +46,10 @@ const applyMove = (
       creatureAtPosition !== undefined
     );
   };
-  return {
-    ...state,
-    entities: state.entities.map((entity) =>
-      entity.id === creature.id
-        ? {
-            ...updatePosition(creature, moveAction, collision),
-            ongoingAction: null,
-          }
-        : entity,
-    ),
-  };
+  return updateEntityById(state, creature.id, (entity) => ({
+    ...updatePosition(entity, moveAction, collision),
+    ongoingAction: null,
+  }));
 };
 
 const applyAttack = (
@@ -69,6 +62,45 @@ const applyAttack = (
   state = resetEntityOngoingAction(state, entity.id);
   state = dealDamageAtPosition(state, tileAttacked, 1);
 
+  return state;
+};
+
+const isValidChargeDestination = (state: State, position: Position) =>
+  !collisionWithMap(state.map, position) &&
+  getCreatureAtPosition(state, position) === undefined;
+
+const getChargeDestination = (state: State, entity: Entity) => {
+  const firstTile = getNewPosition(entity.position, entity.direction);
+  const secondTile = getNewPosition(firstTile, entity.direction);
+  const thirdTile = getNewPosition(secondTile, entity.direction);
+
+  if (isValidChargeDestination(state, thirdTile)) return thirdTile;
+  if (isValidChargeDestination(state, secondTile)) return secondTile;
+  if (isValidChargeDestination(state, firstTile)) return firstTile;
+  return entity.position;
+};
+
+const applyCharge = (state: State, entity: Entity): State => {
+  const destination = getChargeDestination(state, entity);
+
+  if (
+    destination.x === entity.position.x &&
+    destination.y === entity.position.y
+  )
+    return resetEntityOngoingAction(state, entity.id);
+
+  for (
+    let tile = getNewPosition(entity.position, entity.direction);
+    tile.x !== destination.x || tile.y !== destination.y;
+    tile = getNewPosition(tile, entity.direction)
+  )
+    state = dealDamageAtPosition(state, tile, 1);
+
+  state = updateEntityById(state, entity.id, (entity) => ({
+    ...entity,
+    position: destination,
+    ongoingAction: null,
+  }));
   return state;
 };
 
@@ -128,6 +160,8 @@ const applyOngoingAction = (state: State, entityId: string): State => {
       return applyFireball(state, entity);
     case "fireball:move":
       return applyFireballMove(state, entity);
+    case "charge":
+      return applyCharge(state, entity);
     default:
       return state;
   }
