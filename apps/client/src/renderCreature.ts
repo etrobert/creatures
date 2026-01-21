@@ -25,23 +25,21 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   const canvasPosition = gridToCanvas(creature.position);
   ctx.fillStyle = color;
   ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
-  const animatedCreature = animationList[creature.name];
-  if (animatedCreature === undefined)
-    throw new Error("Does not find sprite for the creature");
+  const animation = entitiesAnimations[creature.name];
+  if (animation === undefined)
+    throw new Error("Does not find animation for the creature");
+  const { animationFrames, imgWidth, imgHeight } = animation;
+  const frameDuration = tickDuration / animationFrames;
   ctx.drawImage(
-    animatedCreature.img,
-    (Math.floor(
-      (currentTime / tickDuration) * animatedCreature.animationFrames,
-    ) %
-      animatedCreature.animationFrames) *
-      animatedCreature.imgWidth,
-    getDirectionLine(creature.direction) * animatedCreature.imgHeight,
-    animatedCreature.imgWidth,
-    animatedCreature.imgHeight,
-    canvasPosition.x - (animatedCreature.imgWidth - cellWidth) / 2,
-    canvasPosition.y - (animatedCreature.imgWidth - cellWidth) / 2,
-    animatedCreature.imgWidth,
-    animatedCreature.imgHeight,
+    animation.sprite,
+    (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
+    getDirectionLine(creature.direction) * imgHeight,
+    imgWidth,
+    imgHeight,
+    canvasPosition.x - (imgWidth - cellWidth) / 2,
+    canvasPosition.y - (imgWidth - cellWidth) / 2,
+    imgWidth,
+    imgHeight,
   );
 };
 
@@ -49,7 +47,7 @@ const imgBulbizard = new Image();
 imgBulbizard.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
 const animationBulbizard = {
   name: "bulbizard",
-  img: imgBulbizard,
+  sprite: imgBulbizard,
   imgWidth: 40,
   imgHeight: 40,
   animationFrames: 6,
@@ -59,13 +57,13 @@ const imgSalameche = new Image();
 imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
 const animationSalameche = {
   name: "salameche",
-  img: imgSalameche,
+  sprite: imgSalameche,
   imgWidth: 32,
   imgHeight: 32,
   animationFrames: 4,
 };
 
-const animationList = {
+const entitiesAnimations = {
   bulbizard: animationBulbizard,
   salameche: animationSalameche,
 };
