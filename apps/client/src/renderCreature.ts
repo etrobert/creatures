@@ -26,8 +26,6 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   ctx.fillStyle = color;
   ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
   const animation = entitiesAnimations[creature.name];
-  if (animation === undefined)
-    throw new Error("Does not find animation for the creature");
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
   ctx.drawImage(
