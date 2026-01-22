@@ -4,6 +4,10 @@ import {
 } from "@creatures/shared/messages";
 import { setState, state } from "./state.js";
 import { start } from "./index.js";
+import {
+  initActiveCreatureId,
+  setActivePlayer,
+} from "./activePlayerCreature.js";
 
 // WebSocket connection
 // In development: ws://localhost:3000
@@ -28,6 +32,10 @@ ws.onmessage = (event) => {
     case "state update":
       if (state === undefined) start();
       setState(data.state);
+      break;
+    case "assign player id":
+      setActivePlayer(data.id);
+      initActiveCreatureId();
       break;
   }
 };

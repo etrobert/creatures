@@ -56,7 +56,7 @@ const basicEntitySchema = z.object({
 export const creatureSchema = basicEntitySchema.extend({
   name: creatureNameSchema,
   type: z.literal("creature"),
-  player: z.number(),
+  player: z.string(),
   health: z.number(),
   maxHealth: z.number(),
 });

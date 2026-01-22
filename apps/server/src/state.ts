@@ -14,14 +14,10 @@ let nextId = 0;
 const createId = () => String(nextId++);
 
 const createCreature = ({
-  player = 0,
+  player = "0",
   position = { x: 3, y: 2 },
   name = "bulbizard",
-}: {
-  player?: number;
-  position?: Position;
-  name?: CreatureName;
-} = {}): Creature => ({
+}: Partial<Pick<Creature, "player" | "position" | "name">> = {}): Creature => ({
   name,
   id: createId(),
   type: "creature",
@@ -38,9 +34,9 @@ export const createState = (): State => ({
   lastTick: 0,
   entities: [
     createCreature(),
-    createCreature({ player: 1, position: { x: 1, y: 1 } }),
+    createCreature({ player: "1", position: { x: 1, y: 1 } }),
     createCreature({
-      player: 0,
+      player: "0",
       name: "salameche",
       position: { x: 5, y: 5 },
     }),

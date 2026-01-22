@@ -3,7 +3,7 @@ import type {
   ServerMessage,
 } from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";
-import { WebSocketServer } from "ws";
+import WebSocket, { WebSocketServer } from "ws";
 import { createServer } from "http";
 import { createState } from "./state.js";
 import { update } from "./update.js";
@@ -30,8 +30,30 @@ app.use((req, res) => {
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+const clients = new Map<WebSocket, { id: string }>();
+
+const ids = ["0", "1"];
+
+const getNextId = (): string => {
+  const id = ids.find((id) =>
+    clients.entries().every(([_, client]) => client.id !== id),
+  );
+  if (id === undefined) throw new Error("all ids are taken");
+  return id;
+};
+
+const sendMessage = (ws: WebSocket, message: ServerMessage) =>
+  ws.send(JSON.stringify(message));
+
 wss.on("connection", (ws) => {
-  console.log("Client connected");
+  const id = getNextId();
+
+  console.log("Client connected: ", id);
+
+  clients.set(ws, { id });
+
+  sendMessage(ws, { type: "state update", state });
+  sendMessage(ws, { type: "assign player id", id });
 
   ws.on("message", (data) => {
     const message = clientMessageSchema.parse(JSON.parse(data.toString()));
@@ -43,7 +65,10 @@ wss.on("connection", (ws) => {
     }
   });
 
-  ws.on("close", () => console.log("Client disconnected"));
+  ws.on("close", () => {
+    console.log("Client disconnected: ", id);
+    clients.delete(ws);
+  });
 });
 
 function processPlayerInputMessage(message: PlayerInputMessage) {
@@ -65,12 +90,7 @@ let state = createState();
 
 function broadcastState() {
   for (const client of wss.clients)
-    client.send(
-      JSON.stringify({
-        type: "state update",
-        state,
-      } satisfies ServerMessage),
-    );
+    sendMessage(client, { type: "state update", state });
 }
 
 function gameLoop() {
