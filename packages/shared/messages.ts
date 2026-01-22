@@ -32,12 +32,18 @@ const resetActionsMessageSchema = z.object({
   creatureId: z.string(),
 });
 
+const resetStateMessageSchema = z.object({
+  type: z.literal("reset state"),
+});
+
 export type PlayerInputMessage = z.infer<typeof playerInputMessageSchema>;
 export type ResetActionsMessage = z.infer<typeof resetActionsMessageSchema>;
+export type ResetStateMessage = z.infer<typeof resetStateMessageSchema>;
 
 export const clientMessageSchema = z.discriminatedUnion("type", [
   playerInputMessageSchema,
   resetActionsMessageSchema,
+  resetStateMessageSchema,
 ]);
 
 export type ClientMessage = z.infer<typeof clientMessageSchema>;

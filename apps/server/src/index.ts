@@ -1,6 +1,7 @@
 import type {
   PlayerInputMessage,
   ResetActionsMessage,
+  ResetStateMessage,
   ServerMessage,
 } from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";
@@ -64,6 +65,9 @@ wss.on("connection", (ws) => {
       case "player input":
         processPlayerInputMessage(message);
         break;
+      case "reset state":
+        processResetStateMessage();
+        break;
       case "reset actions":
         processResetActions(message);
         break;
@@ -89,6 +93,12 @@ function processPlayerInputMessage(message: PlayerInputMessage) {
     ...entity,
     nextActions: [...entity.nextActions, ...message.actions],
   }));
+
+  broadcastState();
+}
+
+function processResetStateMessage() {
+  state = createState();
 
   broadcastState();
 }

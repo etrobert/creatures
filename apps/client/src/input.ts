@@ -143,6 +143,13 @@ const resetActionsOnKeyDown = (event: KeyboardEvent) => {
   });
 };
 
+const resetStateOnKeyDown = (event: KeyboardEvent) => {
+  if (event.code !== "KeyN") return;
+  sendClientMessage({
+    type: "reset state",
+  });
+};
+
 export const setupEventListeners = () => {
   window.addEventListener("keydown", createActionOnKeyDown);
 
@@ -151,6 +158,7 @@ export const setupEventListeners = () => {
   window.addEventListener("keydown", changeActiveCreatureOnKeyDown);
 
   window.addEventListener("keydown", resetActionsOnKeyDown);
+  window.addEventListener("keydown", resetStateOnKeyDown);
 };
 
 export const removeEventListeners = () => {
@@ -161,6 +169,7 @@ export const removeEventListeners = () => {
   window.removeEventListener("keydown", changeActiveCreatureOnKeyDown);
 
   window.removeEventListener("keydown", resetActionsOnKeyDown);
+  window.removeEventListener("keydown", resetStateOnKeyDown);
 };
 
 // translation bwtween grid position and canvas position
