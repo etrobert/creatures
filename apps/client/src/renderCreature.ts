@@ -20,21 +20,16 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
-const img = new Image();
-const imgWidth = 40;
-const imgHeight = 40;
-const animationFrames = 6;
-const frameDuration = tickDuration / animationFrames;
-img.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
-
 export const renderCreature = (creature: Creature, currentTime: number) => {
   const color = creature.player === activePlayer ? "blue" : "red";
   const canvasPosition = gridToCanvas(creature.position);
   ctx.fillStyle = color;
   ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
-
+  const animation = entitiesAnimations[creature.name];
+  const { animationFrames, imgWidth, imgHeight } = animation;
+  const frameDuration = tickDuration / animationFrames;
   ctx.drawImage(
-    img,
+    animation.sprite,
     (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
     getDirectionLine(creature.direction) * imgHeight,
     imgWidth,
@@ -44,4 +39,29 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
     imgWidth,
     imgHeight,
   );
+};
+
+const imgBulbizard = new Image();
+imgBulbizard.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
+const animationBulbizard = {
+  name: "bulbizard",
+  sprite: imgBulbizard,
+  imgWidth: 40,
+  imgHeight: 40,
+  animationFrames: 6,
+};
+
+const imgSalameche = new Image();
+imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
+const animationSalameche = {
+  name: "salameche",
+  sprite: imgSalameche,
+  imgWidth: 32,
+  imgHeight: 32,
+  animationFrames: 4,
+};
+
+const entitiesAnimations = {
+  bulbizard: animationBulbizard,
+  salameche: animationSalameche,
 };

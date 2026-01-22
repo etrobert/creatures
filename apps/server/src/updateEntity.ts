@@ -1,103 +1,35 @@
-import {
-  type AttackAction,
-  type Position,
-  type State,
-  type MoveAction,
-  type Entity,
-  type Creature,
-} from "@creatures/shared/state";
+import { type State } from "@creatures/shared/state";
+
+import { getEntity } from "@creatures/shared/gameLogicUtilities";
 
 import {
-  collisionWithMap,
-  updatePosition,
-  getNewPosition,
-  isCreature,
-  getCreatureAtPosition,
-} from "@creatures/shared/gameLogicUtilities";
+  applyAttack,
+  applyCharge,
+  applyFireball,
+  applyFireballMove,
+  applyMove,
+} from "./applyActions.js";
+import { updateEntityById } from "./actionUtilities.js";
 
-import { createFireball } from "./state.js";
-
-export const updateEntity = (state: State, entity: Entity): State => {
-  entity = updateActions(entity);
-  return applyOngoingAction(state, entity);
+export const updateEntity = (state: State, entityId: string): State => {
+  state = updateActions(state, entityId);
+  return applyOngoingAction(state, entityId);
 };
 
-const updateActions = (creature: Entity) => {
-  if (creature.ongoingAction) return creature;
-  const [ongoingAction, ...nextActions] = creature.nextActions;
-  if (!ongoingAction) return creature;
-  return { ...creature, ongoingAction, nextActions };
+const updateActions = (state: State, entityId: string): State => {
+  const entity = getEntity(state, entityId);
+  if (entity.ongoingAction) return state;
+  const [ongoingAction, ...nextActions] = entity.nextActions;
+  if (!ongoingAction) return state;
+  return updateEntityById(state, entityId, (entity) => ({
+    ...entity,
+    ongoingAction,
+    nextActions,
+  }));
 };
 
-const applyMove = (
-  state: State,
-  creature: Entity,
-  moveAction: MoveAction,
-): State => {
-  const collision = (newPosition: Position) => {
-    const creatureAtPosition = getCreatureAtPosition(state, newPosition);
-    return (
-      collisionWithMap(state.map, newPosition) ||
-      creatureAtPosition !== undefined
-    );
-  };
-  return {
-    ...state,
-    entities: state.entities.map((entity) =>
-      entity.id === creature.id
-        ? {
-            ...updatePosition(creature, moveAction, collision),
-            ongoingAction: null,
-          }
-        : entity,
-    ),
-  };
-};
-
-const applyAttack = (
-  state: State,
-  creature: Entity,
-  attackAction: AttackAction,
-): State => {
-  const tileAttacked = getNewPosition(
-    creature.position,
-    attackAction.direction,
-  );
-  const attackedCreature = getCreatureAtPosition(state, tileAttacked);
-
-  return {
-    ...state,
-    entities: state.entities
-      .filter((entity) => entity.type === "creature")
-      .map((entity) => {
-        if (entity.id === creature.id)
-          return { ...creature, ongoingAction: null };
-        if (entity.id === attackedCreature?.id)
-          return { ...entity, health: entity.health - 1 };
-        return entity;
-      }),
-  };
-};
-
-const applyFireball = (state: State, creature: Entity): State => {
-  const spawnedFireball = createFireball(
-    getNewPosition(creature.position, creature.direction),
-    creature.direction,
-  );
-  return {
-    ...state,
-    entities: [
-      ...state.entities.map((entity) =>
-        entity.id === creature.id
-          ? { ...creature, ongoingAction: null }
-          : entity,
-      ),
-      spawnedFireball,
-    ],
-  };
-};
-
-const applyOngoingAction = (state: State, entity: Entity): State => {
+const applyOngoingAction = (state: State, entityId: string): State => {
+  const entity = getEntity(state, entityId);
   switch (entity.ongoingAction?.type) {
     case "move":
       return applyMove(state, entity, entity.ongoingAction);
@@ -107,30 +39,9 @@ const applyOngoingAction = (state: State, entity: Entity): State => {
       return applyFireball(state, entity);
     case "fireball:move":
       return applyFireballMove(state, entity);
+    case "charge":
+      return applyCharge(state, entity);
     default:
       return state;
   }
-};
-
-export const applyFireballMove = (state: State, fireball: Entity): State => {
-  const newPosition = getNewPosition(fireball.position, fireball.direction);
-
-  if (collisionWithMap(state.map, newPosition))
-    return {
-      ...state,
-      entities: state.entities.filter((entity) => entity.id !== fireball.id),
-    };
-
-  const updatedEntities = state.entities.map((entity) => {
-    if (entity.id === fireball.id) return { ...entity, position: newPosition };
-    else if (
-      entity.type === "creature" &&
-      entity.position.x === newPosition.x &&
-      entity.position.y === newPosition.y
-    )
-      return { ...entity, health: entity.health - 1 };
-    return entity;
-  });
-
-  return { ...state, entities: updatedEntities };
 };

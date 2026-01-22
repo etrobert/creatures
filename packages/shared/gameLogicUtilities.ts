@@ -1,7 +1,6 @@
 import {
   countColumns,
   countRow,
-  type Action,
   type GameMap,
   type Creature,
   type Direction,
@@ -78,6 +77,12 @@ export const findActiveCreature = (
   if (activeCreature.type !== "creature")
     throw new Error("Active creature is not a creature");
   return activeCreature;
+};
+
+export const getEntity = (state: State, entityId: string): Entity => {
+  const entity = state.entities.find(({ id }) => id === entityId);
+  if (entity === undefined) throw new Error("entity not found");
+  return entity;
 };
 
 export const getCreatureAtPosition = (
