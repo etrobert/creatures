@@ -61,22 +61,21 @@ export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   renderBackground(state.map);
+  const creatureGhosts = state.entities
+    .filter(isCreature)
+    .filter((creature) => creature.player === activePlayer)
+    .filter((creature) => creature.nextActions.length !== 0)
+    .map(getGhost);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const entities = state.entities.filter(
         (entity) => entity.position.x === x && entity.position.y === y,
       );
       entities.forEach((entity) => renderEntity(entity, currentTime));
-      const creatureGhosts = state.entities
-        .filter(isCreature)
-        .filter((creature) => creature.player === activePlayer)
-        .filter((creature) => creature.nextActions.length !== 0)
-        .map(getGhost)
-        .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
       ctx.globalAlpha = 0.5;
-      creatureGhosts.forEach((creature) =>
-        renderCreature(creature, currentTime),
-      );
+      creatureGhosts
+        .filter((ghost) => ghost.position.x === x && ghost.position.y === y)
+        .forEach((creature) => renderCreature(creature, currentTime));
       ctx.globalAlpha = 1;
     }
   }
