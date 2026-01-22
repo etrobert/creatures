@@ -100,4 +100,4 @@ export type CreatureKit = {
 export const countColumns = 10;
 export const countRow = 7;
 
-export const tickDuration = 300;
+export const tickDuration = 1000;
