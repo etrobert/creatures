@@ -17,6 +17,7 @@ import {
   updatePosition,
   isCreature,
 } from "@creatures/shared/gameLogicUtilities";
+import { activePlayer } from "./activePlayerCreature.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -68,6 +69,7 @@ export const render = (state: State, currentTime: number) => {
       entities.forEach((entity) => renderEntity(entity, currentTime));
       const creatureGhosts = state.entities
         .filter(isCreature)
+        .filter((creature) => creature.player === activePlayer)
         .filter((creature) => creature.nextActions.length !== 0)
         .map(getGhost)
         .filter((ghost) => ghost.position.x === x && ghost.position.y === y);
