@@ -21,6 +21,16 @@ export const initActiveCreatureId = () => {
   activeCreatureId = newActiveCreatureId;
 };
 
+export const nextActiveCreature = () => {
+  const creatureIds = listPlayerCreatureIds(activePlayer);
+  const currentIndex = creatureIds.indexOf(activeCreatureId);
+  const newIndex = (currentIndex + 1) % creatureIds.length;
+  const newActiveCreatureId = creatureIds[newIndex];
+  if (newActiveCreatureId === undefined)
+    throw new Error("newActiveCreatureId is undefined");
+  activeCreatureId = newActiveCreatureId;
+};
+
 export let activeCreatureId = "0";
 
 export const setActiveCreatureId = (newActiveCreatureId: string) =>
