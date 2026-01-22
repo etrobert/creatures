@@ -142,6 +142,7 @@ const keyDownHandler = (event: KeyboardEvent) => {
     case "ArrowLeft":
     case "ArrowDown":
     case "ArrowRight":
+    case "KeyQ":
     case "KeyW":
     case "KeyE":
       createActionOnKeyDown(event);
