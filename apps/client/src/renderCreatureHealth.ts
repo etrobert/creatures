@@ -3,9 +3,9 @@ import { cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
 import { activeCreatureId, activePlayer } from "./activePlayerCreature.js";
 
 const getHealthAspect = (creature: Creature) => {
-  const enemyAspect = { color: "#E72D23", size: "medium" };
+  const enemyAspect = { color: "#C3423F", size: "medium" };
   const activeCreatureAspect = { color: "#006F4C", size: "big" };
-  const allyAspect = { color: "#0079BA", size: "small" };
+  const allyAspect = { color: "#006F4C", size: "medium" };
   if (creature.player !== activePlayer) return enemyAspect;
   if (creature.id === activeCreatureId) return activeCreatureAspect;
   return allyAspect;
