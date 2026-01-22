@@ -1,5 +1,5 @@
 import { render } from "./render.js";
-import { setupEventListeners } from "./input.js";
+import { removeEventListeners, setupEventListeners } from "./input.js";
 import { resetState, state } from "./state.js";
 
 function gameLoop(currentTime: number) {
@@ -15,4 +15,5 @@ export function start() {
 
 export function stop() {
   resetState();
+  removeEventListeners();
 }

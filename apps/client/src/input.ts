@@ -157,6 +157,14 @@ export const setupEventListeners = () => {
   window.addEventListener("keydown", changeActiveCreatureOnKeyDown);
 };
 
+export const removeEventListeners = () => {
+  window.removeEventListener("keydown", createActionOnKeyDown);
+
+  canvas.removeEventListener("click", onCanvasClick);
+
+  window.removeEventListener("keydown", changeActiveCreatureOnKeyDown);
+};
+
 // translation bwtween grid position and canvas position
 const canvasToGrid = ({ x, y }: Position) => ({
   x: Math.floor((x - cellWidth / 2) / cellWidth),
