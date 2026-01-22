@@ -8,8 +8,14 @@ export const stateUpdateMessageSchema = z.object({
   state: stateSchema,
 });
 
+const assignIdMessageSchema = z.object({
+  type: z.literal("assign id"),
+  id: z.string(),
+});
+
 export const serverMessageSchema = z.discriminatedUnion("type", [
   stateUpdateMessageSchema,
+  assignIdMessageSchema,
 ]);
 
 export type ServerMessage = z.infer<typeof serverMessageSchema>;

@@ -1,6 +1,5 @@
-import { activePlayer } from "./activePlayerCreature.js";
 import { ctx } from "./render.js";
-import { cellHeight, cellWidth, gridToCanvas } from "./render.js";
+import { cellWidth, gridToCanvas } from "./render.js";
 import {
   tickDuration,
   type Creature,
