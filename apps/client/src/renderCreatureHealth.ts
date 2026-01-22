@@ -2,49 +2,69 @@ import type { Creature } from "@creatures/shared/state";
 import { cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
 import { activeCreatureId, activePlayer } from "./activePlayerCreature.js";
 
-const getHealthColor = (creature: Creature) => {
-  const enemyColor = "#EF3E4D"; //red
-  const activeCreatureColor = "#40A060"; //dark green
-  const allyColor = "#50C878"; // light green
-  if (creature.player !== activePlayer) return enemyColor;
-  return creature.id === activeCreatureId ? activeCreatureColor : allyColor;
+const getHealthAspect = (creature: Creature) => {
+  const enemyAspect = { color: "#C3423F", size: "small" }; //red
+  const activeCreatureAspect = { color: "#006F4C", size: "big" }; //green
+  const allyAspect = { color: "#006F4C", size: "small" }; //samegreen
+  if (creature.player !== activePlayer) return enemyAspect;
+  if (creature.id === activeCreatureId) return activeCreatureAspect;
+  return allyAspect;
 };
 
 export const renderCreatureHealth = (creature: Creature) => {
-  const color = getHealthColor(creature);
-  renderCreatureHealthWithColor(creature, color);
+  const aspect = getHealthAspect(creature);
+  renderCreatureHealthWithColor(creature, aspect);
 };
 
-const renderCreatureHealthWithColor = (creature: Creature, color: string) => {
+const getHealthSizeParams = (size: string) => {
+  switch (size) {
+    case "big":
+      return { ySize: 7, yPad: 4, xMargin: 0 };
+    case "medium":
+      return { ySize: 6, yPad: 3, xMargin: 1 };
+    case "small":
+      return { ySize: 5, yPad: 3, xMargin: 2 };
+    default:
+      return { ySize: 5, yPad: 3, xMargin: 2 };
+  }
+};
+
+const renderCreatureHealthWithColor = (
+  creature: Creature,
+  aspect: { color: string; size: string },
+) => {
   const canvasPosition = gridToCanvas(creature.position);
-  const xPad = cellWidth / 8;
-  const yPadTop = (-1 * cellHeight) / 16;
-  const yPadBot = (cellHeight * 15) / 16;
+  const { ySize, yPad, xMargin } = getHealthSizeParams(aspect.size);
+  const greyRectangleTop = {
+    x: canvasPosition.x + xMargin + 1,
+    y: canvasPosition.y - yPad + 1,
+  };
+  const greyRectangleSize = { x: cellHeight - xMargin * 2 - 2, y: ySize - 2 };
   ctx.fillStyle = "black";
 
   ctx.fillRect(
-    canvasPosition.x + xPad - 1,
-    canvasPosition.y + yPadTop - 1,
-    cellWidth - 2 * xPad + 2,
-    cellHeight - (yPadTop + yPadBot) + 2,
+    greyRectangleTop.x - 1,
+    greyRectangleTop.y - 1,
+    greyRectangleSize.x + 2,
+    greyRectangleSize.y + 2,
   );
   ctx.fillStyle = "LightGray";
 
   ctx.fillRect(
-    canvasPosition.x + xPad,
-    canvasPosition.y + yPadTop,
-    cellWidth - 2 * xPad,
-    cellHeight - (yPadTop + yPadBot),
+    greyRectangleTop.x,
+    greyRectangleTop.y,
+    greyRectangleSize.x,
+    greyRectangleSize.y,
   );
 
   const percentageHealth = creature.health / creature.maxHealth;
-  ctx.fillStyle = color;
-  const endCurrentHP = percentageHealth * (cellWidth - 2 * xPad);
+  ctx.fillStyle = aspect.color;
+  const endCurrentHP = percentageHealth * greyRectangleSize.x;
 
   ctx.fillRect(
-    canvasPosition.x + xPad,
-    canvasPosition.y + yPadTop,
+    greyRectangleTop.x,
+    greyRectangleTop.y,
     endCurrentHP,
-    cellHeight - (yPadTop + yPadBot),
+    greyRectangleSize.y,
   );
 };
