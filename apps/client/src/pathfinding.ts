@@ -27,14 +27,14 @@ export const pathToTargetUsingBFS = (
     targetPosition,
   );
 
-type Node = {
+type Crossroad = {
   position: Position;
   pathMove: MoveAction[];
 };
 
 const bfs = (
   state: State,
-  queue: Node[],
+  queue: Crossroad[],
   visited: Position[],
   target: Position,
 ): MoveAction[] => {
@@ -54,14 +54,14 @@ const bfs = (
 
   const neighborsToCheck = neighbors.filter(notVisited);
 
-  const nextNodes: Node[] = neighborsToCheck.map((n) => ({
+  const nextCrossroad: Crossroad[] = neighborsToCheck.map((n) => ({
     position: n.position,
     pathMove: [...pathMove, n.moveAction],
   }));
 
   return bfs(
     state,
-    [...rest, ...nextNodes], // FIFO → BFS
+    [...rest, ...nextCrossroad], // FIFO → BFS
     [...visited, ...neighborsToCheck.map((neighbor) => neighbor.position)],
     target,
   );
