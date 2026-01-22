@@ -46,9 +46,9 @@ const sendMessage = (ws: WebSocket, message: ServerMessage) =>
   ws.send(JSON.stringify(message));
 
 wss.on("connection", (ws) => {
-  console.log("Client connected");
-
   const id = getNextId();
+
+  console.log("Client connected: ", id);
 
   clients.set(ws, { id });
 
@@ -66,7 +66,7 @@ wss.on("connection", (ws) => {
   });
 
   ws.on("close", () => {
-    console.log("Client disconnected");
+    console.log("Client disconnected: ", id);
     clients.delete(ws);
   });
 });
