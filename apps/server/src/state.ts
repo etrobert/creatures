@@ -1,5 +1,4 @@
 import {
-  type CreatureName,
   type Direction,
   type Entity,
   type Position,
@@ -22,7 +21,7 @@ const createCreature = ({
   id: createId(),
   type: "creature",
   player,
-  health: 9,
+  health: 10,
   maxHealth: 10,
   position,
   direction: "down",
@@ -33,12 +32,17 @@ const createCreature = ({
 export const createState = (): State => ({
   lastTick: 0,
   entities: [
-    createCreature(),
-    createCreature({ player: "1", position: { x: 1, y: 1 } }),
+    createCreature({ player: "0" }),
     createCreature({
       player: "0",
       name: "salameche",
       position: { x: 5, y: 5 },
+    }),
+    createCreature({ player: "1", position: { x: 1, y: 1 } }),
+    createCreature({
+      player: "1",
+      name: "salameche",
+      position: { x: 2, y: 2 },
     }),
   ],
   map,
