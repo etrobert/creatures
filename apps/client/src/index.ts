@@ -2,11 +2,13 @@ import { render } from "./render.js";
 import { setupEventListeners } from "./input.js";
 import { state } from "./state.js";
 
-setupEventListeners();
-
 function gameLoop(currentTime: number) {
-  if (state !== undefined) render(state, currentTime);
+  if (state === undefined) return;
+  render(state, currentTime);
   requestAnimationFrame(gameLoop);
 }
 
-requestAnimationFrame(gameLoop);
+export function start() {
+  setupEventListeners();
+  requestAnimationFrame(gameLoop);
+}
