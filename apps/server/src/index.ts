@@ -85,17 +85,11 @@ function processResetActions(message: ResetActionsMessage) {
 }
 
 function processPlayerInputMessage(message: PlayerInputMessage) {
-  state = {
-    ...state,
-    entities: state.entities.map((entity) =>
-      entity.id === message.creatureId
-        ? {
-            ...entity,
-            nextActions: [...entity.nextActions, ...message.actions],
-          }
-        : entity,
-    ),
-  };
+  state = updateEntityById(state, message.creatureId, (entity) => ({
+    ...entity,
+    nextActions: [...entity.nextActions, ...message.actions],
+  }));
+
   broadcastState();
 }
 
