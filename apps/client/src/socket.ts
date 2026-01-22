@@ -4,7 +4,10 @@ import {
 } from "@creatures/shared/messages";
 import { setState, state } from "./state.js";
 import { start } from "./index.js";
-import { setActivePlayer } from "./activePlayerCreature.js";
+import {
+  initActiveCreatureId,
+  setActivePlayer,
+} from "./activePlayerCreature.js";
 
 // WebSocket connection
 // In development: ws://localhost:3000
@@ -32,6 +35,7 @@ ws.onmessage = (event) => {
       break;
     case "assign id":
       setActivePlayer(data.id);
+      initActiveCreatureId();
       break;
   }
 };

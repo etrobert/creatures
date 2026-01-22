@@ -14,6 +14,13 @@ export const listPlayerCreatureIds = (player: string) => {
     .map((creature) => creature.id);
 };
 
+export const initActiveCreatureId = () => {
+  const newActiveCreatureId = listPlayerCreatureIds(activePlayer)[0];
+  if (newActiveCreatureId === undefined)
+    throw new Error("no creatures for active player");
+  activeCreatureId = newActiveCreatureId;
+};
+
 export let activeCreatureId = "0";
 
 export const setActiveCreatureId = (newActiveCreatureId: string) =>

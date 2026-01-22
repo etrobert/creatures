@@ -52,6 +52,7 @@ wss.on("connection", (ws) => {
 
   clients.set(ws, { id });
 
+  sendMessage(ws, { type: "state update", state });
   sendMessage(ws, { type: "assign id", id });
 
   ws.on("message", (data) => {
