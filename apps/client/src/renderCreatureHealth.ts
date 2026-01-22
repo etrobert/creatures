@@ -36,10 +36,10 @@ const renderCreatureHealthWithColor = (
   const canvasPosition = gridToCanvas(creature.position);
   const { ySize, yPad, xMargin } = getHealthSizeParams(aspect.size);
   const greyRectangleTop = {
-    x: canvasPosition.x + 1 + xMargin,
+    x: canvasPosition.x + xMargin + 1,
     y: canvasPosition.y - yPad + 1,
   };
-  const greyRectangleSize = { x: cellHeight - 2 - xMargin * 2, y: ySize - 2 };
+  const greyRectangleSize = { x: cellHeight - xMargin * 2 - 2, y: ySize - 2 };
   ctx.fillStyle = "black";
 
   ctx.fillRect(
