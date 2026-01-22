@@ -1,7 +1,6 @@
 import { render } from "./render.js";
 import { removeEventListeners, setupEventListeners } from "./input.js";
 import { resetState, state } from "./state.js";
-import { initActiveCreatureId } from "./activePlayerCreature.js";
 
 function gameLoop(currentTime: number) {
   if (state === undefined) return;
