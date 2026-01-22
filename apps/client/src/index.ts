@@ -1,6 +1,6 @@
 import { render } from "./render.js";
 import { setupEventListeners } from "./input.js";
-import { state } from "./state.js";
+import { resetState, state } from "./state.js";
 
 function gameLoop(currentTime: number) {
   if (state === undefined) return;
@@ -11,4 +11,8 @@ function gameLoop(currentTime: number) {
 export function start() {
   setupEventListeners();
   requestAnimationFrame(gameLoop);
+}
+
+export function stop() {
+  resetState();
 }

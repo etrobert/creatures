@@ -34,7 +34,10 @@ ws.onmessage = (event) => {
 
 ws.onerror = (error) => console.error("WebSocket error:", error);
 
-ws.onclose = () => console.log("Disconnected from WebSocket server");
+ws.onclose = () => {
+  console.log("Disconnected from WebSocket server");
+  stop();
+};
 
 export const sendClientMessage = (message: ClientMessage) =>
   ws.send(JSON.stringify(message));
