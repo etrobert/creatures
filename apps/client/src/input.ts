@@ -135,12 +135,22 @@ function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
   setActiveCreatureId(newActiveCreature);
 }
 
+const resetActionsOnKeyDown = (event: KeyboardEvent) => {
+  if (event.code !== "KeyD") return;
+  sendClientMessage({
+    type: "reset actions",
+    creatureId: activeCreatureId,
+  });
+};
+
 export const setupEventListeners = () => {
   window.addEventListener("keydown", createActionOnKeyDown);
 
   canvas.addEventListener("click", onCanvasClick);
 
   window.addEventListener("keydown", changeActiveCreatureOnKeyDown);
+
+  window.addEventListener("keydown", resetActionsOnKeyDown);
 };
 
 export const removeEventListeners = () => {
@@ -149,6 +159,8 @@ export const removeEventListeners = () => {
   canvas.removeEventListener("click", onCanvasClick);
 
   window.removeEventListener("keydown", changeActiveCreatureOnKeyDown);
+
+  window.removeEventListener("keydown", resetActionsOnKeyDown);
 };
 
 // translation bwtween grid position and canvas position
