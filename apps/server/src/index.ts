@@ -53,7 +53,7 @@ wss.on("connection", (ws) => {
   clients.set(ws, { id });
 
   sendMessage(ws, { type: "state update", state });
-  sendMessage(ws, { type: "assign id", id });
+  sendMessage(ws, { type: "assign player id", id });
 
   ws.on("message", (data) => {
     const message = clientMessageSchema.parse(JSON.parse(data.toString()));

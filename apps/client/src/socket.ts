@@ -33,7 +33,7 @@ ws.onmessage = (event) => {
       if (state === undefined) start();
       setState(data.state);
       break;
-    case "assign id":
+    case "assign player id":
       setActivePlayer(data.id);
       initActiveCreatureId();
       break;
