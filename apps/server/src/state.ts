@@ -17,12 +17,7 @@ const createCreature = ({
   player = "0",
   position = { x: 3, y: 2 },
   name = "bulbizard",
-}: {
-  // TODO: ts pick
-  player?: string;
-  position?: Position;
-  name?: CreatureName;
-} = {}): Creature => ({
+}: Partial<Pick<Creature, "player" | "position" | "name">> = {}): Creature => ({
   name,
   id: createId(),
   type: "creature",
