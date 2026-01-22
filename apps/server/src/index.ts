@@ -101,6 +101,12 @@ function processResetStateMessage() {
   state = createState();
 
   broadcastState();
+
+  for (const ws of wss.clients) {
+    const client = clients.get(ws);
+    if (client === undefined) throw new Error("Websocket not registered");
+    sendMessage(ws, { type: "assign player id", id: client.id });
+  }
 }
 
 let state = createState();
