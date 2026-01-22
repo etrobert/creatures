@@ -21,10 +21,10 @@ const getDirectionLine = (direction: Direction) => {
 };
 
 export const renderCreature = (creature: Creature, currentTime: number) => {
-  const color = creature.player === activePlayer ? "blue" : "red";
   const canvasPosition = gridToCanvas(creature.position);
-  ctx.fillStyle = color;
-  ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
+  // const color = creature.player === activePlayer ? "blue" : "red";
+  // ctx.fillStyle = color;
+  // ctx.fillRect(canvasPosition.x, canvasPosition.y, cellWidth, cellHeight);
   const animation = entitiesAnimations[creature.name];
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;

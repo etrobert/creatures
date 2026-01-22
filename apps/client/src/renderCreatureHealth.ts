@@ -1,7 +1,16 @@
 import type { Creature } from "@creatures/shared/state";
 import { cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
+import { activeCreatureId, activePlayer } from "./activePlayerCreature.js";
 
 export const renderCreatureHealth = (creature: Creature) => {
+  creature.player !== activePlayer
+    ? renderCreatureHealthWithColor(creature, "#EF3E4D")
+    : creature.id === activeCreatureId
+      ? renderCreatureHealthWithColor(creature, "#40A060")
+      : renderCreatureHealthWithColor(creature, "#50C878");
+};
+
+const renderCreatureHealthWithColor = (creature: Creature, color: string) => {
   const canvasPosition = gridToCanvas(creature.position);
   const xPad = cellWidth / 8;
   const yPadTop = (-1 * cellHeight) / 16;
@@ -24,7 +33,7 @@ export const renderCreatureHealth = (creature: Creature) => {
   );
 
   const percentageHealth = creature.health / creature.maxHealth;
-  ctx.fillStyle = "green";
+  ctx.fillStyle = color;
   const endCurrentHP = percentageHealth * (cellWidth - 2 * xPad);
 
   ctx.fillRect(
