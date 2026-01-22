@@ -3,6 +3,7 @@ import {
   activeCreatureId,
   activePlayer,
   listPlayerCreatureIds,
+  nextActiveCreature,
   setActiveCreatureId,
 } from "./activePlayerCreature.js";
 
@@ -159,6 +160,11 @@ const keyDownHandler = (event: KeyboardEvent) => {
       break;
     case "KeyN":
       sendClientMessage({ type: "reset state" });
+      break;
+    case "Tab":
+      // This is used so that we don't tab out of the window
+      event.preventDefault();
+      nextActiveCreature();
       break;
   }
 };
