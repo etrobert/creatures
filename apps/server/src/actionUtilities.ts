@@ -23,11 +23,13 @@ export const dealDamageAtPosition = (
   damage: number,
 ): State => ({
   ...state,
-  entities: state.entities.map((entity) =>
-    entity.type === "creature" &&
-    entity.position.x === position.x &&
-    entity.position.y === position.y
-      ? { ...entity, health: entity.health - damage }
-      : entity,
-  ),
+  entities: state.entities
+    .map((entity) =>
+      entity.type === "creature" &&
+      entity.position.x === position.x &&
+      entity.position.y === position.y
+        ? { ...entity, health: entity.health - damage }
+        : entity,
+    )
+    .filter((entity) => entity.type !== "creature" || entity.health > 0),
 });
