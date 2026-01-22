@@ -2,7 +2,8 @@ import {
   serverMessageSchema,
   type ClientMessage,
 } from "@creatures/shared/messages";
-import { setState } from "./state.js";
+import { setState, state } from "./state.js";
+import { start } from "./index.js";
 
 // WebSocket connection
 // In development: ws://localhost:3000
@@ -25,6 +26,7 @@ ws.onmessage = (event) => {
   const data = serverMessageSchema.parse(JSON.parse(event.data));
   switch (data.type) {
     case "state update":
+      if (state === undefined) start();
       setState(data.state);
       break;
   }
@@ -32,7 +34,10 @@ ws.onmessage = (event) => {
 
 ws.onerror = (error) => console.error("WebSocket error:", error);
 
-ws.onclose = () => console.log("Disconnected from WebSocket server");
+ws.onclose = () => {
+  console.log("Disconnected from WebSocket server");
+  stop();
+};
 
 export const sendClientMessage = (message: ClientMessage) =>
   ws.send(JSON.stringify(message));
