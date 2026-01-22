@@ -7,6 +7,7 @@ import { start } from "./index.js";
 import {
   initActiveCreatureId,
   setActivePlayer,
+  updateActiveCreatureId,
 } from "./activePlayerCreature.js";
 
 // WebSocket connection
@@ -31,6 +32,7 @@ ws.onmessage = (event) => {
   switch (data.type) {
     case "state update":
       if (state === undefined) start();
+      updateActiveCreatureId(data.state);
       setState(data.state);
       break;
     case "assign player id":

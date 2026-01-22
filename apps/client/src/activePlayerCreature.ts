@@ -1,5 +1,6 @@
 import { isCreature } from "@creatures/shared/gameLogicUtilities";
 import { state } from "./state.js";
+import type { State } from "@creatures/shared/state";
 
 export let activePlayer = "0";
 
@@ -35,3 +36,9 @@ export let activeCreatureId = "0";
 
 export const setActiveCreatureId = (newActiveCreatureId: string) =>
   (activeCreatureId = newActiveCreatureId);
+
+export const updateActiveCreatureId = (state: State) => {
+  if (state.entities.some((thisEntity) => thisEntity.id === activeCreatureId))
+    return;
+  nextActiveCreature();
+};
