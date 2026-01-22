@@ -27,10 +27,17 @@ export const playerInputMessageSchema = z.object({
   actions: z.array(actionSchema),
 });
 
+const resetActionsMessageSchema = z.object({
+  type: z.literal("reset actions"),
+  creatureId: z.string(),
+});
+
 export type PlayerInputMessage = z.infer<typeof playerInputMessageSchema>;
+export type ResetActionsMessage = z.infer<typeof resetActionsMessageSchema>;
 
 export const clientMessageSchema = z.discriminatedUnion("type", [
   playerInputMessageSchema,
+  resetActionsMessageSchema,
 ]);
 
 export type ClientMessage = z.infer<typeof clientMessageSchema>;

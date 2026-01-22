@@ -1,5 +1,6 @@
 import type {
   PlayerInputMessage,
+  ResetActionsMessage,
   ServerMessage,
 } from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";
@@ -11,6 +12,7 @@ import { tickDuration } from "@creatures/shared/state";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import { updateEntityById } from "./actionUtilities.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +64,9 @@ wss.on("connection", (ws) => {
       case "player input":
         processPlayerInputMessage(message);
         break;
+      case "reset actions":
+        processResetActions(message);
+        break;
     }
   });
 
@@ -71,18 +76,20 @@ wss.on("connection", (ws) => {
   });
 });
 
+function processResetActions(message: ResetActionsMessage) {
+  state = updateEntityById(state, message.creatureId, (entity) => ({
+    ...entity,
+    nextActions: [],
+  }));
+  broadcastState();
+}
+
 function processPlayerInputMessage(message: PlayerInputMessage) {
-  state = {
-    ...state,
-    entities: state.entities.map((entity) =>
-      entity.id === message.creatureId
-        ? {
-            ...entity,
-            nextActions: [...entity.nextActions, ...message.actions],
-          }
-        : entity,
-    ),
-  };
+  state = updateEntityById(state, message.creatureId, (entity) => ({
+    ...entity,
+    nextActions: [...entity.nextActions, ...message.actions],
+  }));
+
   broadcastState();
 }
 
