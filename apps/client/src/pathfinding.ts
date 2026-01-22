@@ -76,3 +76,30 @@ const accessibleNeighbors = (state: State, { x, y }: Position) => {
     (neighbor) => !collisionWithMap(state.map, neighbor.position),
   );
 };
+
+export const pathToTarget = (
+  currentPosition: Position,
+  targetPosition: Position,
+) => {
+  const nextActionsX =
+    currentPosition.x < targetPosition.x
+      ? new Array(targetPosition.x - currentPosition.x).fill({
+          type: "move",
+          direction: "right",
+        })
+      : new Array(currentPosition.x - targetPosition.x).fill({
+          type: "move",
+          direction: "left",
+        });
+  const nextActionsY =
+    currentPosition.y < targetPosition.y
+      ? new Array(targetPosition.y - currentPosition.y).fill({
+          type: "move",
+          direction: "down",
+        })
+      : new Array(currentPosition.y - targetPosition.y).fill({
+          type: "move",
+          direction: "up",
+        });
+  return [...nextActionsX, ...nextActionsY];
+};
