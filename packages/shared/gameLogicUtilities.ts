@@ -96,3 +96,6 @@ export const getCreatureAtPosition = (
         creature.position.x === position.x &&
         creature.position.y === position.y,
     );
+
+export const samePosition = (a: Position, b: Position): boolean =>
+  a.x === b.x && a.y === b.y;

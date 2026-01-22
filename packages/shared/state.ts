@@ -8,7 +8,8 @@ export const positionSchema = z.object({
   y: z.number(),
 });
 
-export const directionSchema = z.enum(["up", "right", "left", "down"]);
+export const allDirections = ["up", "right", "left", "down"] as const;
+export const directionSchema = z.enum(allDirections);
 
 export const moveActionSchema = z.object({
   type: z.literal("move"),
