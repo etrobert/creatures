@@ -135,41 +135,44 @@ function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
   setActiveCreatureId(newActiveCreature);
 }
 
-const resetActionsOnKeyDown = (event: KeyboardEvent) => {
-  if (event.code !== "KeyD") return;
-  sendClientMessage({
-    type: "reset actions",
-    creatureId: activeCreatureId,
-  });
-};
-
-const resetStateOnKeyDown = (event: KeyboardEvent) => {
-  if (event.code !== "KeyN") return;
-  sendClientMessage({
-    type: "reset state",
-  });
+const keyDownHandler = (event: KeyboardEvent) => {
+  switch (event.code) {
+    case "ArrowUp":
+    case "ArrowLeft":
+    case "ArrowDown":
+    case "ArrowRight":
+    case "KeyW":
+    case "KeyE":
+      createActionOnKeyDown(event);
+      break;
+    case "Digit1":
+    case "Digit2":
+    case "Digit3":
+    case "Digit4":
+      changeActiveCreatureOnKeyDown(event);
+      break;
+    case "KeyD":
+      sendClientMessage({
+        type: "reset actions",
+        creatureId: activeCreatureId,
+      });
+      break;
+    case "KeyN":
+      sendClientMessage({ type: "reset state" });
+      break;
+  }
 };
 
 export const setupEventListeners = () => {
-  window.addEventListener("keydown", createActionOnKeyDown);
-
   canvas.addEventListener("click", onCanvasClick);
 
-  window.addEventListener("keydown", changeActiveCreatureOnKeyDown);
-
-  window.addEventListener("keydown", resetActionsOnKeyDown);
-  window.addEventListener("keydown", resetStateOnKeyDown);
+  window.addEventListener("keydown", keyDownHandler);
 };
 
 export const removeEventListeners = () => {
-  window.removeEventListener("keydown", createActionOnKeyDown);
-
   canvas.removeEventListener("click", onCanvasClick);
 
-  window.removeEventListener("keydown", changeActiveCreatureOnKeyDown);
-
-  window.removeEventListener("keydown", resetActionsOnKeyDown);
-  window.removeEventListener("keydown", resetStateOnKeyDown);
+  window.removeEventListener("keydown", keyDownHandler);
 };
 
 // translation bwtween grid position and canvas position
