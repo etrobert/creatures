@@ -61,11 +61,9 @@ export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   renderBackground(state.map);
-  const creatureGhosts = state.entities
-    .filter(isCreature)
-    .filter((creature) => creature.player === activePlayer)
-    .filter((creature) => creature.nextActions.length !== 0)
-    .map(getGhost);
+
+  const creatureGhosts = getGhosts(state);
+
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
       const position = { x, y };
@@ -78,6 +76,14 @@ export const render = (state: State, currentTime: number) => {
     }
   }
   renderUi(state);
+};
+
+const getGhosts = (state: State) => {
+  return state.entities
+    .filter(isCreature)
+    .filter((creature) => creature.player === activePlayer)
+    .filter((creature) => creature.nextActions.length !== 0)
+    .map(getGhost);
 };
 
 const renderEntityAtPosition = (
