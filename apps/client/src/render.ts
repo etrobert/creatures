@@ -68,18 +68,29 @@ export const render = (state: State, currentTime: number) => {
     .map(getGhost);
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
-      const entities = state.entities.filter(
-        (entity) => entity.position.x === x && entity.position.y === y,
-      );
-      entities.forEach((entity) => renderEntity(entity, currentTime));
+      const position = { x, y };
+
+      renderEntityAtPosition(state.entities, currentTime, position);
+
       ctx.globalAlpha = 0.5;
-      creatureGhosts
-        .filter((ghost) => ghost.position.x === x && ghost.position.y === y)
-        .forEach((creature) => renderCreature(creature, currentTime));
+      renderEntityAtPosition(creatureGhosts, currentTime, position);
       ctx.globalAlpha = 1;
     }
   }
   renderUi(state);
+};
+
+const renderEntityAtPosition = (
+  entities: Entity[],
+  currentTime: number,
+  position: Position,
+) => {
+  entities
+    .filter(
+      (entity) =>
+        entity.position.x === position.x && entity.position.y === position.y,
+    )
+    .forEach((entity) => renderEntity(entity, currentTime));
 };
 
 export const getGhost = (creature: Creature) => {
