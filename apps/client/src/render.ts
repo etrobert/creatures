@@ -71,7 +71,7 @@ export const render = (state: State, currentTime: number) => {
       renderEntityAtPosition(state.entities, currentTime, position);
 
       ctx.globalAlpha = 0.5;
-      renderEntityAtPosition(creatureGhosts, currentTime, position);
+      renderGhostAtPosition(creatureGhosts, currentTime, position);
       ctx.globalAlpha = 1;
     }
   }
@@ -84,6 +84,19 @@ const getGhosts = (state: State) => {
     .filter((creature) => creature.player === activePlayer)
     .filter((creature) => creature.nextActions.length !== 0)
     .map(getGhost);
+};
+
+const renderGhostAtPosition = (
+  ghosts: Creature[],
+  currentTime: number,
+  position: Position,
+) => {
+  ghosts
+    .filter(
+      (ghost) =>
+        ghost.position.x === position.x && ghost.position.y === position.y,
+    )
+    .forEach((ghost) => renderCreature(ghost, currentTime));
 };
 
 const renderEntityAtPosition = (
