@@ -96,6 +96,10 @@ export const applyFireball = (state: State, creature: Entity): State => {
   const position = getNewPosition(creature.position, creature.direction);
   const spawnedFireball = createFireball(position, creature.direction);
 
+  const warmupDuration = 1;
+  if (state.tick <= creature.ongoingActionStart - 1 + warmupDuration)
+    return state;
+
   state = resetEntityOngoingAction(state, creature.id);
   state = dealFireballDamage(state, position);
 

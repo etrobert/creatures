@@ -49,6 +49,7 @@ const basicEntitySchema = z.object({
   type: z.literal("entity"),
   position: positionSchema,
   ongoingAction: actionSchema.nullable(),
+  ongoingActionStart: z.number(),
   nextActions: z.array(actionSchema),
   direction: directionSchema,
 });
