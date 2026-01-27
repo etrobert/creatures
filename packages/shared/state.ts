@@ -71,7 +71,7 @@ const tileSchema = z.enum(["grass", "void"]);
 export const mapSchema = z.array(tileSchema);
 
 export const stateSchema = z.object({
-  lastTick: z.number(),
+  tick: z.number(),
   entities: z.array(entitySchema),
   map: mapSchema,
 });

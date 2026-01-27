@@ -30,7 +30,7 @@ const createCreature = ({
 });
 
 export const createState = (): State => ({
-  lastTick: 0,
+  tick: 0,
   entities: [
     createCreature({ player: "0" }),
     createCreature({

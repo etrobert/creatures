@@ -1,7 +1,6 @@
 import type {
   PlayerInputMessage,
   ResetActionsMessage,
-  ResetStateMessage,
   ServerMessage,
 } from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";
@@ -118,6 +117,7 @@ function broadcastState() {
 
 function gameLoop() {
   state = update(state);
+  state = { ...state, tick: state.tick + 1 };
 
   broadcastState();
 }
