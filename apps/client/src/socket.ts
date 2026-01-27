@@ -34,9 +34,9 @@ ws.onmessage = (event) => {
   switch (data.type) {
     case "state update":
       if (state === undefined) start();
+      setState(data.state);
       if (lossDetection(data.state, activePlayer)) lossKeyHandler();
       else updateActiveCreatureId(data.state);
-      setState(data.state);
       break;
     case "assign player id":
       setActivePlayer(data.id);
