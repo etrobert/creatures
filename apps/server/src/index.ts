@@ -117,7 +117,6 @@ function broadcastState() {
 
 function gameLoop() {
   state = update(state);
-  state = { ...state, tick: state.tick + 1 };
 
   broadcastState();
 }

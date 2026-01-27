@@ -6,5 +6,5 @@ export function update(state: State): State {
     if (state.entities.some((thisEntity) => thisEntity.id === entity.id))
       state = updateEntity(state, entity.id);
   }
-  return state;
+  return { ...state, tick: state.tick + 1 };
 }
