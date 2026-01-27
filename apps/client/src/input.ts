@@ -136,7 +136,7 @@ function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
   setActiveCreatureId(newActiveCreature);
 }
 
-const keyDownHandler = (event: KeyboardEvent) => {
+const keyDownHandlerGame = (event: KeyboardEvent) => {
   switch (event.code) {
     case "ArrowUp":
     case "ArrowLeft":
@@ -159,9 +159,6 @@ const keyDownHandler = (event: KeyboardEvent) => {
         creatureId: activeCreatureId,
       });
       break;
-    case "KeyN":
-      sendClientMessage({ type: "reset state" });
-      break;
     case "Tab":
       // This is used so that we don't tab out of the window
       event.preventDefault();
@@ -170,16 +167,36 @@ const keyDownHandler = (event: KeyboardEvent) => {
   }
 };
 
-export const setupEventListeners = () => {
-  canvas.addEventListener("click", onCanvasClick);
-
-  window.addEventListener("keydown", keyDownHandler);
+const keyDownHandlerBasis = (event: KeyboardEvent) => {
+  switch (event.code) {
+    case "KeyN":
+      sendClientMessage({ type: "reset state" });
+      break;
+  }
 };
 
-export const removeEventListeners = () => {
+export const setupGameEventListeners = () => {
+  canvas.addEventListener("click", onCanvasClick);
+
+  window.addEventListener("keydown", keyDownHandlerGame);
+
+  window.addEventListener("keydown", keyDownHandlerBasis);
+};
+
+export const removeGameEventListeners = () => {
   canvas.removeEventListener("click", onCanvasClick);
 
-  window.removeEventListener("keydown", keyDownHandler);
+  window.removeEventListener("keydown", keyDownHandlerGame);
+
+  window.removeEventListener("keydown", keyDownHandlerBasis);
+};
+
+export const setupDeathEventListeners = () => {
+  window.addEventListener("keydown", keyDownHandlerBasis);
+};
+
+export const removeDeathEventListeners = () => {
+  window.removeEventListener("keydown", keyDownHandlerBasis);
 };
 
 // translation bwtween grid position and canvas position

@@ -1,6 +1,6 @@
 import { isCreature } from "@creatures/shared/gameLogicUtilities";
 import { state } from "./state.js";
-import type { State } from "@creatures/shared/state";
+import { entitySchema, type State } from "@creatures/shared/state";
 
 export let activePlayer = "0";
 
