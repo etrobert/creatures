@@ -118,7 +118,11 @@ function onCanvasClick(event: PointerEvent) {
 
 function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
   const getActiveCreature = () => {
-    const listActivePlayerCreatureIds = listPlayerCreatureIds(activePlayer);
+    if (state === undefined) throw new Error("state is undefined");
+    const listActivePlayerCreatureIds = listPlayerCreatureIds(
+      state,
+      activePlayer,
+    );
     switch (event.code) {
       case "Digit1":
         return listActivePlayerCreatureIds[0];
