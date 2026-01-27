@@ -54,7 +54,8 @@ const createAction = (creature: Creature, actionType: ActionType): Action => {
 
 function createActionOnKeyDown(event: KeyboardEvent) {
   if (state === undefined) throw new Error("state is undefined");
-  if (activeCreatureId === undefined) return; // we're dead
+  if (activeCreatureId === undefined)
+    throw new Error("activeCreatureId is undefined");
   const activeCreature = findActiveCreature(state, activeCreatureId);
 
   const getAction = () => {
