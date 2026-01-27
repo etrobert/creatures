@@ -5,12 +5,10 @@ import {
 import { setState, state } from "./state.js";
 import { start } from "./index.js";
 import {
-  activePlayer,
   initActiveCreatureId,
   setActivePlayer,
   updateActiveCreatureId,
 } from "./activePlayerCreature.js";
-import { lossDetection, lossKeyHandler } from "./lossDetection.js";
 
 // WebSocket connection
 // In development: ws://localhost:3000
@@ -35,8 +33,7 @@ ws.onmessage = (event) => {
     case "state update":
       if (state === undefined) start();
       setState(data.state);
-      if (lossDetection(data.state, activePlayer)) lossKeyHandler();
-      else updateActiveCreatureId();
+      updateActiveCreatureId();
       break;
     case "assign player id":
       setActivePlayer(data.id);

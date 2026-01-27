@@ -54,6 +54,7 @@ const createAction = (creature: Creature, actionType: ActionType): Action => {
 
 function createActionOnKeyDown(event: KeyboardEvent) {
   if (state === undefined) throw new Error("state is undefined");
+  if (activeCreatureId === undefined) return; // we're dead
   const activeCreature = findActiveCreature(state, activeCreatureId);
 
   const getAction = () => {
@@ -140,7 +141,15 @@ function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
   setActiveCreatureId(newActiveCreature);
 }
 
-const keyDownHandlerGame = (event: KeyboardEvent) => {
+const keyDownHandler = (event: KeyboardEvent) => {
+  switch (event.code) {
+    case "KeyN":
+      sendClientMessage({ type: "reset state" });
+      break;
+  }
+
+  if (activeCreatureId === undefined) return; // we're dead
+
   switch (event.code) {
     case "ArrowUp":
     case "ArrowLeft":
@@ -171,36 +180,16 @@ const keyDownHandlerGame = (event: KeyboardEvent) => {
   }
 };
 
-const keyDownHandlerBasis = (event: KeyboardEvent) => {
-  switch (event.code) {
-    case "KeyN":
-      sendClientMessage({ type: "reset state" });
-      break;
-  }
-};
-
 export const setupGameEventListeners = () => {
   canvas.addEventListener("click", onCanvasClick);
 
-  window.addEventListener("keydown", keyDownHandlerGame);
-
-  window.addEventListener("keydown", keyDownHandlerBasis);
+  window.addEventListener("keydown", keyDownHandler);
 };
 
 export const removeGameEventListeners = () => {
   canvas.removeEventListener("click", onCanvasClick);
 
-  window.removeEventListener("keydown", keyDownHandlerGame);
-
-  window.removeEventListener("keydown", keyDownHandlerBasis);
-};
-
-export const setupDeathEventListeners = () => {
-  window.addEventListener("keydown", keyDownHandlerBasis);
-};
-
-export const removeDeathEventListeners = () => {
-  window.removeEventListener("keydown", keyDownHandlerBasis);
+  window.removeEventListener("keydown", keyDownHandler);
 };
 
 // translation bwtween grid position and canvas position
