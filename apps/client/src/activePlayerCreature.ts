@@ -38,7 +38,8 @@ export let activeCreatureId = "0";
 export const setActiveCreatureId = (newActiveCreatureId: string) =>
   (activeCreatureId = newActiveCreatureId);
 
-export const updateActiveCreatureId = (state: State) => {
+export const updateActiveCreatureId = () => {
+  if (state === undefined) throw new Error("state is undefined");
   if (state.entities.some((thisEntity) => thisEntity.id === activeCreatureId))
     return;
   nextActiveCreature();

@@ -36,7 +36,7 @@ ws.onmessage = (event) => {
       if (state === undefined) start();
       setState(data.state);
       if (lossDetection(data.state, activePlayer)) lossKeyHandler();
-      else updateActiveCreatureId(data.state);
+      else updateActiveCreatureId();
       break;
     case "assign player id":
       setActivePlayer(data.id);
