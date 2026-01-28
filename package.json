@@ -19,8 +19,7 @@
     "typecheck:client": "npm run typecheck --workspace=@creatures/client",
     "typecheck:server": "npm run typecheck --workspace=@creatures/server",
     "format": "npm run format --workspace=@creatures/client",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
