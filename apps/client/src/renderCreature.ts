@@ -21,7 +21,7 @@ const getDirectionLine = (direction: Direction) => {
 
 export const renderCreature = (creature: Creature, currentTime: number) => {
   const canvasPosition = gridToCanvas(creature.position);
-  const animation = entitiesAnimations[creature.name];
+  const animation = getAnimation(creature);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
   ctx.drawImage(
@@ -35,6 +35,20 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
     imgWidth,
     imgHeight,
   );
+};
+
+const getAnimation = (creature: Creature): Animation => {
+  const entityAnimations = entitiesAnimations[creature.name];
+
+  const { ongoingAction } = creature;
+
+  if (ongoingAction === null) return entityAnimations.default;
+
+  const ongoingActionType = ongoingAction.type;
+
+  const animation = entityAnimations[ongoingActionType];
+
+  return animation === undefined ? entityAnimations.default : animation;
 };
 
 const imgBulbizard = new Image();
@@ -57,7 +71,26 @@ const animationSalameche = {
   animationFrames: 4,
 };
 
+type Animation = {
+  name: string;
+  sprite: HTMLImageElement;
+  imgWidth: number;
+  imgHeight: number;
+  animationFrames: number;
+};
+
+const bulbizardAnimations: Record<string, Animation> & { default: Animation } =
+  {
+    attack: animationSalameche,
+    default: animationBulbizard,
+  };
+
+const salamecheAnimations: Record<string, Animation> & { default: Animation } =
+  {
+    default: animationSalameche,
+  };
+
 const entitiesAnimations = {
-  bulbizard: animationBulbizard,
-  salameche: animationSalameche,
+  bulbizard: bulbizardAnimations,
+  salameche: salamecheAnimations,
 };
