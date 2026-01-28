@@ -61,25 +61,55 @@ export const render = (state: State, currentTime: number) => {
   ctx.fillStyle = "lightskyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   renderBackground(state.map);
-  const creatureGhosts = state.entities
-    .filter(isCreature)
-    .filter((creature) => creature.player === activePlayer)
-    .filter((creature) => creature.nextActions.length !== 0)
-    .map(getGhost);
+
+  const creatureGhosts = getGhosts(state);
+
   for (let x = 0; x < countColumns; x++) {
     for (let y = 0; y < countRow; y++) {
-      const entities = state.entities.filter(
-        (entity) => entity.position.x === x && entity.position.y === y,
-      );
-      entities.forEach((entity) => renderEntity(entity, currentTime));
+      const position = { x, y };
+
+      renderEntitiesAtPosition(state.entities, currentTime, position);
+
       ctx.globalAlpha = 0.5;
-      creatureGhosts
-        .filter((ghost) => ghost.position.x === x && ghost.position.y === y)
-        .forEach((creature) => renderCreature(creature, currentTime));
+      renderGhostsAtPosition(creatureGhosts, currentTime, position);
       ctx.globalAlpha = 1;
     }
   }
   renderUi(state);
+};
+
+const getGhosts = (state: State) => {
+  return state.entities
+    .filter(isCreature)
+    .filter((creature) => creature.player === activePlayer)
+    .filter((creature) => creature.nextActions.length !== 0)
+    .map(getGhost);
+};
+
+const renderGhostsAtPosition = (
+  ghosts: Creature[],
+  currentTime: number,
+  position: Position,
+) => {
+  ghosts
+    .filter(
+      (ghost) =>
+        ghost.position.x === position.x && ghost.position.y === position.y,
+    )
+    .forEach((ghost) => renderCreature(ghost, currentTime));
+};
+
+const renderEntitiesAtPosition = (
+  entities: Entity[],
+  currentTime: number,
+  position: Position,
+) => {
+  entities
+    .filter(
+      (entity) =>
+        entity.position.x === position.x && entity.position.y === position.y,
+    )
+    .forEach((entity) => renderEntity(entity, currentTime));
 };
 
 export const getGhost = (creature: Creature) => {
