@@ -181,13 +181,13 @@ const keyDownHandler = (event: KeyboardEvent) => {
   }
 };
 
-export const setupGameEventListeners = () => {
+export const setupEventListeners = () => {
   canvas.addEventListener("click", onCanvasClick);
 
   window.addEventListener("keydown", keyDownHandler);
 };
 
-export const removeGameEventListeners = () => {
+export const removeEventListeners = () => {
   canvas.removeEventListener("click", onCanvasClick);
 
   window.removeEventListener("keydown", keyDownHandler);
