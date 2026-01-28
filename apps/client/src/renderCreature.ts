@@ -76,16 +76,16 @@ type Animation = {
   animationFrames: number;
 };
 
-const bulbizardAnimations: Record<string, Animation> & { default: Animation } =
-  {
-    attack: animationSalameche,
-    default: animationBulbizard,
-  };
+type AnimationSet = Record<string, Animation> & { default: Animation };
 
-const salamecheAnimations: Record<string, Animation> & { default: Animation } =
-  {
-    default: animationSalameche,
-  };
+const bulbizardAnimations: AnimationSet = {
+  attack: animationSalameche,
+  default: animationBulbizard,
+};
+
+const salamecheAnimations: AnimationSet = {
+  default: animationSalameche,
+};
 
 const entitiesAnimations = {
   bulbizard: bulbizardAnimations,
