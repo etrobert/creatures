@@ -1,5 +1,5 @@
 import type { Creature } from "@creatures/shared/state";
-import { cellHeight, cellWidth, ctx, gridToCanvas } from "./render.js";
+import { cellHeight, ctx, gridToCanvas } from "./render.js";
 import { activeCreatureId, activePlayer } from "./activePlayerCreature.js";
 
 const getHealthAspect = (creature: Creature) => {

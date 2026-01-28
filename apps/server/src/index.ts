@@ -38,7 +38,7 @@ const ids = ["0", "1"];
 
 const getNextId = (): string => {
   const id = ids.find((id) =>
-    clients.entries().every(([_, client]) => client.id !== id),
+    clients.entries().every(([, client]) => client.id !== id),
   );
   if (id === undefined) throw new Error("all ids are taken");
   return id;
