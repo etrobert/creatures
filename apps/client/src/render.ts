@@ -68,10 +68,10 @@ export const render = (state: State, currentTime: number) => {
     for (let y = 0; y < countRow; y++) {
       const position = { x, y };
 
-      renderEntityAtPosition(state.entities, currentTime, position);
+      renderEntitiesAtPosition(state.entities, currentTime, position);
 
       ctx.globalAlpha = 0.5;
-      renderGhostAtPosition(creatureGhosts, currentTime, position);
+      renderGhostsAtPosition(creatureGhosts, currentTime, position);
       ctx.globalAlpha = 1;
     }
   }
@@ -86,7 +86,7 @@ const getGhosts = (state: State) => {
     .map(getGhost);
 };
 
-const renderGhostAtPosition = (
+const renderGhostsAtPosition = (
   ghosts: Creature[],
   currentTime: number,
   position: Position,
@@ -99,7 +99,7 @@ const renderGhostAtPosition = (
     .forEach((ghost) => renderCreature(ghost, currentTime));
 };
 
-const renderEntityAtPosition = (
+const renderEntitiesAtPosition = (
   entities: Entity[],
   currentTime: number,
   position: Position,
