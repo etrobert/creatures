@@ -24,6 +24,7 @@ const updateActions = (state: State, entityId: string): State => {
   return updateEntityById(state, entityId, (entity) => ({
     ...entity,
     ongoingAction,
+    ongoingActionStart: state.tick,
     nextActions,
   }));
 };

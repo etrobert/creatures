@@ -1,7 +1,6 @@
 import type {
   PlayerInputMessage,
   ResetActionsMessage,
-  ResetStateMessage,
   ServerMessage,
 } from "@creatures/shared/messages";
 import { clientMessageSchema } from "@creatures/shared/messages";

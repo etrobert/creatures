@@ -26,11 +26,12 @@ const createCreature = ({
   position,
   direction: "down",
   ongoingAction: null,
+  ongoingActionStart: 0,
   nextActions: [],
 });
 
 export const createState = (): State => ({
-  lastTick: 0,
+  tick: 0,
   entities: [
     createCreature({ player: "0" }),
     createCreature({
@@ -58,6 +59,7 @@ export const createFireball = (
     direction,
     id: createId(),
     ongoingAction: null,
+    ongoingActionStart: 0,
     nextActions: [{ type: "fireball:move" }],
   }) as const;
 
