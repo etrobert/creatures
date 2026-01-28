@@ -32,8 +32,8 @@ ws.onmessage = (event) => {
   switch (data.type) {
     case "state update":
       if (state === undefined) start();
-      updateActiveCreatureId(data.state);
       setState(data.state);
+      updateActiveCreatureId();
       break;
     case "assign player id":
       setActivePlayer(data.id);

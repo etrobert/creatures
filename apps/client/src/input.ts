@@ -54,6 +54,8 @@ const createAction = (creature: Creature, actionType: ActionType): Action => {
 
 function createActionOnKeyDown(event: KeyboardEvent) {
   if (state === undefined) throw new Error("state is undefined");
+  if (activeCreatureId === undefined)
+    throw new Error("activeCreatureId is undefined");
   const activeCreature = findActiveCreature(state, activeCreatureId);
 
   const getAction = () => {
@@ -118,7 +120,11 @@ function onCanvasClick(event: PointerEvent) {
 
 function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
   const getActiveCreature = () => {
-    const listActivePlayerCreatureIds = listPlayerCreatureIds(activePlayer);
+    if (state === undefined) throw new Error("state is undefined");
+    const listActivePlayerCreatureIds = listPlayerCreatureIds(
+      state,
+      activePlayer,
+    );
     switch (event.code) {
       case "Digit1":
         return listActivePlayerCreatureIds[0];
@@ -137,6 +143,14 @@ function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
 }
 
 const keyDownHandler = (event: KeyboardEvent) => {
+  switch (event.code) {
+    case "KeyN":
+      sendClientMessage({ type: "reset state" });
+      break;
+  }
+
+  if (activeCreatureId === undefined) return; // we're dead
+
   switch (event.code) {
     case "ArrowUp":
     case "ArrowLeft":
@@ -158,9 +172,6 @@ const keyDownHandler = (event: KeyboardEvent) => {
         type: "reset actions",
         creatureId: activeCreatureId,
       });
-      break;
-    case "KeyN":
-      sendClientMessage({ type: "reset state" });
       break;
     case "Tab":
       // This is used so that we don't tab out of the window
