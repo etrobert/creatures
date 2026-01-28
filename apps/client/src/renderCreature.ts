@@ -54,25 +54,22 @@ const getAnimation = (creature: Creature): Animation => {
 const imgBulbizard = new Image();
 imgBulbizard.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
 const animationBulbizard = {
-  name: "bulbizard",
   sprite: imgBulbizard,
   imgWidth: 40,
   imgHeight: 40,
   animationFrames: 6,
-};
+} satisfies Animation;
 
 const imgSalameche = new Image();
 imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
 const animationSalameche = {
-  name: "salameche",
   sprite: imgSalameche,
   imgWidth: 32,
   imgHeight: 32,
   animationFrames: 4,
-};
+} satisfies Animation;
 
 type Animation = {
-  name: string;
   sprite: HTMLImageElement;
   imgWidth: number;
   imgHeight: number;
