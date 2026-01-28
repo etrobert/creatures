@@ -16,13 +16,12 @@ export const listPlayerCreatureIds = (state: State, player: string) =>
 export const initActiveCreatureId = () => {
   if (state === undefined) throw new Error("state is undefined");
   const newActiveCreatureId = listPlayerCreatureIds(state, activePlayer)[0];
-  if (newActiveCreatureId === undefined)
-    throw new Error("no creatures for active player");
   activeCreatureId = newActiveCreatureId;
 };
 
 export const nextActiveCreature = () => {
   if (state === undefined) throw new Error("state is undefined");
+  if (activeCreatureId === undefined) return; // we're dead
   const creatureIds = listPlayerCreatureIds(state, activePlayer);
   const currentIndex = creatureIds.indexOf(activeCreatureId);
   const newIndex = (currentIndex + 1) % creatureIds.length;
@@ -32,7 +31,7 @@ export const nextActiveCreature = () => {
   activeCreatureId = newActiveCreatureId;
 };
 
-export let activeCreatureId = "0";
+export let activeCreatureId: string | undefined = "0";
 
 export const setActiveCreatureId = (newActiveCreatureId: string) =>
   (activeCreatureId = newActiveCreatureId);
@@ -41,5 +40,5 @@ export const updateActiveCreatureId = () => {
   if (state === undefined) throw new Error("state is undefined");
   if (state.entities.some((thisEntity) => thisEntity.id === activeCreatureId))
     return;
-  nextActiveCreature();
+  initActiveCreatureId();
 };
