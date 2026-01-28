@@ -21,7 +21,7 @@ const getDirectionLine = (direction: Direction) => {
 
 export const renderCreature = (creature: Creature, currentTime: number) => {
   const canvasPosition = gridToCanvas(creature.position);
-  const animation = entitiesAnimations[creature.name];
+  const animation = getAnimation(creature);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
   ctx.drawImage(
@@ -37,27 +37,57 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   );
 };
 
+const getAnimation = (creature: Creature): Animation => {
+  const entityAnimations = entitiesAnimations[creature.name];
+
+  const { ongoingAction } = creature;
+
+  if (ongoingAction === null) return entityAnimations.default;
+
+  const ongoingActionType = ongoingAction.type;
+
+  const animation = entityAnimations[ongoingActionType];
+
+  return animation === undefined ? entityAnimations.default : animation;
+};
+
 const imgBulbizard = new Image();
 imgBulbizard.src = "/sprites/animations/bulbasaur/Walk-Anim.png";
 const animationBulbizard = {
-  name: "bulbizard",
   sprite: imgBulbizard,
   imgWidth: 40,
   imgHeight: 40,
   animationFrames: 6,
-};
+} satisfies Animation;
 
 const imgSalameche = new Image();
 imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
 const animationSalameche = {
-  name: "salameche",
   sprite: imgSalameche,
   imgWidth: 32,
   imgHeight: 32,
   animationFrames: 4,
+} satisfies Animation;
+
+type Animation = {
+  sprite: HTMLImageElement;
+  imgWidth: number;
+  imgHeight: number;
+  animationFrames: number;
+};
+
+type AnimationSet = Record<string, Animation> & { default: Animation };
+
+const bulbizardAnimations: AnimationSet = {
+  attack: animationSalameche,
+  default: animationBulbizard,
+};
+
+const salamecheAnimations: AnimationSet = {
+  default: animationSalameche,
 };
 
 const entitiesAnimations = {
-  bulbizard: animationBulbizard,
-  salameche: animationSalameche,
+  bulbizard: bulbizardAnimations,
+  salameche: salamecheAnimations,
 };
