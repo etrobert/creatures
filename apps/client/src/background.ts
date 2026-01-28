@@ -16,7 +16,7 @@ const getBackgroundTile = (background: GameMap, position: Position) => {
 };
 
 const getBackgroundTilesMap = (backgroundMap: GameMap) => {
-  let backgroundTilesMap = new Array();
+  let backgroundTilesMap: GameMap = [];
   for (let yn = 0; yn < countRow * 2; yn++) {
     for (let xn = 0; xn < countColumns * 2; xn++) {
       const x = Math.floor(xn / 2);
