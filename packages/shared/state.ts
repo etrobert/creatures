@@ -50,6 +50,7 @@ const basicEntitySchema = z.object({
   position: positionSchema,
   ongoingAction: actionSchema.nullable(),
   ongoingActionStart: z.number(),
+  resetOngoingActionNextTurn: z.boolean(),
   nextActions: z.array(actionSchema),
   direction: directionSchema,
 });
