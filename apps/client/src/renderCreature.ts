@@ -24,6 +24,11 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   const animation = getAnimation(creature);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
+
+  // TODO: Fix beginning of animation on first frame
+  if (creature.ongoingAction?.type === "attack")
+    console.log(Math.floor(currentTime / frameDuration) % animationFrames);
+
   ctx.drawImage(
     animation.sprite,
     (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
@@ -60,6 +65,15 @@ const animationBulbizard = {
   animationFrames: 6,
 } satisfies Animation;
 
+const imgBulbizardAttack = new Image();
+imgBulbizardAttack.src = "/sprites/animations/bulbasaur/Attack-Anim.png";
+const animationBulbizardAttack = {
+  sprite: imgBulbizardAttack,
+  imgWidth: 64,
+  imgHeight: 72,
+  animationFrames: 11,
+} satisfies Animation;
+
 const imgSalameche = new Image();
 imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
 const animationSalameche = {
@@ -79,7 +93,7 @@ type Animation = {
 type AnimationSet = Record<string, Animation> & { default: Animation };
 
 const bulbizardAnimations: AnimationSet = {
-  attack: animationSalameche,
+  attack: animationBulbizardAttack,
   default: animationBulbizard,
 };
 
