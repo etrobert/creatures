@@ -31,10 +31,13 @@ export const applyMove = (
       creatureAtPosition !== undefined
     );
   };
-  return updateEntityById(state, creature.id, (entity) => ({
-    ...updatePosition(entity, moveAction, collision),
-    ongoingAction: null,
-  }));
+  state = updateEntityById(state, creature.id, (entity) =>
+    updatePosition(entity, moveAction, collision),
+  );
+
+  state = resetEntityOngoingAction(state, creature.id);
+
+  return state;
 };
 
 export const applyAttack = (
@@ -84,8 +87,10 @@ export const applyCharge = (state: State, entity: Entity): State => {
   state = updateEntityById(state, entity.id, (entity) => ({
     ...entity,
     position: destination,
-    ongoingAction: null,
   }));
+
+  state = resetEntityOngoingAction(state, entity.id);
+
   return state;
 };
 
