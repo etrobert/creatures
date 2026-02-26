@@ -2,7 +2,7 @@ import {
   serverMessageSchema,
   type ClientMessage,
 } from "@creatures/shared/messages";
-import { setState, state } from "./state.js";
+import { setState, setTickStart, state } from "./state.js";
 import { start } from "./index.js";
 import {
   initActiveCreatureId,
@@ -32,6 +32,11 @@ ws.onmessage = (event) => {
   switch (data.type) {
     case "state update":
       if (state === undefined) start();
+      if (state?.tick !== data.state.tick) {
+        if (typeof document.timeline.currentTime !== "number")
+          throw new Error("Incorrect currentTime");
+        setTickStart(document.timeline.currentTime);
+      }
       setState(data.state);
       updateActiveCreatureId();
       break;

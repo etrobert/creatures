@@ -5,6 +5,7 @@ import {
   type Creature,
   type Direction,
 } from "@creatures/shared/state";
+import { tickStart } from "./state.js";
 
 const getDirectionLine = (direction: Direction) => {
   switch (direction) {
@@ -25,13 +26,10 @@ export const renderCreature = (creature: Creature, currentTime: number) => {
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
 
-  // TODO: Fix beginning of animation on first frame
-  if (creature.ongoingAction?.type === "attack")
-    console.log(Math.floor(currentTime / frameDuration) % animationFrames);
-
   ctx.drawImage(
     animation.sprite,
-    (Math.floor(currentTime / frameDuration) % animationFrames) * imgWidth,
+    (Math.floor((currentTime - tickStart) / frameDuration) % animationFrames) *
+      imgWidth,
     getDirectionLine(creature.direction) * imgHeight,
     imgWidth,
     imgHeight,
