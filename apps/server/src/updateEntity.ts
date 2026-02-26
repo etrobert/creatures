@@ -12,8 +12,19 @@ import {
 import { updateEntityById } from "./actionUtilities.js";
 
 export const updateEntity = (state: State, entityId: string): State => {
+  state = resetOngoingAction(state, entityId);
   state = updateActions(state, entityId);
   return applyOngoingAction(state, entityId);
+};
+
+const resetOngoingAction = (state: State, entityId: string): State => {
+  const entity = getEntity(state, entityId);
+  if (!entity.resetOngoingActionNextTurn) return state;
+  return updateEntityById(state, entityId, (entity) => ({
+    ...entity,
+    resetOngoingActionNextTurn: false,
+    ongoingAction: null,
+  }));
 };
 
 const updateActions = (state: State, entityId: string): State => {

@@ -14,7 +14,7 @@ export const updateEntityById = (
 export const resetEntityOngoingAction = (state: State, entityId: string) =>
   updateEntityById(state, entityId, (entity) => ({
     ...entity,
-    ongoingAction: null,
+    resetOngoingActionNextTurn: true,
   }));
 
 export const dealDamageAtPosition = (

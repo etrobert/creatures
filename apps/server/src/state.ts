@@ -27,6 +27,7 @@ const createCreature = ({
   direction: "down",
   ongoingAction: null,
   ongoingActionStart: 0,
+  resetOngoingActionNextTurn: false,
   nextActions: [],
 });
 
@@ -60,6 +61,7 @@ export const createFireball = (
     id: createId(),
     ongoingAction: null,
     ongoingActionStart: 0,
+    resetOngoingActionNextTurn: false,
     nextActions: [{ type: "fireball:move" }],
   }) as const;
 
