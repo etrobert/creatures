@@ -87,6 +87,7 @@ export const applyCharge = (state: State, entity: Entity): State => {
   state = updateEntityById(state, entity.id, (entity) => ({
     ...entity,
     position: destination,
+    previousPosition: entity.position,
   }));
 
   state = resetEntityOngoingAction(state, entity.id);
