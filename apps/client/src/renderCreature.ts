@@ -72,6 +72,16 @@ const animationBulbizardAttack = {
   animationFrames: 11,
 } satisfies Animation;
 
+const imgBulbizardSwing = new Image();
+imgBulbizardSwing.src = "/sprites/animations/bulbasaur/Swing-Anim.png";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const animationBulbizardSwing = {
+  sprite: imgBulbizardSwing,
+  imgWidth: 72,
+  imgHeight: 72,
+  animationFrames: 9,
+} satisfies Animation;
+
 const imgSalameche = new Image();
 imgSalameche.src = "/sprites/animations/salameche/Walk-Anim.png";
 const animationSalameche = {
