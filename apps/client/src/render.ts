@@ -53,7 +53,7 @@ export const gridToCanvas = ({ x, y }: Position) => ({
   y: y * cellHeight + cellHeight / 2,
 });
 
-const getPosition = (creature: Creature, currentTime: number) => {
+const getCanvasPosition = (creature: Creature, currentTime: number) => {
   const canvasPosition = gridToCanvas(creature.position);
   if (creature.previousPosition === null) return canvasPosition;
   const canvasPreviousPosition = gridToCanvas(creature.previousPosition);
@@ -72,7 +72,7 @@ const renderEntity = (entity: Entity, currentTime: number) => {
   switch (entity.type) {
     case "creature":
       {
-        const canvasPosition = getPosition(entity, currentTime);
+        const canvasPosition = getCanvasPosition(entity, currentTime);
         renderCreature(entity, canvasPosition, currentTime);
         renderCreatureHealth(entity, canvasPosition);
       }
