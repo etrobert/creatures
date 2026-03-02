@@ -121,12 +121,11 @@ export const applyFireballMove = (state: State, fireball: Entity): State => {
       entities: state.entities.filter((entity) => entity.id !== fireball.id),
     };
 
-  const updatedEntities = state.entities.map((entity) =>
-    entity.id === fireball.id ? { ...entity, position: newPosition } : entity,
-  );
+  state = updateEntityById(state, fireball.id, (entity) => ({
+    ...entity,
+    position: newPosition,
+    previousPosition: fireball.position,
+  }));
 
-  return dealFireballDamage(
-    { ...state, entities: updatedEntities },
-    newPosition,
-  );
+  return dealFireballDamage(state, newPosition);
 };
