@@ -57,6 +57,7 @@ export const createFireball = (
 ): Entity =>
   ({
     type: "entity",
+    name: "fireball",
     position,
     previousPosition: null,
     direction,

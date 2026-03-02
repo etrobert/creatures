@@ -41,11 +41,14 @@ export const actionSchema = z.discriminatedUnion("type", [
   fireballMoveActionSchema,
 ]);
 
-export const creatureNameSchema = z.enum(creatureKits.map(({ name }) => name));
+const creatureNames = creatureKits.map(({ name }) => name);
+export const creatureNameSchema = z.enum(creatureNames);
+const entityNameSchema = z.enum([...creatureNames, "fireball"]);
 export type CreatureName = z.infer<typeof creatureNameSchema>;
 
 const basicEntitySchema = z.object({
   id: z.string(),
+  name: entityNameSchema,
   type: z.literal("entity"),
   position: positionSchema,
   previousPosition: positionSchema.nullable(),

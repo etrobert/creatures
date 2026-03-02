@@ -2,9 +2,9 @@ import { ctx } from "./render.js";
 import { cellWidth } from "./render.js";
 import {
   tickDuration,
-  type Creature,
   type Direction,
   type Position,
+  type Entity,
 } from "@creatures/shared/state";
 import { tickStart } from "./state.js";
 
@@ -21,12 +21,12 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
-export const renderCreature = (
-  creature: Creature,
+export const renderEntityAnimation = (
+  entity: Entity,
   canvasPosition: Position,
   currentTime: number,
 ) => {
-  const animation = getAnimation(creature);
+  const animation = getAnimation(entity);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
 
@@ -34,7 +34,7 @@ export const renderCreature = (
     animation.sprite,
     (Math.floor((currentTime - tickStart) / frameDuration) % animationFrames) *
       imgWidth,
-    getDirectionLine(creature.direction) * imgHeight,
+    getDirectionLine(entity.direction) * imgHeight,
     imgWidth,
     imgHeight,
     canvasPosition.x - (imgWidth - cellWidth) / 2,
@@ -44,7 +44,7 @@ export const renderCreature = (
   );
 };
 
-const getAnimation = (creature: Creature): Animation => {
+const getAnimation = (creature: Entity): Animation => {
   const entityAnimations = entitiesAnimations[creature.name];
 
   const { ongoingAction } = creature;
@@ -95,6 +95,15 @@ const animationSalameche = {
   animationFrames: 4,
 } satisfies Animation;
 
+const imgFireball = new Image();
+imgFireball.src = "/sprites/animations/Fireball/allFireball.png";
+const fireballAnimation = {
+  sprite: imgFireball,
+  imgWidth: 32,
+  imgHeight: 32,
+  animationFrames: 2,
+} satisfies Animation;
+
 type Animation = {
   sprite: HTMLImageElement;
   imgWidth: number;
@@ -113,7 +122,12 @@ const salamecheAnimations: AnimationSet = {
   default: animationSalameche,
 };
 
+const fireballAnimations: AnimationSet = {
+  default: fireballAnimation,
+};
+
 const entitiesAnimations = {
   bulbizard: bulbizardAnimations,
   salameche: salamecheAnimations,
+  fireball: fireballAnimations,
 };
