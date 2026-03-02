@@ -97,7 +97,7 @@ const animationSalameche = {
 } satisfies Animation;
 
 const imgFireball = new Image();
-imgSalameche.src = "/sprites/animations/Fireball/allFireball.png";
+imgFireball.src = "/sprites/animations/Fireball/allFireball.png";
 const fireballAnimation = {
   sprite: imgFireball,
   imgWidth: 32,
