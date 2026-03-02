@@ -7,6 +7,7 @@ import {
   type State,
   type Creature,
   type Entity,
+  tickDuration,
 } from "@creatures/shared/state";
 import { renderUi } from "./renderUi.js";
 import { renderCreatureHealth } from "./renderCreatureHealth.js";
@@ -17,7 +18,13 @@ import {
   updatePosition,
   isCreature,
 } from "@creatures/shared/gameLogicUtilities";
+import {
+  addPositions,
+  multiplyPosition,
+  subPositions,
+} from "@creatures/shared/positionUtilities";
 import { activePlayer } from "./activePlayerCreature.js";
+import { tickStart } from "./state.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -46,11 +53,29 @@ export const gridToCanvas = ({ x, y }: Position) => ({
   y: y * cellHeight + cellHeight / 2,
 });
 
+const getCanvasPosition = (creature: Creature, currentTime: number) => {
+  const canvasPosition = gridToCanvas(creature.position);
+  if (creature.previousPosition === null) return canvasPosition;
+  const canvasPreviousPosition = gridToCanvas(creature.previousPosition);
+  const progress = (currentTime - tickStart) / tickDuration;
+  const positionDifference = subPositions(
+    canvasPosition,
+    canvasPreviousPosition,
+  );
+  return addPositions(
+    canvasPreviousPosition,
+    multiplyPosition(positionDifference, progress),
+  );
+};
+
 const renderEntity = (entity: Entity, currentTime: number) => {
   switch (entity.type) {
     case "creature":
-      renderCreature(entity, currentTime);
-      renderCreatureHealth(entity);
+      {
+        const canvasPosition = getCanvasPosition(entity, currentTime);
+        renderCreature(entity, canvasPosition, currentTime);
+        renderCreatureHealth(entity, canvasPosition);
+      }
       break;
     default:
       renderFireball(entity, currentTime);
@@ -96,7 +121,9 @@ const renderGhostsAtPosition = (
       (ghost) =>
         ghost.position.x === position.x && ghost.position.y === position.y,
     )
-    .forEach((ghost) => renderCreature(ghost, currentTime));
+    .forEach((ghost) =>
+      renderCreature(ghost, gridToCanvas(ghost.position), currentTime),
+    );
 };
 
 const renderEntitiesAtPosition = (

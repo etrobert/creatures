@@ -48,6 +48,7 @@ export const updatePosition = <T extends Entity>(
 
   return {
     ...entity,
+    previousPosition: entity.position,
     position: newPosition,
     direction: nextAction.direction,
   };

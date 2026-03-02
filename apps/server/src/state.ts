@@ -24,6 +24,7 @@ const createCreature = ({
   health: 10,
   maxHealth: 10,
   position,
+  previousPosition: null,
   direction: "down",
   ongoingAction: null,
   ongoingActionStart: 0,
@@ -57,6 +58,7 @@ export const createFireball = (
   ({
     type: "entity",
     position,
+    previousPosition: null,
     direction,
     id: createId(),
     ongoingAction: null,

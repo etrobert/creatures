@@ -11,7 +11,14 @@ import {
 } from "./applyActions.js";
 import { updateEntityById } from "./actionUtilities.js";
 
+const resetPreviousPosition = (state: State, entityId: string): State =>
+  updateEntityById(state, entityId, (entity) => ({
+    ...entity,
+    previousPosition: null,
+  }));
+
 export const updateEntity = (state: State, entityId: string): State => {
+  state = resetPreviousPosition(state, entityId);
   state = resetOngoingAction(state, entityId);
   state = updateActions(state, entityId);
   return applyOngoingAction(state, entityId);

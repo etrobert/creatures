@@ -1,9 +1,10 @@
 import { ctx } from "./render.js";
-import { cellWidth, gridToCanvas } from "./render.js";
+import { cellWidth } from "./render.js";
 import {
   tickDuration,
   type Creature,
   type Direction,
+  type Position,
 } from "@creatures/shared/state";
 import { tickStart } from "./state.js";
 
@@ -20,8 +21,11 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
-export const renderCreature = (creature: Creature, currentTime: number) => {
-  const canvasPosition = gridToCanvas(creature.position);
+export const renderCreature = (
+  creature: Creature,
+  canvasPosition: Position,
+  currentTime: number,
+) => {
   const animation = getAnimation(creature);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
