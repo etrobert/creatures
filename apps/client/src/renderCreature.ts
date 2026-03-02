@@ -5,6 +5,7 @@ import {
   type Creature,
   type Direction,
   type Position,
+  type Entity,
 } from "@creatures/shared/state";
 import { tickStart } from "./state.js";
 
@@ -44,7 +45,7 @@ export const renderCreature = (
   );
 };
 
-const getAnimation = (creature: Creature): Animation => {
+const getAnimation = (creature: Entity): Animation => {
   const entityAnimations = entitiesAnimations[creature.name];
 
   const { ongoingAction } = creature;
@@ -95,6 +96,15 @@ const animationSalameche = {
   animationFrames: 4,
 } satisfies Animation;
 
+const imgFireball = new Image();
+imgSalameche.src = "/sprites/animations/Fireball/allFireball.png";
+const fireballAnimation = {
+  sprite: imgFireball,
+  imgWidth: 32,
+  imgHeight: 32,
+  animationFrames: 2,
+} satisfies Animation;
+
 type Animation = {
   sprite: HTMLImageElement;
   imgWidth: number;
@@ -113,7 +123,12 @@ const salamecheAnimations: AnimationSet = {
   default: animationSalameche,
 };
 
+const fireballAnimations: AnimationSet = {
+  default: fireballAnimation,
+};
+
 const entitiesAnimations = {
   bulbizard: bulbizardAnimations,
   salameche: salamecheAnimations,
+  fireball: fireballAnimations,
 };

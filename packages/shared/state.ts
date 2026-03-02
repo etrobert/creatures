@@ -46,6 +46,7 @@ export type CreatureName = z.infer<typeof creatureNameSchema>;
 
 const basicEntitySchema = z.object({
   id: z.string(),
+  name: z.string(),
   type: z.literal("entity"),
   position: positionSchema,
   previousPosition: positionSchema.nullable(),
