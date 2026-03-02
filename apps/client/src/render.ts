@@ -103,7 +103,7 @@ const getGhosts = (state: State) => {
 };
 
 const renderGhostsAtPosition = (
-  ghosts: Entity[],
+  ghosts: Creature[],
   currentTime: number,
   position: Position,
 ) => {
