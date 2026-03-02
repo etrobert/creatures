@@ -2,7 +2,6 @@ import { ctx } from "./render.js";
 import { cellWidth } from "./render.js";
 import {
   tickDuration,
-  type Creature,
   type Direction,
   type Position,
   type Entity,
@@ -22,12 +21,13 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
+// TODO: Rename
 export const renderCreature = (
-  creature: Creature,
+  entity: Entity,
   canvasPosition: Position,
   currentTime: number,
 ) => {
-  const animation = getAnimation(creature);
+  const animation = getAnimation(entity);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
 
@@ -35,7 +35,7 @@ export const renderCreature = (
     animation.sprite,
     (Math.floor((currentTime - tickStart) / frameDuration) % animationFrames) *
       imgWidth,
-    getDirectionLine(creature.direction) * imgHeight,
+    getDirectionLine(entity.direction) * imgHeight,
     imgWidth,
     imgHeight,
     canvasPosition.x - (imgWidth - cellWidth) / 2,

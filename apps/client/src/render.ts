@@ -5,13 +5,11 @@ import {
   countRow,
   type Position,
   type State,
-  type Creature,
   type Entity,
   tickDuration,
 } from "@creatures/shared/state";
 import { renderUi } from "./renderUi.js";
 import { renderCreatureHealth } from "./renderCreatureHealth.js";
-import { renderFireball } from "./renderFireball.js";
 
 import {
   outerMapCollision,
@@ -53,10 +51,10 @@ export const gridToCanvas = ({ x, y }: Position) => ({
   y: y * cellHeight + cellHeight / 2,
 });
 
-const getCanvasPosition = (creature: Creature, currentTime: number) => {
-  const canvasPosition = gridToCanvas(creature.position);
-  if (creature.previousPosition === null) return canvasPosition;
-  const canvasPreviousPosition = gridToCanvas(creature.previousPosition);
+const getCanvasPosition = (entity: Entity, currentTime: number) => {
+  const canvasPosition = gridToCanvas(entity.position);
+  if (entity.previousPosition === null) return canvasPosition;
+  const canvasPreviousPosition = gridToCanvas(entity.previousPosition);
   const progress = (currentTime - tickStart) / tickDuration;
   const positionDifference = subPositions(
     canvasPosition,
@@ -69,17 +67,9 @@ const getCanvasPosition = (creature: Creature, currentTime: number) => {
 };
 
 const renderEntity = (entity: Entity, currentTime: number) => {
-  switch (entity.type) {
-    case "creature":
-      {
-        const canvasPosition = getCanvasPosition(entity, currentTime);
-        renderCreature(entity, canvasPosition, currentTime);
-        renderCreatureHealth(entity, canvasPosition);
-      }
-      break;
-    default:
-      renderFireball(entity, currentTime);
-  }
+  const canvasPosition = getCanvasPosition(entity, currentTime);
+  renderCreature(entity, canvasPosition, currentTime);
+  if (isCreature(entity)) renderCreatureHealth(entity, canvasPosition);
 };
 
 export const render = (state: State, currentTime: number) => {
@@ -112,7 +102,7 @@ const getGhosts = (state: State) => {
 };
 
 const renderGhostsAtPosition = (
-  ghosts: Creature[],
+  ghosts: Entity[],
   currentTime: number,
   position: Position,
 ) => {
@@ -139,7 +129,7 @@ const renderEntitiesAtPosition = (
     .forEach((entity) => renderEntity(entity, currentTime));
 };
 
-export const getGhost = (creature: Creature) => {
+export const getGhost = (creature: Entity) => {
   let dummyCreature = creature;
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
