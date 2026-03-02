@@ -69,7 +69,6 @@ const getCanvasPosition = (entity: Entity, currentTime: number) => {
 
 const renderEntity = (entity: Entity, currentTime: number) => {
   const canvasPosition = getCanvasPosition(entity, currentTime);
-  // renderCreature est un nom incorrect
   renderEntityAnimation(entity, canvasPosition, currentTime);
   if (isCreature(entity)) renderCreatureHealth(entity, canvasPosition);
 };
