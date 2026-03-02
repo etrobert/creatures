@@ -7,6 +7,7 @@ import {
   type State,
   type Entity,
   tickDuration,
+  type Creature,
 } from "@creatures/shared/state";
 import { renderUi } from "./renderUi.js";
 import { renderCreatureHealth } from "./renderCreatureHealth.js";
@@ -130,7 +131,7 @@ const renderEntitiesAtPosition = (
     .forEach((entity) => renderEntity(entity, currentTime));
 };
 
-export const getGhost = (creature: Entity) => {
+export const getGhost = (creature: Creature) => {
   let dummyCreature = creature;
   while (dummyCreature.nextActions[0]) {
     const [nextAction, ...nextActions] = dummyCreature.nextActions;
