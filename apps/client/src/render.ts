@@ -7,6 +7,7 @@ import {
   type State,
   type Creature,
   type Entity,
+  tickDuration,
 } from "@creatures/shared/state";
 import { renderUi } from "./renderUi.js";
 import { renderCreatureHealth } from "./renderCreatureHealth.js";
@@ -18,6 +19,7 @@ import {
   isCreature,
 } from "@creatures/shared/gameLogicUtilities";
 import { activePlayer } from "./activePlayerCreature.js";
+import { tickStart } from "./state.js";
 
 const getCanvas = () => {
   const canvas = document.querySelector("canvas");
@@ -46,11 +48,44 @@ export const gridToCanvas = ({ x, y }: Position) => ({
   y: y * cellHeight + cellHeight / 2,
 });
 
+const subPositions = (pos1: Position, pos2: Position): Position => ({
+  x: pos1.x - pos2.x,
+  y: pos1.y - pos2.y,
+});
+
+const addPositions = (pos1: Position, pos2: Position): Position => ({
+  x: pos1.x + pos2.x,
+  y: pos1.y + pos2.y,
+});
+
+const multiplyPosition = (pos: Position, n: number): Position => ({
+  x: pos.x * n,
+  y: pos.y * n,
+});
+
+const getPosition = (creature: Creature, currentTime: number) => {
+  const canvasPosition = gridToCanvas(creature.position);
+  if (creature.previousPosition === null) return canvasPosition;
+  const canvasPreviousPosition = gridToCanvas(creature.previousPosition);
+  const progress = (currentTime - tickStart) / tickDuration;
+  const positionDifference = subPositions(
+    canvasPosition,
+    canvasPreviousPosition,
+  );
+  return addPositions(
+    canvasPreviousPosition,
+    multiplyPosition(positionDifference, progress),
+  );
+};
+
 const renderEntity = (entity: Entity, currentTime: number) => {
   switch (entity.type) {
     case "creature":
-      renderCreature(entity, currentTime);
-      renderCreatureHealth(entity);
+      {
+        const canvasPosition = getPosition(entity, currentTime);
+        renderCreature(entity, canvasPosition, currentTime);
+        renderCreatureHealth(entity);
+      }
       break;
     default:
       renderFireball(entity, currentTime);
@@ -96,7 +131,9 @@ const renderGhostsAtPosition = (
       (ghost) =>
         ghost.position.x === position.x && ghost.position.y === position.y,
     )
-    .forEach((ghost) => renderCreature(ghost, currentTime));
+    .forEach((ghost) =>
+      renderCreature(ghost, gridToCanvas(ghost.position), currentTime),
+    );
 };
 
 const renderEntitiesAtPosition = (

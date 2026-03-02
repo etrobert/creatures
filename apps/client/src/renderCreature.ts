@@ -1,5 +1,5 @@
 import { ctx } from "./render.js";
-import { cellWidth, gridToCanvas } from "./render.js";
+import { cellWidth } from "./render.js";
 import {
   tickDuration,
   type Creature,
@@ -21,38 +21,11 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
-const subPositions = (pos1: Position, pos2: Position): Position => ({
-  x: pos1.x - pos2.x,
-  y: pos1.y - pos2.y,
-});
-
-const addPositions = (pos1: Position, pos2: Position): Position => ({
-  x: pos1.x + pos2.x,
-  y: pos1.y + pos2.y,
-});
-
-const multiplyPosition = (pos: Position, n: number): Position => ({
-  x: pos.x * n,
-  y: pos.y * n,
-});
-
-const getPosition = (creature: Creature, currentTime: number) => {
-  const canvasPosition = gridToCanvas(creature.position);
-  if (creature.previousPosition === null) return canvasPosition;
-  const canvasPreviousPosition = gridToCanvas(creature.previousPosition);
-  const progress = (currentTime - tickStart) / tickDuration;
-  const positionDifference = subPositions(
-    canvasPosition,
-    canvasPreviousPosition,
-  );
-  return addPositions(
-    canvasPreviousPosition,
-    multiplyPosition(positionDifference, progress),
-  );
-};
-
-export const renderCreature = (creature: Creature, currentTime: number) => {
-  const canvasPosition = getPosition(creature, currentTime);
+export const renderCreature = (
+  creature: Creature,
+  canvasPosition: Position,
+  currentTime: number,
+) => {
   const animation = getAnimation(creature);
   const { animationFrames, imgWidth, imgHeight } = animation;
   const frameDuration = tickDuration / animationFrames;
