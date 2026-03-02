@@ -1,5 +1,5 @@
-import type { Creature } from "@creatures/shared/state";
-import { cellHeight, ctx, gridToCanvas } from "./render.js";
+import type { Creature, Position } from "@creatures/shared/state";
+import { cellHeight, ctx } from "./render.js";
 import { activeCreatureId, activePlayer } from "./activePlayerCreature.js";
 
 const getHealthAspect = (creature: Creature) => {
@@ -11,9 +11,12 @@ const getHealthAspect = (creature: Creature) => {
   return allyAspect;
 };
 
-export const renderCreatureHealth = (creature: Creature) => {
+export const renderCreatureHealth = (
+  creature: Creature,
+  canvasPosition: Position,
+) => {
   const aspect = getHealthAspect(creature);
-  renderCreatureHealthWithColor(creature, aspect);
+  renderCreatureHealthWithColor(creature, canvasPosition, aspect);
 };
 
 const getHealthSizeParams = (size: string) => {
@@ -31,9 +34,9 @@ const getHealthSizeParams = (size: string) => {
 
 const renderCreatureHealthWithColor = (
   creature: Creature,
+  canvasPosition: Position,
   aspect: { color: string; size: string },
 ) => {
-  const canvasPosition = gridToCanvas(creature.position);
   const { ySize, yPad, xMargin } = getHealthSizeParams(aspect.size);
   const greyRectangleTop = {
     x: canvasPosition.x + xMargin + 1,

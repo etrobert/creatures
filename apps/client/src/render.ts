@@ -74,7 +74,7 @@ const renderEntity = (entity: Entity, currentTime: number) => {
       {
         const canvasPosition = getPosition(entity, currentTime);
         renderCreature(entity, canvasPosition, currentTime);
-        renderCreatureHealth(entity);
+        renderCreatureHealth(entity, canvasPosition);
       }
       break;
     default:
