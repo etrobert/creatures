@@ -18,6 +18,11 @@ import {
   updatePosition,
   isCreature,
 } from "@creatures/shared/gameLogicUtilities";
+import {
+  addPositions,
+  multiplyPosition,
+  subPositions,
+} from "@creatures/shared/positionUtilities";
 import { activePlayer } from "./activePlayerCreature.js";
 import { tickStart } from "./state.js";
 
@@ -46,21 +51,6 @@ canvas.height = cellHeight * (countRow + 1);
 export const gridToCanvas = ({ x, y }: Position) => ({
   x: x * cellWidth + cellWidth / 2,
   y: y * cellHeight + cellHeight / 2,
-});
-
-const subPositions = (pos1: Position, pos2: Position): Position => ({
-  x: pos1.x - pos2.x,
-  y: pos1.y - pos2.y,
-});
-
-const addPositions = (pos1: Position, pos2: Position): Position => ({
-  x: pos1.x + pos2.x,
-  y: pos1.y + pos2.y,
-});
-
-const multiplyPosition = (pos: Position, n: number): Position => ({
-  x: pos.x * n,
-  y: pos.y * n,
 });
 
 const getPosition = (creature: Creature, currentTime: number) => {
