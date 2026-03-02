@@ -44,7 +44,8 @@ export const updatePosition = <T extends Entity>(
 ): T => {
   const newPosition = getNewPosition(entity.position, nextAction.direction);
 
-  if (collision(newPosition)) return entity;
+  if (collision(newPosition))
+    return { ...entity, direction: nextAction.direction };
 
   return {
     ...entity,
