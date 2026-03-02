@@ -21,8 +21,7 @@ const getDirectionLine = (direction: Direction) => {
   }
 };
 
-// TODO: Rename
-export const renderCreature = (
+export const renderEntityAnimation = (
   entity: Entity,
   canvasPosition: Position,
   currentTime: number,

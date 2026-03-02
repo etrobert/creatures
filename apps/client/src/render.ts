@@ -1,5 +1,5 @@
 import { renderBackground } from "./background.js";
-import { renderCreature } from "./renderCreature.js";
+import { renderEntityAnimation } from "./renderEntityAnimation.js";
 import {
   countColumns,
   countRow,
@@ -68,7 +68,8 @@ const getCanvasPosition = (entity: Entity, currentTime: number) => {
 
 const renderEntity = (entity: Entity, currentTime: number) => {
   const canvasPosition = getCanvasPosition(entity, currentTime);
-  renderCreature(entity, canvasPosition, currentTime);
+  // renderCreature est un nom incorrect
+  renderEntityAnimation(entity, canvasPosition, currentTime);
   if (isCreature(entity)) renderCreatureHealth(entity, canvasPosition);
 };
 
@@ -112,7 +113,7 @@ const renderGhostsAtPosition = (
         ghost.position.x === position.x && ghost.position.y === position.y,
     )
     .forEach((ghost) =>
-      renderCreature(ghost, gridToCanvas(ghost.position), currentTime),
+      renderEntityAnimation(ghost, gridToCanvas(ghost.position), currentTime),
     );
 };
 
