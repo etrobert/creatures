@@ -31,11 +31,11 @@ export const getNewPosition = (
 export const collisionWithMap = (map: GameMap, position: Position) =>
   outerMapCollision(position) || mapCollision(map, position);
 
-export const outerMapCollision = (positon: Position) =>
-  positon.x < 0 ||
-  positon.x >= countColumns ||
-  positon.y < 0 ||
-  positon.y >= countRow;
+export const outerMapCollision = (position: Position) =>
+  position.x < 0 ||
+  position.x >= countColumns ||
+  position.y < 0 ||
+  position.y >= countRow;
 
 export const updatePosition = <T extends Entity>(
   entity: T,
