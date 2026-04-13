@@ -9,8 +9,7 @@ export const setActivePlayer = (newActivePlayer: string) =>
 
 export let isSpectator = false;
 
-export const setSpectator = (spectator: boolean) =>
-  (isSpectator = spectator);
+export const setSpectator = (spectator: boolean) => (isSpectator = spectator);
 
 export const listPlayerCreatureIds = (state: State, player: string) =>
   state.entities
