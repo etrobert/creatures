@@ -13,9 +13,14 @@ const assignPlayerIdMessageSchema = z.object({
   id: z.string(),
 });
 
+const assignSpectatorMessageSchema = z.object({
+  type: z.literal("assign spectator"),
+});
+
 export const serverMessageSchema = z.discriminatedUnion("type", [
   stateUpdateMessageSchema,
   assignPlayerIdMessageSchema,
+  assignSpectatorMessageSchema,
 ]);
 
 export type ServerMessage = z.infer<typeof serverMessageSchema>;

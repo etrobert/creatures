@@ -7,6 +7,7 @@ import { start } from "./index.js";
 import {
   initActiveCreatureId,
   setActivePlayer,
+  setSpectator,
   updateActiveCreatureId,
 } from "./activePlayerCreature.js";
 
@@ -41,8 +42,12 @@ ws.onmessage = (event) => {
       updateActiveCreatureId();
       break;
     case "assign player id":
+      setSpectator(false);
       setActivePlayer(data.id);
       initActiveCreatureId();
+      break;
+    case "assign spectator":
+      setSpectator(true);
       break;
   }
 };
