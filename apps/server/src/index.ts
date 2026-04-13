@@ -32,16 +32,14 @@ app.use((req, res) => {
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
-const clients = new Map<WebSocket, { id: string }>();
+const clients = new Map<WebSocket, { id: string | undefined }>();
 
 const ids = ["0", "1"];
 
-const getNextId = (): string => {
-  const id = ids.find((id) =>
+const getNextId = (): string | undefined => {
+  return ids.find((id) =>
     clients.entries().every(([, client]) => client.id !== id),
   );
-  if (id === undefined) throw new Error("all ids are taken");
-  return id;
 };
 
 const sendMessage = (ws: WebSocket, message: ServerMessage) =>
@@ -50,12 +48,16 @@ const sendMessage = (ws: WebSocket, message: ServerMessage) =>
 wss.on("connection", (ws) => {
   const id = getNextId();
 
-  console.log("Client connected: ", id);
+  console.log("Client connected: ", id ?? "spectator");
 
   clients.set(ws, { id });
 
   sendMessage(ws, { type: "state update", state });
-  sendMessage(ws, { type: "assign player id", id });
+  if (id !== undefined) {
+    sendMessage(ws, { type: "assign player id", id });
+  } else {
+    sendMessage(ws, { type: "assign spectator" });
+  }
 
   ws.on("message", (data) => {
     const message = clientMessageSchema.parse(JSON.parse(data.toString()));
@@ -74,7 +76,7 @@ wss.on("connection", (ws) => {
   });
 
   ws.on("close", () => {
-    console.log("Client disconnected: ", id);
+    console.log("Client disconnected: ", id ?? "spectator");
     clients.delete(ws);
   });
 });
@@ -104,7 +106,11 @@ function processResetStateMessage() {
   for (const ws of wss.clients) {
     const client = clients.get(ws);
     if (client === undefined) throw new Error("Websocket not registered");
-    sendMessage(ws, { type: "assign player id", id: client.id });
+    if (client.id !== undefined) {
+      sendMessage(ws, { type: "assign player id", id: client.id });
+    } else {
+      sendMessage(ws, { type: "assign spectator" });
+    }
   }
 }
 

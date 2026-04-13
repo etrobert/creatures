@@ -7,6 +7,10 @@ export let activePlayer = "0";
 export const setActivePlayer = (newActivePlayer: string) =>
   (activePlayer = newActivePlayer);
 
+export let isSpectator = false;
+
+export const setSpectator = (spectator: boolean) => (isSpectator = spectator);
+
 export const listPlayerCreatureIds = (state: State, player: string) =>
   state.entities
     .filter(isCreature)
