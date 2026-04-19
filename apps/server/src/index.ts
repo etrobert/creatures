@@ -11,23 +11,19 @@ import { update } from "./update.js";
 import { tickDuration } from "@creatures/shared/state";
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import { updateEntityById } from "./actionUtilities.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const port = process.env.PORT || 3000;
 const app = express();
 
-// Serve static files from the client build
-const clientDistPath = path.join(__dirname, "../../client/dist");
-app.use(express.static(clientDistPath));
-
-// Serve index.html for all other routes (SPA support)
-app.use((req, res) => {
-  res.sendFile(path.join(clientDistPath, "index.html"));
-});
+// Serve static files from the client build (production only)
+const clientDistPath = process.env.CLIENT_DIST_PATH;
+if (clientDistPath !== undefined) {
+  app.use(express.static(clientDistPath));
+  app.use((req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+}
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
