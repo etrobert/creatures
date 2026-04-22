@@ -5,6 +5,10 @@ body {
   margin: 0;
 }
 
+canvas {
+  image-rendering: pixelated;
+}
+
 body {
   display: grid;
   place-items: center;
