@@ -2,6 +2,7 @@ import { canvas, cellWidth, cellHeight, getGhost } from "./render.js";
 import {
   activeCreatureId,
   activePlayer,
+  isSpectator,
   listPlayerCreatureIds,
   nextActiveCreature,
   setActiveCreatureId,
@@ -98,6 +99,7 @@ function createActionOnKeyDown(event: KeyboardEvent) {
 }
 
 function onCanvasClick(event: PointerEvent) {
+  if (isSpectator) return;
   if (state === undefined) throw new Error("state is undefined");
   const clickPosition = canvasToGrid({ x: event.offsetX, y: event.offsetY });
   const activeCreature = state.entities
@@ -143,6 +145,8 @@ function changeActiveCreatureOnKeyDown(event: KeyboardEvent) {
 }
 
 const keyDownHandler = (event: KeyboardEvent) => {
+  if (isSpectator) return;
+
   switch (event.code) {
     case "KeyN":
       sendClientMessage({ type: "reset state" });
