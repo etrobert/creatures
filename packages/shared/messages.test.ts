@@ -173,6 +173,8 @@ describe("serverMessageSchema", () => {
   });
 
   it("rejects a 'state update' message with a malformed state", () => {
+    // "lava" is not a valid tile (tileSchema only allows "grass" | "void"),
+    // so the nested mapSchema rejects the state.
     expect(
       serverMessageSchema.safeParse({
         type: "state update",
