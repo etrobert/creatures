@@ -40,5 +40,8 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  // vite.config.ts lives at the package root (outside rootDir) and is compiled
+  // by Vite itself, so the app typecheck only covers src.
+  "include": ["src"]
 }

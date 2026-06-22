@@ -26,7 +26,7 @@ if (clientDistPath !== undefined) {
 }
 
 const server = createServer(app);
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server, path: "/ws" });
 
 const clients = new Map<WebSocket, { id: string }>();
 
