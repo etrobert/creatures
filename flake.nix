@@ -6,7 +6,7 @@
   };
 
   outputs =
-    { nixpkgs, ... }:
+    { self, nixpkgs, ... }:
     let
       systems = [
         "x86_64-linux"
@@ -42,6 +42,63 @@
           '';
         };
       });
+
+      # Self-contained deployment: runs the server as a systemd unit and exposes
+      # it through Caddy. The domain is a consumer option (not hardcoded), so the
+      # project isn't bound to any one host. A single `serverPort` feeds both
+      # the server's SERVER_PORT and Caddy's reverse-proxy target, so the two
+      # can't drift.
+      nixosModules.default =
+        {
+          config,
+          lib,
+          pkgs,
+          ...
+        }:
+        let
+          inherit (pkgs.stdenv.hostPlatform) system;
+          cfg = config.services.creatures;
+        in
+        {
+          options.services.creatures = {
+            enable = lib.mkEnableOption "the Creatures game server";
+
+            hostName = lib.mkOption {
+              type = lib.types.str;
+              example = "creatures.example.com";
+              description = "Domain Caddy serves Creatures on.";
+            };
+
+            serverPort = lib.mkOption {
+              type = lib.types.port;
+              default = 3000;
+              description = ''
+                Port the server listens on and that Caddy reverse-proxies to.
+              '';
+            };
+          };
+
+          config = lib.mkIf cfg.enable {
+            systemd.services.creatures = {
+              description = "Creatures server";
+              wantedBy = [ "multi-user.target" ];
+              after = [ "network.target" ];
+              environment.SERVER_PORT = toString cfg.serverPort;
+              serviceConfig = {
+                ExecStart = "${self.packages.${system}.default}/bin/creatures-server";
+                Restart = "on-failure";
+                DynamicUser = true;
+              };
+            };
+
+            services.caddy = {
+              enable = true;
+              virtualHosts.${cfg.hostName}.extraConfig = /* caddy */ ''
+                reverse_proxy localhost:${toString cfg.serverPort}
+              '';
+            };
+          };
+        };
 
       devShells = forEachSystem (pkgs: {
         default = pkgs.mkShell {
