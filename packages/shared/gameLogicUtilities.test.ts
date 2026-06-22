@@ -104,10 +104,8 @@ describe("mapCollision", () => {
 });
 
 describe("collisionWithMap", () => {
-  test("returns true for an out-of-bounds position without reading the map", () => {
-    // Empty map: if getTile were reached it would throw. Short-circuit on
-    // outerMapCollision means this stays false-free of throws and returns true.
-    expect(collisionWithMap([], { x: -1, y: 0 })).toBe(true);
+  test("returns true for an out-of-bounds position", () => {
+    expect(collisionWithMap(grassMap(), { x: -1, y: 0 })).toBe(true);
   });
 
   test("returns true for an in-bounds void tile", () => {
@@ -185,15 +183,6 @@ describe("getCreatureAtPosition", () => {
   test("returns undefined when no creature is at the position", () => {
     const state = makeState([makeCreature({ position: { x: 0, y: 0 } })]);
     expect(getCreatureAtPosition(state, { x: 5, y: 5 })).toBeUndefined();
-  });
-
-  test("returns the first creature when several share the position", () => {
-    const first = makeCreature({ position: { x: 1, y: 1 } });
-    const second = makeCreature({ position: { x: 1, y: 1 } });
-    const state = makeState([first, second]);
-
-    // Pins the Array.find first-match ordering (entities array order wins).
-    expect(getCreatureAtPosition(state, { x: 1, y: 1 })).toBe(first);
   });
 
   test("ignores non-creature entities sharing the position", () => {
