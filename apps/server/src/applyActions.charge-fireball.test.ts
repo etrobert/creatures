@@ -160,6 +160,60 @@ describe("applyCharge", () => {
     ).toBe(9);
   });
 
+  test("stops short when the destination tile is occupied by a creature", () => {
+    const charger = createTestCreature({
+      id: "charger",
+      position: { x: 1, y: 1 },
+      direction: "right",
+    });
+    // Occupies the natural 3-tile destination (4,1), so the charge lands on
+    // (3,1) instead — exercising the creature-occupancy branch of
+    // isValidChargeDestination (distinct from the void branch above).
+    const occupant = createTestCreature({
+      id: "occupant",
+      name: "salameche",
+      position: { x: 4, y: 1 },
+      health: 10,
+    });
+    const state: State = {
+      tick: 0,
+      entities: [charger, occupant],
+      map: buildMap(),
+    };
+
+    const result = applyCharge(state, charger);
+
+    const movedCharger = result.entities.find((e) => e.id === "charger")!;
+    expect(movedCharger.position).toEqual({ x: 3, y: 1 });
+    // The blocking creature sits beyond the landing tile, so it takes no damage.
+    expect(
+      (result.entities.find((e) => e.id === "occupant") as Creature).health,
+    ).toBe(10);
+  });
+
+  test("kills and removes a path creature reduced to 0 health", () => {
+    const charger = createTestCreature({
+      id: "charger",
+      position: { x: 1, y: 1 },
+      direction: "right",
+    });
+    const victim = createTestCreature({
+      id: "victim",
+      name: "salameche",
+      position: { x: 2, y: 1 },
+      health: 1,
+    });
+    const state: State = {
+      tick: 0,
+      entities: [charger, victim],
+      map: buildMap(),
+    };
+
+    const result = applyCharge(state, charger);
+
+    expect(result.entities.some((e) => e.id === "victim")).toBe(false);
+  });
+
   test("does not move and only resets the action when blocked immediately", () => {
     const charger = createTestCreature({
       id: "charger",
