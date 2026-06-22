@@ -241,6 +241,15 @@ describe("getCreatureAtPosition", () => {
     expect(getCreatureAtPosition(state, { x: 5, y: 5 })).toBeUndefined();
   });
 
+  test("returns the first creature when several share the position", () => {
+    const first = makeCreature({ position: { x: 1, y: 1 } });
+    const second = makeCreature({ position: { x: 1, y: 1 } });
+    const state = makeState([first, second]);
+
+    // Pins the Array.find first-match ordering (entities array order wins).
+    expect(getCreatureAtPosition(state, { x: 1, y: 1 })).toBe(first);
+  });
+
   test("ignores non-creature entities sharing the position", () => {
     const entity = makeEntity({ position: { x: 2, y: 2 } });
     const state = makeState([entity]);
