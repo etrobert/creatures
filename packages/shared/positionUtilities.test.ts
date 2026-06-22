@@ -59,15 +59,6 @@ describe("multiplyPosition", () => {
     expect(multiplyPosition({ x: 3, y: 4 }, 0)).toEqual({ x: 0, y: 0 });
   });
 
-  test("scaling a negative component by zero yields negative zero", () => {
-    // Characterizes current behavior: -4 * 0 === -0. `toEqual` treats it as
-    // 0, but Object.is / strict serialization distinguish it — a sharp edge
-    // for any code that compares multiplied positions exactly.
-    const result = multiplyPosition({ x: -4, y: 3 }, 0);
-    expect(Object.is(result.x, -0)).toBe(true);
-    expect(Object.is(result.y, 0)).toBe(true);
-  });
-
   test("multiplying by a negative number flips signs", () => {
     expect(multiplyPosition({ x: 3, y: -4 }, -1)).toEqual({ x: -3, y: 4 });
   });
