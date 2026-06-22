@@ -10,10 +10,11 @@ import {
   updateActiveCreatureId,
 } from "./activePlayerCreature.js";
 
-// WebSocket connection: always same-origin at /ws.
+// WebSocket connection: always same-origin at /ws, in both dev and prod.
 // In production the backend serves the static files and handles /ws directly.
-// In development Vite proxies /ws to the backend (see vite.config.ts), so the
-// client doesn't need to know the backend's port.
+// In development Vite proxies /ws to the backend (see vite.config.ts). Either
+// way the browser bundle stays port-agnostic — the backend port lives only in
+// dev tooling (vite.config.ts), never in shipped client code.
 const getWebSocketUrl = () => {
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   return `${protocol}//${window.location.host}/ws`;
