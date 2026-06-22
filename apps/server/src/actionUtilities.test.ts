@@ -59,6 +59,17 @@ const makeState = (entities: Entity[]): State => ({
   map: [],
 });
 
+// Locate a creature by id and narrow it from the Entity union without a type
+// assertion; throws if it is missing or not a creature, which fails the test
+// with a clear message instead of a silent `undefined`.
+const findCreature = (state: State, id: string): Creature => {
+  const entity = state.entities.find((e) => e.id === id);
+  if (entity?.type !== "creature") {
+    throw new Error(`expected a creature with id "${id}"`);
+  }
+  return entity;
+};
+
 describe("updateEntityById", () => {
   it("applies the update fn only to the matching entity", () => {
     const a = makeCreature("a", { x: 0, y: 0 }, 50);
@@ -148,9 +159,7 @@ describe("dealDamageAtPosition", () => {
 
     const result = dealDamageAtPosition(state, { x: 2, y: 3 }, 20);
 
-    const survivor = result.entities.find((e) => e.id === "c");
-    expect(survivor?.type).toBe("creature");
-    expect((survivor as Creature).health).toBe(30);
+    expect(findCreature(result, "c").health).toBe(30);
   });
 
   it("removes a creature whose health drops to exactly 0 (death)", () => {
@@ -178,9 +187,7 @@ describe("dealDamageAtPosition", () => {
 
     const result = dealDamageAtPosition(state, { x: 2, y: 3 }, 20);
 
-    expect((result.entities.find((e) => e.id === "c") as Creature).health).toBe(
-      1,
-    );
+    expect(findCreature(result, "c").health).toBe(1);
   });
 
   it("sweeps out an already-dead creature anywhere, not just at the damaged tile", () => {
@@ -193,9 +200,7 @@ describe("dealDamageAtPosition", () => {
     // The death filter runs over every creature, not only those at the damaged
     // position, so a creature already at <= 0 health elsewhere is removed too.
     expect(result.entities.find((e) => e.id === "dead")).toBeUndefined();
-    expect(
-      (result.entities.find((e) => e.id === "target") as Creature).health,
-    ).toBe(30);
+    expect(findCreature(result, "target").health).toBe(30);
   });
 
   it("leaves creatures at other positions untouched", () => {
@@ -205,9 +210,7 @@ describe("dealDamageAtPosition", () => {
 
     const result = dealDamageAtPosition(state, { x: 2, y: 3 }, 20);
 
-    expect(
-      (result.entities.find((e) => e.id === "target") as Creature).health,
-    ).toBe(30);
+    expect(findCreature(result, "target").health).toBe(30);
     expect(result.entities.find((e) => e.id === "bystander")).toBe(bystander);
   });
 
@@ -218,12 +221,8 @@ describe("dealDamageAtPosition", () => {
 
     const result = dealDamageAtPosition(state, { x: 1, y: 1 }, 15);
 
-    expect(
-      (result.entities.find((e) => e.id === "first") as Creature).health,
-    ).toBe(35);
-    expect(
-      (result.entities.find((e) => e.id === "second") as Creature).health,
-    ).toBe(15);
+    expect(findCreature(result, "first").health).toBe(35);
+    expect(findCreature(result, "second").health).toBe(15);
   });
 
   it("does not damage or remove a non-creature entity at the same position", () => {
@@ -235,9 +234,7 @@ describe("dealDamageAtPosition", () => {
 
     const resultFireball = result.entities.find((e) => e.id === "f");
     expect(resultFireball).toBe(fireball);
-    expect((result.entities.find((e) => e.id === "c") as Creature).health).toBe(
-      30,
-    );
+    expect(findCreature(result, "c").health).toBe(30);
   });
 
   it("keeps a non-creature entity even when a co-located creature dies", () => {
@@ -259,8 +256,6 @@ describe("dealDamageAtPosition", () => {
 
     expect(result).not.toBe(state);
     expect(result.entities).not.toBe(state.entities);
-    expect(state.entities[0] && (state.entities[0] as Creature).health).toBe(
-      50,
-    );
+    expect(findCreature(state, "c").health).toBe(50);
   });
 });
