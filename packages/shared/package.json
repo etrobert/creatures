@@ -6,7 +6,8 @@
     "./messages": "./messages.ts",
     "./creatureKits": "./creatureKits.ts",
     "./state": "./state.ts",
-    "./gameLogicUtilities": "./gameLogicUtilities.ts"
+    "./gameLogicUtilities": "./gameLogicUtilities.ts",
+    "./testHelpers": "./testHelpers.ts"
   },
   "dependencies": {
     "zod": "^4.3.5"

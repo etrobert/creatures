@@ -5,6 +5,7 @@ import {
   type Entity,
   type GameMap,
   type MoveAction,
+  type Position,
   type State,
 } from "./state.js";
 
@@ -57,9 +58,18 @@ export const makeState = (entities: Entity[], map: GameMap = []): State => ({
   map,
 });
 
+// A full-grid map (countColumns x countRow) that is all grass except for the
+// given void tiles.
+export const buildMap = (voids: Position[] = []): GameMap => {
+  const map: GameMap = new Array<GameMap[number]>(countColumns * countRow).fill(
+    "grass",
+  );
+  for (const { x, y } of voids) map[x + y * countColumns] = "void";
+  return map;
+};
+
 // A full grass map covering the whole grid (countColumns x countRow).
-export const grassMap = (): GameMap =>
-  new Array<"grass">(countColumns * countRow).fill("grass");
+export const grassMap = (): GameMap => buildMap();
 
 export const move = (direction: MoveAction["direction"]): MoveAction => ({
   type: "move",
