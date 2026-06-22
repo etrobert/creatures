@@ -104,7 +104,7 @@
       devShells = forEachSystem (pkgs: {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            nodejs_24
+            nodejs_26
             playwright-test
           ];
 
