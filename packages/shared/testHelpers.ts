@@ -75,3 +75,8 @@ export const move = (direction: MoveAction["direction"]): MoveAction => ({
   type: "move",
   direction,
 });
+
+// Locate an entity by name. Useful when a test cannot reference an entity by
+// id — e.g. one spawned internally by the code under test.
+export const findByName = (state: State, name: string): Entity | undefined =>
+  state.entities.find((entity) => entity.name === name);
