@@ -1,127 +1,72 @@
 import { describe, expect, test } from "vitest";
-import { applyFireball, applyFireballMove } from "./applyActions.js";
+
+import { findActiveCreature } from "@creatures/shared/gameLogicUtilities";
 import {
-  countColumns,
-  countRow,
-  type Creature,
-  type Entity,
-  type GameMap,
-  type Position,
-  type State,
-} from "@creatures/shared/state";
+  buildMap,
+  makeCreature,
+  makeEntity,
+  makeState,
+} from "@creatures/shared/testHelpers";
+import { countColumns, type Entity, type State } from "@creatures/shared/state";
+
+import { applyFireball, applyFireballMove } from "./applyActions.js";
 
 // Characterization tests for the fireball actions. They pin the CURRENT
 // behavior of applyFireball / applyFireballMove; they do not assert what the
-// code "should" do. Helpers are kept local to this file on purpose.
+// code "should" do.
 
-const buildMap = (voids: Position[] = []): GameMap => {
-  const map: GameMap = new Array(countColumns * countRow).fill("grass");
-  for (const { x, y } of voids) map[x + y * countColumns] = "void";
-  return map;
-};
-
-const createTestCreature = (overrides: Partial<Creature> = {}): Creature => ({
-  id: "creature",
-  name: "bulbizard",
-  type: "creature",
-  player: "0",
-  health: 10,
-  maxHealth: 10,
-  position: { x: 0, y: 0 },
-  previousPosition: null,
-  direction: "down",
-  ongoingAction: null,
-  ongoingActionStart: 0,
-  resetOngoingActionNextTurn: false,
-  nextActions: [],
-  ...overrides,
-});
-
-// A fireball is the non-creature member of the Entity union. Typing the helper
-// against that member (rather than the whole union) lets the object literal and
-// the `Partial` overrides check directly, without an `as Entity` assertion.
-type BasicEntity = Extract<Entity, { type: "entity" }>;
-
-const createTestFireball = (
-  overrides: Partial<BasicEntity> = {},
-): BasicEntity => ({
-  id: "fireball",
-  name: "fireball",
-  type: "entity",
-  position: { x: 0, y: 0 },
-  previousPosition: null,
-  direction: "right",
-  ongoingAction: null,
-  ongoingActionStart: 0,
-  resetOngoingActionNextTurn: false,
-  nextActions: [{ type: "fireball:move" }],
-  ...overrides,
-});
-
+// Locate the spawned fireball by name: applyFireball creates it internally, so
+// the test has no id to look it up by.
 const findByName = (state: State, name: string): Entity | undefined =>
   state.entities.find((entity) => entity.name === name);
 
-// Locate a creature by id and narrow it from the Entity union without a type
-// assertion; throws if it is missing or not a creature, which fails the test
-// with a clear message instead of a silent `undefined`.
-const findCreature = (state: State, id: string): Creature => {
-  const entity = state.entities.find((e) => e.id === id);
-  if (entity?.type !== "creature") {
-    throw new Error(`expected a creature with id "${id}"`);
-  }
-  return entity;
-};
-
 describe("applyFireball", () => {
   test("waits (returns state unchanged) on the warmup tick", () => {
-    const caster = createTestCreature({
+    const caster = makeCreature({
       id: "caster",
       position: { x: 3, y: 3 },
       direction: "right",
       ongoingActionStart: 5,
     });
-    const victim = createTestCreature({
+    const victim = makeCreature({
       id: "victim",
       name: "salameche",
       position: { x: 4, y: 3 },
       health: 10,
     });
+    // tick (5) <= ongoingActionStart (5) - 1 + warmupDuration (1) => waiting.
     const state: State = {
-      // tick (5) <= ongoingActionStart (5) - 1 + warmupDuration (1) => waiting.
+      ...makeState([caster, victim], buildMap()),
       tick: 5,
-      entities: [caster, victim],
-      map: buildMap(),
     };
 
     const result = applyFireball(state, caster);
 
     expect(result).toBe(state);
     expect(findByName(result, "fireball")).toBeUndefined();
-    expect(findCreature(result, "victim").health).toBe(10);
+    expect(findActiveCreature(result, "victim").health).toBe(10);
     expect(
-      result.entities.find((e) => e.id === "caster")!
-        .resetOngoingActionNextTurn,
+      findActiveCreature(result, "caster").resetOngoingActionNextTurn,
     ).toBe(false);
   });
 
   test("spawns a fireball ahead, damages that tile, and resets the action once past warmup", () => {
-    const caster = createTestCreature({
+    const caster = makeCreature({
       id: "caster",
       position: { x: 3, y: 3 },
       direction: "right",
       ongoingActionStart: 5,
     });
-    const victim = createTestCreature({
+    const victim = makeCreature({
       id: "victim",
       name: "salameche",
       position: { x: 4, y: 3 },
       health: 10,
     });
+    // tick (6) > ongoingActionStart (5) => fires.
     const state: State = {
-      // tick (6) > ongoingActionStart (5) => fires.
+      ...makeState([caster, victim], buildMap()),
       tick: 6,
-      entities: [caster, victim],
-      map: buildMap(),
     };
 
     const result = applyFireball(state, caster);
@@ -133,10 +78,9 @@ describe("applyFireball", () => {
     expect(fireball.position).toEqual({ x: 4, y: 3 });
     expect(fireball.direction).toBe("right");
 
-    expect(findCreature(result, "victim").health).toBe(9);
+    expect(findActiveCreature(result, "victim").health).toBe(9);
     expect(
-      result.entities.find((e) => e.id === "caster")!
-        .resetOngoingActionNextTurn,
+      findActiveCreature(result, "caster").resetOngoingActionNextTurn,
     ).toBe(true);
 
     // The fireball is appended at the end of the entities array.
@@ -146,43 +90,35 @@ describe("applyFireball", () => {
 
 describe("applyFireballMove", () => {
   test("moves one tile in its direction, recording previousPosition and damaging the new tile", () => {
-    const fireball = createTestFireball({
+    const fireball = makeEntity({
       id: "fb",
       position: { x: 3, y: 3 },
       direction: "right",
     });
-    const victim = createTestCreature({
+    const victim = makeCreature({
       id: "victim",
       name: "salameche",
       position: { x: 4, y: 3 },
       health: 10,
     });
-    const state: State = {
-      tick: 0,
-      entities: [fireball, victim],
-      map: buildMap(),
-    };
+    const state = makeState([fireball, victim], buildMap());
 
     const result = applyFireballMove(state, fireball);
 
     const movedFireball = result.entities.find((e) => e.id === "fb")!;
     expect(movedFireball.position).toEqual({ x: 4, y: 3 });
     expect(movedFireball.previousPosition).toEqual({ x: 3, y: 3 });
-    expect(findCreature(result, "victim").health).toBe(9);
+    expect(findActiveCreature(result, "victim").health).toBe(9);
   });
 
   test("is removed from entities when the next tile is off the map", () => {
-    const fireball = createTestFireball({
+    const fireball = makeEntity({
       id: "fb",
       // x = countColumns - 1: moving right steps off the map.
       position: { x: countColumns - 1, y: 3 },
       direction: "right",
     });
-    const state: State = {
-      tick: 0,
-      entities: [fireball],
-      map: buildMap(),
-    };
+    const state = makeState([fireball], buildMap());
 
     const result = applyFireballMove(state, fireball);
 
@@ -193,16 +129,12 @@ describe("applyFireballMove", () => {
   test("a void tile does NOT stop the fireball (only off-map collisions remove it)", () => {
     // applyFireballMove uses outerMapCollision, not collisionWithMap, so the
     // fireball moves onto a void tile instead of being destroyed.
-    const fireball = createTestFireball({
+    const fireball = makeEntity({
       id: "fb",
       position: { x: 3, y: 3 },
       direction: "right",
     });
-    const state: State = {
-      tick: 0,
-      entities: [fireball],
-      map: buildMap([{ x: 4, y: 3 }]),
-    };
+    const state = makeState([fireball], buildMap([{ x: 4, y: 3 }]));
 
     const result = applyFireballMove(state, fireball);
 
