@@ -13,7 +13,9 @@ import express from "express";
 import path from "path";
 import { updateEntityById } from "./actionUtilities.js";
 
-const port = process.env.PORT || 3000;
+// SERVER_PORT is the dev knob (set by the root `dev` script, shared with Vite's
+// proxy target); PORT is the conventional name production sets.
+const port = process.env.SERVER_PORT || process.env.PORT || 3000;
 const app = express();
 
 // Serve static files from the client build (production only)
