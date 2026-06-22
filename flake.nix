@@ -47,7 +47,15 @@
         default = pkgs.mkShell {
           packages = with pkgs; [
             nodejs_24
+            playwright-test
           ];
+
+          # Use the NixOS-compatible browsers from nixpkgs instead of letting
+          # Playwright download its own (those binaries don't run on NixOS).
+          # playwright-test and playwright-driver.browsers resolve from the same
+          # pinned nixpkgs, so the CLI and browser revisions stay in sync.
+          PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+          PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "1";
 
           shellHook = /* bash */ ''
             echo "Creatures dev shell ready. Use npm install, npm run dev, or npm run build."
