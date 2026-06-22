@@ -18,6 +18,8 @@
     "typecheck": "npm run typecheck:client && npm run typecheck:server",
     "typecheck:client": "npm run typecheck --workspace=@creatures/client",
     "typecheck:server": "npm run typecheck --workspace=@creatures/server",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "npm run format --workspace=@creatures/client",
     "lint": "eslint ."
   },
@@ -29,6 +31,7 @@
     "@eslint/js": "^10.0.1",
     "concurrently": "^9.2.1",
     "eslint": "^10.2.0",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.54.0",
+    "vitest": "^4.1.9"
   }
 }
