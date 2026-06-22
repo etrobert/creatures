@@ -1,6 +1,7 @@
+---
 name: Type Check
 
-on:
+"on":
   push:
     branches: [main]
   pull_request:
@@ -16,7 +17,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "26"
 
       - name: Install Dependencies
         run: npm install
