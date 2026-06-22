@@ -36,6 +36,17 @@ const createTestCreature = (overrides: Partial<Creature> = {}): Creature => ({
   ...overrides,
 });
 
+// Locate a creature by id and narrow it from the Entity union without a type
+// assertion; throws if it is missing or not a creature, which fails the test
+// with a clear message instead of a silent `undefined`.
+const findCreature = (state: State, id: string): Creature => {
+  const entity = state.entities.find((e) => e.id === id);
+  if (entity?.type !== "creature") {
+    throw new Error(`expected a creature with id "${id}"`);
+  }
+  return entity;
+};
+
 describe("applyCharge", () => {
   test("charges the full 3 tiles ahead, damaging tiles passed through but not the destination", () => {
     const charger = createTestCreature({
@@ -69,12 +80,8 @@ describe("applyCharge", () => {
     expect(movedCharger.resetOngoingActionNextTurn).toBe(true);
 
     // Both tiles passed through take 1 damage; the destination tile is empty.
-    const damaged1 = result.entities.find(
-      (e) => e.id === "passed1",
-    ) as Creature;
-    const damaged2 = result.entities.find(
-      (e) => e.id === "passed2",
-    ) as Creature;
+    const damaged1 = findCreature(result, "passed1");
+    const damaged2 = findCreature(result, "passed2");
     expect(damaged1.health).toBe(9);
     expect(damaged2.health).toBe(9);
   });
@@ -102,9 +109,7 @@ describe("applyCharge", () => {
 
     const movedCharger = result.entities.find((e) => e.id === "charger")!;
     expect(movedCharger.position).toEqual({ x: 4, y: 1 });
-    expect(
-      (result.entities.find((e) => e.id === "blocker") as Creature).health,
-    ).toBe(9);
+    expect(findCreature(result, "blocker").health).toBe(9);
   });
 
   test("stops at the farthest valid tile when the destination tile is void", () => {
@@ -131,9 +136,7 @@ describe("applyCharge", () => {
     expect(movedCharger.position).toEqual({ x: 3, y: 1 });
     expect(movedCharger.previousPosition).toEqual({ x: 1, y: 1 });
     // Only the single tile passed through is damaged.
-    expect(
-      (result.entities.find((e) => e.id === "passed") as Creature).health,
-    ).toBe(9);
+    expect(findCreature(result, "passed").health).toBe(9);
   });
 
   test("stops short when the destination tile is occupied by a creature", () => {
@@ -162,9 +165,7 @@ describe("applyCharge", () => {
     const movedCharger = result.entities.find((e) => e.id === "charger")!;
     expect(movedCharger.position).toEqual({ x: 3, y: 1 });
     // The blocking creature sits beyond the landing tile, so it takes no damage.
-    expect(
-      (result.entities.find((e) => e.id === "occupant") as Creature).health,
-    ).toBe(10);
+    expect(findCreature(result, "occupant").health).toBe(10);
   });
 
   test("kills and removes a path creature reduced to 0 health", () => {
