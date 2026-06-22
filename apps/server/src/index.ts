@@ -13,7 +13,9 @@ import express from "express";
 import path from "path";
 import { updateEntityById } from "./actionUtilities.js";
 
-const port = process.env.PORT || 3000;
+// SERVER_PORT is set by the root `dev` script and shared with Vite's proxy
+// target so the two can't drift; defaults to 3000 (also the prod default).
+const port = process.env.SERVER_PORT || 3000;
 const app = express();
 
 // Serve static files from the client build (production only)
@@ -26,7 +28,7 @@ if (clientDistPath !== undefined) {
 }
 
 const server = createServer(app);
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server, path: "/ws" });
 
 const clients = new Map<WebSocket, { id: string }>();
 

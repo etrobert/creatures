@@ -40,5 +40,10 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  // Scope the typecheck (`tsc --noEmit`) to src. vite.config.ts sits at the
+  // package root, outside rootDir (./src) — including it would make tsc error
+  // ("not under rootDir"). Vite loads and transpiles its own config via esbuild,
+  // so it doesn't need to be in the app's tsc program.
+  "include": ["src"]
 }
