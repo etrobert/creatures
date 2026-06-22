@@ -172,6 +172,32 @@ describe("dealDamageAtPosition", () => {
     expect(result.entities.find((e) => e.id === "c")).toBeUndefined();
   });
 
+  it("keeps a creature left at exactly 1 health", () => {
+    const creature = makeCreature("c", { x: 2, y: 3 }, 21);
+    const state = makeState([creature]);
+
+    const result = dealDamageAtPosition(state, { x: 2, y: 3 }, 20);
+
+    expect((result.entities.find((e) => e.id === "c") as Creature).health).toBe(
+      1,
+    );
+  });
+
+  it("sweeps out an already-dead creature anywhere, not just at the damaged tile", () => {
+    const target = makeCreature("target", { x: 2, y: 3 }, 50);
+    const alreadyDead = makeCreature("dead", { x: 8, y: 0 }, 0);
+    const state = makeState([target, alreadyDead]);
+
+    const result = dealDamageAtPosition(state, { x: 2, y: 3 }, 20);
+
+    // The death filter runs over every creature, not only those at the damaged
+    // position, so a creature already at <= 0 health elsewhere is removed too.
+    expect(result.entities.find((e) => e.id === "dead")).toBeUndefined();
+    expect(
+      (result.entities.find((e) => e.id === "target") as Creature).health,
+    ).toBe(30);
+  });
+
   it("leaves creatures at other positions untouched", () => {
     const target = makeCreature("target", { x: 2, y: 3 }, 50);
     const bystander = makeCreature("bystander", { x: 4, y: 4 }, 50);
@@ -209,7 +235,6 @@ describe("dealDamageAtPosition", () => {
 
     const resultFireball = result.entities.find((e) => e.id === "f");
     expect(resultFireball).toBe(fireball);
-    expect(resultFireball).toBeDefined();
     expect((result.entities.find((e) => e.id === "c") as Creature).health).toBe(
       30,
     );
