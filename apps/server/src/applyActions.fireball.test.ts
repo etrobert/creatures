@@ -37,23 +37,40 @@ const createTestCreature = (overrides: Partial<Creature> = {}): Creature => ({
   ...overrides,
 });
 
-const createTestFireball = (overrides: Partial<Entity> = {}): Entity =>
-  ({
-    id: "fireball",
-    name: "fireball",
-    type: "entity",
-    position: { x: 0, y: 0 },
-    previousPosition: null,
-    direction: "right",
-    ongoingAction: null,
-    ongoingActionStart: 0,
-    resetOngoingActionNextTurn: false,
-    nextActions: [{ type: "fireball:move" }],
-    ...overrides,
-  }) as Entity;
+// A fireball is the non-creature member of the Entity union. Typing the helper
+// against that member (rather than the whole union) lets the object literal and
+// the `Partial` overrides check directly, without an `as Entity` assertion.
+type BasicEntity = Extract<Entity, { type: "entity" }>;
+
+const createTestFireball = (
+  overrides: Partial<BasicEntity> = {},
+): BasicEntity => ({
+  id: "fireball",
+  name: "fireball",
+  type: "entity",
+  position: { x: 0, y: 0 },
+  previousPosition: null,
+  direction: "right",
+  ongoingAction: null,
+  ongoingActionStart: 0,
+  resetOngoingActionNextTurn: false,
+  nextActions: [{ type: "fireball:move" }],
+  ...overrides,
+});
 
 const findByName = (state: State, name: string): Entity | undefined =>
   state.entities.find((entity) => entity.name === name);
+
+// Locate a creature by id and narrow it from the Entity union without a type
+// assertion; throws if it is missing or not a creature, which fails the test
+// with a clear message instead of a silent `undefined`.
+const findCreature = (state: State, id: string): Creature => {
+  const entity = state.entities.find((e) => e.id === id);
+  if (entity?.type !== "creature") {
+    throw new Error(`expected a creature with id "${id}"`);
+  }
+  return entity;
+};
 
 describe("applyFireball", () => {
   test("waits (returns state unchanged) on the warmup tick", () => {
@@ -80,9 +97,7 @@ describe("applyFireball", () => {
 
     expect(result).toBe(state);
     expect(findByName(result, "fireball")).toBeUndefined();
-    expect(
-      (result.entities.find((e) => e.id === "victim") as Creature).health,
-    ).toBe(10);
+    expect(findCreature(result, "victim").health).toBe(10);
     expect(
       result.entities.find((e) => e.id === "caster")!
         .resetOngoingActionNextTurn,
@@ -118,9 +133,7 @@ describe("applyFireball", () => {
     expect(fireball.position).toEqual({ x: 4, y: 3 });
     expect(fireball.direction).toBe("right");
 
-    expect(
-      (result.entities.find((e) => e.id === "victim") as Creature).health,
-    ).toBe(9);
+    expect(findCreature(result, "victim").health).toBe(9);
     expect(
       result.entities.find((e) => e.id === "caster")!
         .resetOngoingActionNextTurn,
@@ -155,9 +168,7 @@ describe("applyFireballMove", () => {
     const movedFireball = result.entities.find((e) => e.id === "fb")!;
     expect(movedFireball.position).toEqual({ x: 4, y: 3 });
     expect(movedFireball.previousPosition).toEqual({ x: 3, y: 3 });
-    expect(
-      (result.entities.find((e) => e.id === "victim") as Creature).health,
-    ).toBe(9);
+    expect(findCreature(result, "victim").health).toBe(9);
   });
 
   test("is removed from entities when the next tile is off the map", () => {
