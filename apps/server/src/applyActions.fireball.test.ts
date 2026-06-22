@@ -3,22 +3,14 @@ import { describe, expect, test } from "vitest";
 import { findActiveCreature } from "@creatures/shared/gameLogicUtilities";
 import {
   buildMap,
+  findByName,
   makeCreature,
   makeEntity,
   makeState,
 } from "@creatures/shared/testHelpers";
-import { countColumns, type Entity, type State } from "@creatures/shared/state";
+import { countColumns, type State } from "@creatures/shared/state";
 
 import { applyFireball, applyFireballMove } from "./applyActions.js";
-
-// Characterization tests for the fireball actions. They pin the CURRENT
-// behavior of applyFireball / applyFireballMove; they do not assert what the
-// code "should" do.
-
-// Locate the spawned fireball by name: applyFireball creates it internally, so
-// the test has no id to look it up by.
-const findByName = (state: State, name: string): Entity | undefined =>
-  state.entities.find((entity) => entity.name === name);
 
 describe("applyFireball", () => {
   test("waits (returns state unchanged) on the warmup tick", () => {
