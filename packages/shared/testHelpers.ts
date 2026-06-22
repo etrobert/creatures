@@ -30,20 +30,26 @@ export const makeCreature = (overrides: Partial<Creature> = {}): Creature => ({
   ...overrides,
 });
 
-export const makeEntity = (overrides: Partial<Entity> = {}): Entity =>
-  ({
-    id: `entity-${nextId++}`,
-    name: "fireball",
-    type: "entity",
-    position: { x: 0, y: 0 },
-    previousPosition: null,
-    ongoingAction: null,
-    ongoingActionStart: 0,
-    resetOngoingActionNextTurn: false,
-    nextActions: [],
-    direction: "down",
-    ...overrides,
-  }) as Entity;
+// A non-creature entity (the "entity" member of the Entity discriminated
+// union). Narrowing to this member keeps the literal `type` from widening when
+// overrides are spread, so no type assertion is needed.
+type BasicEntity = Extract<Entity, { type: "entity" }>;
+
+export const makeEntity = (
+  overrides: Partial<BasicEntity> = {},
+): BasicEntity => ({
+  id: `entity-${nextId++}`,
+  name: "fireball",
+  type: "entity",
+  position: { x: 0, y: 0 },
+  previousPosition: null,
+  ongoingAction: null,
+  ongoingActionStart: 0,
+  resetOngoingActionNextTurn: false,
+  nextActions: [],
+  direction: "down",
+  ...overrides,
+});
 
 export const makeState = (entities: Entity[], map: GameMap = []): State => ({
   tick: 0,
