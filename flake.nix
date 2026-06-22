@@ -23,7 +23,8 @@
           pname = "creatures";
           version = "1.0.0";
           src = ./.;
-          npmDepsHash = "sha256-DaEdwJaSwWT1fkUIDyrbJapVAZtcKiOaBB6N6mDOyKQ=";
+          npmDeps = pkgs.importNpmLock { npmRoot = ./.; };
+          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
 
           buildPhase = ''
             npm run build:client
