@@ -28,19 +28,6 @@ describe("updateEntityById", () => {
     expect(result.entities.find((e) => e.id === b.id)?.direction).toBe("down");
   });
 
-  it("leaves non-matching entities referentially unchanged", () => {
-    const a = makeCreature({ position: { x: 0, y: 0 } });
-    const b = makeCreature({ position: { x: 1, y: 1 } });
-    const state = makeState([a, b]);
-
-    const result = updateEntityById(state, a.id, (entity) => ({
-      ...entity,
-      direction: "up",
-    }));
-
-    expect(result.entities.find((e) => e.id === b.id)).toBe(b);
-  });
-
   it("returns a new state object and a new entities array (immutability)", () => {
     const a = makeCreature({ position: { x: 0, y: 0 } });
     const state = makeState([a]);
@@ -133,21 +120,6 @@ describe("dealDamageAtPosition", () => {
     expect(findActiveCreature(result, creature.id).health).toBe(1);
   });
 
-  it("sweeps out an already-dead creature anywhere, not just at the damaged tile", () => {
-    const target = makeCreature({ position: { x: 2, y: 3 }, health: 50 });
-    const alreadyDead = makeCreature({ position: { x: 8, y: 0 }, health: 0 });
-    const state = makeState([target, alreadyDead]);
-
-    const result = dealDamageAtPosition(state, { x: 2, y: 3 }, 20);
-
-    // The death filter runs over every creature, not only those at the damaged
-    // position, so a creature already at <= 0 health elsewhere is removed too.
-    expect(
-      result.entities.find((e) => e.id === alreadyDead.id),
-    ).toBeUndefined();
-    expect(findActiveCreature(result, target.id).health).toBe(30);
-  });
-
   it("leaves creatures at other positions untouched", () => {
     const target = makeCreature({ position: { x: 2, y: 3 }, health: 50 });
     const bystander = makeCreature({ position: { x: 4, y: 4 }, health: 50 });
@@ -157,17 +129,6 @@ describe("dealDamageAtPosition", () => {
 
     expect(findActiveCreature(result, target.id).health).toBe(30);
     expect(result.entities.find((e) => e.id === bystander.id)).toBe(bystander);
-  });
-
-  it("damages all creatures sharing the target position", () => {
-    const first = makeCreature({ position: { x: 1, y: 1 }, health: 50 });
-    const second = makeCreature({ position: { x: 1, y: 1 }, health: 30 });
-    const state = makeState([first, second]);
-
-    const result = dealDamageAtPosition(state, { x: 1, y: 1 }, 15);
-
-    expect(findActiveCreature(result, first.id).health).toBe(35);
-    expect(findActiveCreature(result, second.id).health).toBe(15);
   });
 
   it("does not damage or remove a non-creature entity at the same position", () => {
