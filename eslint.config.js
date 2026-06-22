@@ -16,6 +16,10 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["**/node_modules/**", "**/dist/**"],
+    // `.claude/worktrees/` holds isolated git worktree checkouts (each a full
+    // copy of the repo with its own tsconfig). Linting them makes
+    // typescript-eslint see multiple candidate TSConfigRootDirs and fail to
+    // parse every file, so keep them out of scope.
+    ignores: ["**/node_modules/**", "**/dist/**", ".claude/**"],
   },
 );
