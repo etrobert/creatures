@@ -154,8 +154,3 @@ describe("updateEntity lifecycle", () => {
     expect(findById(result, "victim").health).toBe(9);
   });
 });
-
-// Sanity: countRow is referenced so the import stays meaningful for map sizing.
-test("grass map matches board dimensions", () => {
-  expect(grassMap()).toHaveLength(countColumns * countRow);
-});

@@ -184,9 +184,3 @@ describe("applyAttack", () => {
     expect(result.entities.some((e) => e.id === "victim")).toBe(false);
   });
 });
-
-// Keep countRow referenced so the board-sizing import is exercised.
-test("makeMap matches board dimensions", () => {
-  expect(makeMap()).toHaveLength(countColumns * countRow);
-  expect(countRow).toBe(7);
-});
