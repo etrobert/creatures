@@ -102,6 +102,15 @@
         };
 
       devShells = forEachSystem (pkgs: {
+        # Minimal shell for CI: just the pinned Node toolchain, so the version
+        # CI runs is the same one flake.lock pins for the dev shell — no drift
+        # against a hardcoded actions/setup-node version. Deliberately excludes
+        # Playwright (and its large browser bundle), which the lint/format/
+        # typecheck/test jobs don't need.
+        ci = pkgs.mkShell {
+          packages = [ pkgs.nodejs_26 ];
+        };
+
         default = pkgs.mkShell {
           packages = with pkgs; [
             nodejs_26
