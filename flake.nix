@@ -88,6 +88,8 @@
               serviceConfig = {
                 ExecStart = "${self.packages.${system}.default}/bin/creatures-server";
                 Restart = "on-failure";
+                # tsx exits 128+SIGTERM after relaying the stop signal to node
+                SuccessExitStatus = 143;
                 DynamicUser = true;
               };
             };
